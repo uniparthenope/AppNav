@@ -1,0 +1,11 @@
+Page{
+    background-color: lightseagreen;
+}
+
+.risultati{
+    margin-left: 5px;    /*vedere se funziona, altrimeti mettere solo il numero*/
+    font-weight: bold;
+    font-size: 15;
+    color: wheat;
+    text-align: center;
+}

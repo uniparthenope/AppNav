@@ -1,0 +1,177 @@
+﻿/*
+In NativeScript, the app.css file is where you place CSS rules that
+you would like to apply to your entire application. Check out
+http://docs.nativescript.org/ui/styling for a full list of the CSS
+selectors and properties you can use to style UI components.
+
+/*
+In many cases you may want to use the NativeScript core theme instead
+of writing your own CSS rules. You can learn more about the
+NativeScript core theme at https://github.com/nativescript/theme
+The imported CSS rules must precede all other types of rules.
+*/
+@import "~@nativescript/theme/css/core.css";
+@import "~@nativescript/theme/css/default.css";
+
+/* Place any CSS rules you want to apply on both iOS and Android here.
+This is where the vast majority of your CSS code goes. */
+
+/*
+The following CSS rule changes the font size of all Buttons that have the
+"-primary" class modifier.
+*/
+
+.btn {                   /*stile dei bottoni*/
+    font-size: 15;
+    font-weight: bold;
+    border-radius: 30;
+}
+
+.home-panel{
+    vertical-align: center;
+    font-size: 20;
+    margin: 15;
+}
+
+.description-label{
+    margin-bottom: 15;
+}
+
+.title{         /*stile che avranno i vari titoli delle pagine*/
+    font-weight: bold;
+    font-size: 27;
+    text-align: center;
+}
+
+.sub-title{              /*stile che avranno i sottotitoli delle varie pagine, istruzioni e teoria*/
+    font-weight: bold;
+    font-size: 19;
+    margin-left: 10;
+}
+
+.grassetto{
+    font-weight: bold;
+}
+
+.corsivo{
+    font-style: italic;
+}
+
+.centro{
+    text-align: center;
+}
+
+.titolo-paragrafo{
+    font-weight: bold;
+    font-style: italic;
+    background-color: palegoldenrod;
+}
+
+.nome-casella{
+    font-style: italic;
+    font-weight: bold;
+    background-color: antiquewhite;
+}
+
+.testo{                   /*stile per i testi descrittivi (non titoli o sottotitoli) delle pagine istruzioni e teoria*/
+    margin-left: 10;
+}
+
+.testo-evidenza{          /*stile che permette di mettere il testo in evidenza rispetto al restante*/
+    margin-left: 10;
+    font-weight: bold;
+    font-size: 15;
+}
+
+.elenco{                 /*stile usato per gli elenchi di parole nelle pagine istruzioni e teoria*/
+    text-align: center;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+.definizione{
+    align-items: center;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.immagine{
+    align-items: center;
+}
+
+Actionbar{
+    font-weight: bold;
+}
+
+/*Inserire qui lo stile della classe .btn-esegui-ortodromia, da usare per i bottoni di calcolo nella pagine di ortodromia*/
+
+
+/*Creo le caratteristiche di stile per l'UI delle pagine lossodromia per quanto riguarda la parte degli input in modo da poter usare
+queste caratteristiche in entrambe le pagine (primoProblema e secondoProblema)*/
+
+.riquadro{
+    background-color: #f5f5f5;
+    margin: 3;
+    border-radius: 3;
+}
+
+.titolo-riquadro{
+    background-color: lightgreen;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 3;
+}
+
+.evidenza .titolo-riquadro{
+    font-weight: bold;
+    border-radius: 3;
+    font-size: 23;
+}
+
+.evidenza .titolo-riquadro Label{
+    font-size: 17;
+}
+
+.modelloTerra{
+    orientation: vertical;
+    align-items: center;
+}
+
+.btn-lossodromia{        /*stile dei bottoni usati per eseguire i calcoli delle pagine di lossodromia*/
+    border-radius: 30;
+    background-color: bisque;
+    font-weight: bold;
+    font-size: 15;
+}
+
+
+/*Gli stili per le UI delle pagine ortodromie sfruttano gli stili delle pagine lossodromie, ma devo definire la classe per il titolo per caratterizzare
+il colore di background dei titoli, per distinguere le pagine ortodromia con quelle lossodromia*/
+
+.titolo-riquadro-ortodromia{
+    background-color: lightsalmon;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 3;
+}
+
+.evidenza .titolo-riquadro-ortodromia{
+    font-size: 23;
+}
+
+.btn-ortodromia{
+    background-color: wheat;
+    font-weight: bold;
+    font-size: 15;
+}
+
+.waypoints{
+    align-content: center;
+}
+
+
+/*Classe che gestisce la grafica del listpicker*/
+.picker{
+    width: 700px;
+}

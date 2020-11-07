@@ -1,0 +1,43 @@
+<Page>
+    <ActionBar title="Benvenuti in AppNav!"></ActionBar>
+
+    <ScrollView>
+
+        <FlexboxLayout class="sfondoImmagine">
+
+            <StackLayout>
+                <Image src="~/images/logo.jpg" width="70" height="70"
+                       marginTop="20" />
+
+                <Button class="btn btn-istruzioni" text="Istruzioni"
+                        tap="onIstruzioniTap" />
+                <Button class="btn btn-teoria" text="Cenni di teoria"
+                        tap="onTeoriaTap" />
+                <Label textWrap="true" text="Lossodromia" fontWeight="Bold"
+                       fontSize="17" color="lightgreen" />
+                <Button class="btn btn-lossodromia" text="Primo problema"
+                        tap="onPrimoproblemaTap" />
+                <Button class="btn btn-lossodromia" text="Secondo problema"
+                        tap="onSecondoproblemaTap" />
+                <Label textWrap="true" text="Ortodromia" fontWeight="Bold"
+                       fontSize="17" color="lightsalmon" />
+                <Button class="btn btn-ortodromia" text="Con Waypoints"
+                        tap="onConwaypointsTap" />
+                <Button class="btn btn-ortodromia" text="Senza Waypoints"
+                        tap="onSenzawaypointsTap" />
+
+                <TextView editable="false">
+                    <Span text=" " />
+                </TextView>
+
+                <Label textWrap="true" text="Univeristà degli studi di Napoli Parthenope" class="corsivo" color="White" />
+                <Label textWrap="true" text="Versione: 1.0" class="corsivo" color="White" />
+            </StackLayout>
+
+
+        </FlexboxLayout>
+    </ScrollView>
+
+
+
+</Page>

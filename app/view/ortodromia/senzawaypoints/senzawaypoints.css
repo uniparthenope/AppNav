@@ -1,0 +1,17 @@
+Page{
+    background-color: darkslateblue;
+}
+
+.output{
+    margin-left: 5px;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+Image{
+    border-radius: 34px;
+}
+
+

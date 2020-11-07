@@ -1,0 +1,8 @@
+<Page loaded="onLoaded">
+    <StackLayout>
+        <ListPicker id="tipoList" items="{{ tipologia }}"
+                    selectedIndex="{{ tipo }}" />
+        <Button text="Clicca" tap="onTap"/>
+    </StackLayout>
+
+</Page>

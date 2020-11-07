@@ -1,0 +1,37 @@
+ScrollView{
+    align-content: center;
+}
+
+FlexboxLayout{
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+
+}
+
+.btn-istruzioni{
+    background-color: lightblue;
+}
+.btn-teoria{
+    background-color: lightcoral
+}
+.btn-lossodromia{
+    background-color: lightgreen;
+}
+.btn-ortodromia{
+    background-color: lightsalmon;
+}
+
+Image{
+    border-radius: 34;
+}
+Label{
+    text-align: center;
+}
+
+.sfondoImmagine{
+    background-image: url("~/images/provaSfondo1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
