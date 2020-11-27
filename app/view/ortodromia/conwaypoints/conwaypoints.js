@@ -1025,13 +1025,16 @@ function WaypointsCammino(){
     lonWaypoints[0]=longitude;
     letteraLonWaypoints[0]=letteraLon;
 
-    if (letteraLat==="S"){
-        latitude*=1;
-    }
+
 
     //dichiaro variabile locale per la differenza di longitudine dei waypoints
 
     for (i=1; i<=numeroWaypoints; i++){
+
+        if (letteraLat==="S"){
+            latitude*=-1;
+        }
+
         //creo variabili d'appoggio
         let alfa = Math.sin(Deg2Rad(latitude))*Math.cos(Deg2Rad(i*(camminoWayDist/60)));
         let beta = Math.cos(Deg2Rad(latitude))*Math.sin(Deg2Rad(i*(camminoWayDist/60)))*Math.cos(Deg2Rad(rottaIniziale));
@@ -1048,8 +1051,11 @@ function WaypointsCammino(){
 
         //calcolo la differenza di longitudine del waypoint
         if (letteraLatWaypoints[i]!==letteraLat){//ciclo che mi permette di effettuare il corretto calcolo della differenza di longitudine
-            latWaypoints[i]*=1;
+            latWaypoints[i]*=-1;
         }
+
+        latitude=Math.abs(latitude);
+
 
         let deltaLambdaX;
 
@@ -1130,7 +1136,7 @@ function WaypointsCammino(){
     //memorizzo come ultima componente dei vettori il punto di arrivo
     latWaypoints[numeroWaypoints+1]=latitudeArr;
     letteraLatWaypoints[numeroWaypoints+1]=letteraLatArr;
-    lonWaypoints[numeroWaypoints]=longitudeArr;
+    lonWaypoints[numeroWaypoints+1]=longitudeArr;
     letteraLonWaypoints[numeroWaypoints+1]=letteraLonArr;
 
 }//end function WaypointsCammino()

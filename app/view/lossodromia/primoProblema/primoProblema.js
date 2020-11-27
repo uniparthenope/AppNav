@@ -62,6 +62,7 @@ exports.onLoaded = function(args){
         tipologia: tipologia
     });
     page.bindingContext = vm;
+
 };
 //___________________________________________________________
 

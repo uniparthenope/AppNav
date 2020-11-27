@@ -39,11 +39,11 @@
                     <Span text="inserire il valore, "/> <Span text="numero intero o decimale positivo" class="grassetto" />
                     <Span text=", relativo ai primi di latitudine o longitudine. Si ricorda che, per entrambe le coordinate, tal valore deve essere minore di 60." />
                     <Span text="\n" />  <!--vado a capo-->
-                    <Span text="Terza casella, lettera: " class="nome-casella" />
+                    <Span text="Terza casella, cardine: " class="nome-casella" />
                     <Span text="inserire la lettera coordinata associata alla latitudine, N (nord) o S (sud), o alla longitudine, E (est) o W (ovest)." />
                     <Span text="\n" />  <!--vado a capo-->
                     <Span text="\n" />  <!--vado a capo-->
-                    <Span text="Cammin: " class="titolo-paragrafo" />
+                    <Span text="Cammino: " class="titolo-paragrafo" />
                     <Span text="Per questa categoria di dati è prevista una sola casella nella quale inserire il valore del cammino, espresso in miglia nautiche (NM). Tale valore deve essere " />
                     <Span text="positivo intero o decimale." class="grassetto" />
                     <Span text="\n" />  <!--vado a capo-->

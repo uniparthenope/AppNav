@@ -14,3 +14,26 @@ Page{
 Image{
     border-radius: 34px;
 }
+
+@keyframes animaBack {
+    from {background-color: antiquewhite;}
+    to {background-color: lightseagreen;}
+}
+
+.animato{
+    animation-name: animaBack;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+}
+
+@keyframes animaRuota {
+    from{transform: rotate(0deg);}
+    to{transform: rotate(360deg);}
+}
+.animatoRuota{
+    animation-name: animaRuota;
+    animation-duration: 5s;
+    animation-fill-mode: both;
+    animation-iteration-count: infinite;
+}

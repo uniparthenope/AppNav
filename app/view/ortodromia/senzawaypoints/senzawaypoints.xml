@@ -87,7 +87,9 @@
                     </StackLayout>
 
                     <!--Per non lasciare spazio vuoto inserisco il logo dell'università-->
-                    <Image row="6" col="1" src="~/images/logo.jpg" width="70" height="70"/>
+                    <StackLayout row="6" col="1" class="animato" borderRadius="3">
+                        <Image src="~/images/logo.jpg" width="70" height="70" class="animatoRuota"/>
+                    </StackLayout>
 
                     <!--Creo UI per inserire la rotta-->
                     <StackLayout row="6" col="2" class="riquadro">
@@ -117,7 +119,7 @@
                     </StackLayout>
 
                     <!--Creo UI per effettuare il confronto con la lossdormia-->
-                    <StackLayout row="11" col="0" colSpan="3" class="riquadro">
+                    <StackLayout row="11" col="0" colSpan="3" class="riquadro animatoLosso">
                             <Label textWrap="true"
                                    text="Fai click di seguito per confrontare con la lossodromia!"
                                    fontSize="15" fontWeight="bold"
@@ -296,7 +298,7 @@
                     </StackLayout>
 
                     <StackLayout row="15" col="0" colSpan="3"
-                                 class="riquadro">
+                                 class="riquadro animatoLosso">
                         <Label textWrap="true"
                                text="Fai click di seguito per confrontare con la lossodromia!"
                                fontSize="15" fontWeight="bold"
@@ -348,7 +350,7 @@
                         </StackLayout>
                         <StackLayout>
                             <Label textWrap="true"
-                                   text="La navigazione mista prevede due ortodromie e una lossodromia tra il punto di partenza e il punto di arrivo. Si raccomanda al gentile utente di inserire il parallelo limite solo dopo aver preso visione delle coordinate dei vertici, inoltre il parallelo limite deve essere maggiore in latitudine del punto di partenza e di arrivo."
+                                   text="La navigazione mista prevede due ortodromie e una lossodromia tra il punto di partenza e il punto di arrivo. Si raccomanda al gentile utente di inserire il parallelo limite solo dopo aver preso visione delle coordinate del vertice, inoltre la latitudine del parallelo limite deve essere maggiore in valore assoluto di quelle del punto di partenza e di arrivo."
                                    class="testo"/>
                         </StackLayout>
                     </StackLayout>

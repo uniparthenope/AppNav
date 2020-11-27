@@ -74,7 +74,9 @@
             </StackLayout>
 
             <!--Per non lasciare spazio vuoto inserisco il logo dell'università-->
-            <Image row="6" col="1" src="~/images/logo.jpg" width="70" height="70" />
+            <StackLayout row="6" col="1" class="animato" borderRadius="3">
+                <Image src="~/images/logo.jpg" width="70" height="70" class="animatoRuota"/>
+            </StackLayout>
 
             <!--Creo UI per inserire la rotta vera-->
             <StackLayout row="6" col="2" class="riquadro">
