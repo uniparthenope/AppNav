@@ -1,0 +1,59 @@
+@keyframes animaInfo {
+    from{opacity: 0;}
+    to{opacity: 1;}
+}
+
+.animazione{
+    animation-name: animaInfo;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+}
+
+.sfondoColore{
+    background-color: #1A3153;
+}
+
+.sfondo{
+    background-image: url("~/images/logo1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.trasparente{
+    background-color: transparent;
+}
+
+.centro{
+    align-items: center;
+    text-align: center;
+}
+
+.immagine{
+    width: 100;
+    height: 100;
+}
+
+.immagineVolto{
+    border-radius: 1000;
+}
+
+.testo{
+    color: #CA9E68;
+    font-weight: bold;
+    font-size: 23px;
+}
+
+.testo2{
+    color: snow;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.link{
+    color: rgb(0,255,255);
+    font-size: 19px;
+    font-weight: bold;
+    font-style: italic;
+}

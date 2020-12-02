@@ -35,3 +35,10 @@ Label{
     background-position: center;
     background-size: cover;
 }
+
+.About{
+    color: #CA9E68;
+    font-weight: bold;
+    font-size: 17px;
+    font-style: italic;
+}

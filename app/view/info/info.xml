@@ -1,0 +1,95 @@
+<Page>
+    <Page.actionar>
+        <ActionBar title="AppNav"/>
+    </Page.actionar>
+
+    <ScrollView>
+
+        <FlexboxLayout flexDirection="column" class="sfondoColore sfondo">
+
+            <GridLayout
+                    rows="auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                    columns="*, *, *">
+
+                <StackLayout row="0" col="0" colSpan="3" class="trasparente">
+                    <StackLayout class="centro">
+                        <Label text="AppNav" class="testo" />
+                    </StackLayout>
+                    <Image src="~/images/logoAppNav.png" class="immagine" />
+                    <Label text="Versione 1.0.0" class="centro testo" fontSize="11" />
+                    <Label text="___________________________"
+                           class="centro testo" />
+                </StackLayout>
+
+                <StackLayout row="1" col="0" class="trasparente">
+                    <Image src="~/images/sv1.jpg" class="immagine immagineVolto" />
+                </StackLayout>
+                <StackLayout row="1" col="1" colSpan="2"
+                             class="trasparente centro">
+                    <Label text="Salvatore Troisi" class="testo" />
+                    <Label text="Team leader" class="testo2" />
+                </StackLayout>
+
+                <StackLayout row="2" col="0" colSpan="3">
+                    <Label text=" " fontSize="30" />
+                </StackLayout>
+
+                <StackLayout row="3" col="0" class="trasparente">
+                    <Image src="~/images/miaFoto.jpg" class="immagine immagineVolto" />
+                </StackLayout>
+                <StackLayout row="3" col="1" colSpan="2"
+                             class="trasparente centro">
+                    <Label text="Gabriele Portelli" class="testo" />
+                    <Label text="Developer" class="testo2" />
+                </StackLayout>
+
+                <StackLayout row="4" col="0" colSpan="3">
+                    <Label text=" " fontSize="30" />
+                </StackLayout>
+
+                <StackLayout row="5" col="0" class="trasparente">
+                    <Image src="~/images/nn.jpg" class="immagine immagineVolto" />
+                </StackLayout>
+                <StackLayout row="5" col="1" colSpan="2"
+                             class="trasparente centro">
+                    <Label text="Nunzio Napolitano" class="testo" />
+                    <Label text="Responsabile Mobile Store" class="testo2" />
+                </StackLayout>
+
+                <StackLayout row="6" col="0" colSpan="3" class="trasparente">
+                    <Label text="___________________________"
+                           class="centro testo" />
+                </StackLayout>
+
+                <StackLayout row="7" col="0" colSpan="3" class="trasparente">
+                    <Label textWrap="true"
+                           text="Per i diritti alla prvacy si rimanda al link"
+                           class="centro testo" fontSize="17" />
+                    <Label text=" " fontSize="30" />
+                    <Label tap="onLink" text="tap on link"
+                           class="centro link" />
+                    <Label text=" " fontSize="30" />
+                </StackLayout>
+
+                <StackLayout row="8" col="0" colSpan="3" class="trasparente">
+                    <Label textWrap="true"
+                           text="Per segnalare eventuali problemi si prega di contattare al seguente indirizzo di posta elettronica"
+                           class="centro testo" fontSize="13" />
+                    <Label text=" " fontSize="30" />
+                    <Label
+                            text="gabriele.portelli001@studenti.uniparthenope.it"
+                            class="centro link" fontSize="13" />
+                    <Label text=" " fontSize="30" />
+                </StackLayout>
+
+
+
+
+
+            </GridLayout>
+
+        </FlexboxLayout>
+
+    </ScrollView>
+
+</Page>

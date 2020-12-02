@@ -1,5 +1,10 @@
 <Page>
-    <ActionBar title="Benvenuti in AppNav!"></ActionBar>
+    <ActionBar title="Benvenuti in AppNav!">
+        <ActionItem tap="onAbout" andoroid.postion="right" ios.position="right">
+            <Label text="Info" class="About" />
+        </ActionItem>
+    </ActionBar>
+
 
     <ScrollView>
 
