@@ -8,7 +8,7 @@
     <TabView id="tabViewContainer">
 
         <!--Creo UI per il primo problema dell'ortodromia-->
-        <TabViewItem title="Primo Problema di Ortodromia">
+        <TabViewItem ios:title="I Problema di Ortodromia" android:title="Primo Problema di Ortodromia">
             <ScrollView>
 
                 <GridLayout rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
@@ -153,7 +153,7 @@
 
 
         <!--Creo UI per il secondo problema dell'ortodromia-->
-        <TabViewItem title="Secondo Problema di Ortodromia">
+        <TabViewItem ios:title="II Problema di Ortodromia" android:title="Secondo Problema di Ortodromia">
             <ScrollView>
 
                 <GridLayout
