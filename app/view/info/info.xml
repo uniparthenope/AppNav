@@ -15,14 +15,14 @@
                     <StackLayout class="centro">
                         <Label text="Navigation path" class="testo" />
                     </StackLayout>
-                    <Image src="res://logoapp" class="immagine" />
+                    <Image src="~/images/logoAppNav.png" class="immagine" />
                     <Label text="Versione 1.0.0" class="centro testo" fontSize="11" />
                     <Label text="___________________________"
                            class="centro testo" />
                 </StackLayout>
 
                 <StackLayout row="1" col="0" class="trasparente">
-                    <Image src="res://sv1" class="immagine immagineVolto" />
+                    <Image src="~/images/sv1.jpg" class="immagine immagineVolto" />
                 </StackLayout>
                 <StackLayout row="1" col="1" colSpan="2"
                              class="trasparente centro">
@@ -35,7 +35,7 @@
                 </StackLayout>
 
                 <StackLayout row="3" col="0" class="trasparente">
-                    <Image src="res://miafoto" class="immagine immagineVolto" />
+                    <Image src="~/images/miaFoto.jpg" class="immagine immagineVolto" />
                 </StackLayout>
                 <StackLayout row="3" col="1" colSpan="2"
                              class="trasparente centro">
@@ -48,7 +48,7 @@
                 </StackLayout>
 
                 <StackLayout row="5" col="0" class="trasparente">
-                    <Image src="res://nn" class="immagine immagineVolto" />
+                    <Image src="~/images/nn.jpg" class="immagine immagineVolto" />
                 </StackLayout>
                 <StackLayout row="5" col="1" colSpan="2"
                              class="trasparente centro">

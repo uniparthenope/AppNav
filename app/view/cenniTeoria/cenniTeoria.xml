@@ -72,7 +72,7 @@
             <TextView editable="false" class="definizione">
                 <Span text="Curva che sulle superfici di rotazione, incontra i meridiani secondo un angolo costante, avvolgendosi attorno ai poli senza mai raggiungerli [2]."/>
             </TextView>
-            <Image src="res://lossodromia2" class="immagine"/>
+            <Image src="~/images/lossodromia2.png" class="immagine"/>
             <TextView editable="false">
                 <FormattedString>
                     <Span text="Dall'immagine e dalla definizione " />
@@ -94,7 +94,7 @@
             <TextView editable="false" class="definizione">
                 <Span text="Arco di circonferenza massima che sottende un angolo minore di 180° [2]." />
             </TextView>
-            <Image src="res://ortodromia" />
+            <Image src="~/images/ortodromia.png" />
             <TextView editable="false">
                 <FormattedString>
                     <Span text="L'ortodromia è una curva che, a differenza della lossodromia, appartiene alla categoria delle curve " />
