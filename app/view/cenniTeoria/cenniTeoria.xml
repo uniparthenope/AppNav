@@ -1,6 +1,6 @@
 <Page>
     <Page.actionar>
-        <ActionBar title="AppNav"/>
+        <ActionBar title="Navigation path"/>
     </Page.actionar>
 
     <ScrollView>
@@ -18,7 +18,7 @@
                     <Span text="scienza che studia forma e dimensioni della Terra e si occupa di determinare il campo gravitazionale terrestre, " />
                     <Span text="emerge che la nostra Terra si identifica con un solido molto complesso denominato " /> <Span text="Geoide. " class="corsivo" />
                     <Span text="Tale solido, non geometrico, è associato alla superficie matematica terrestre, che si otterrebbe se i continenti fossero completamente sommersi dalle acque e ipotizzando che tali acque siano perturbate solo dalla forza gravitazionale terrestre e dalla forza centrifuga. " />
-                    <Span text="Pertanto la superficie del geoide è identificata come superficie di ugual potenziale gravitazionale passante per un punto posto al livello medio del mare. "/>
+                    <Span text="Pertanto la superficie del geoide è identificata come superficie di ugual potenziale gravitazionale passante per un punto posto al livello medio del mare [1]. "/>
                     <Span text="\n" />  <!--vado a capo-->
                     <Span text="Dunque, un solido sì fatto renderebbe altamente complicata la vita del navigante per la risoluzione dei vari problemi legati alla navigazione, " />
                     <Span text="pertanto si adoperano dei modelli che meglio approssimano il geoide: " />
@@ -70,9 +70,9 @@
                 </FormattedString>
             </TextView>
             <TextView editable="false" class="definizione">
-                <Span text="Curva che sulle superfici di rotazione, incontra i meridiani secondo un angolo costante, avvolgendosi attorno ai poli senza mai raggiungerli."/>
+                <Span text="Curva che sulle superfici di rotazione, incontra i meridiani secondo un angolo costante, avvolgendosi attorno ai poli senza mai raggiungerli [2]."/>
             </TextView>
-            <Image src="~/images/lossodromia2.png" class="immagine"/>
+            <Image src="res://lossodromia2" class="immagine"/>
             <TextView editable="false">
                 <FormattedString>
                     <Span text="Dall'immagine e dalla definizione " />
@@ -92,9 +92,9 @@
                 </FormattedString>
             </TextView>
             <TextView editable="false" class="definizione">
-                <Span text="Arco di circonferenza massima che sottende un angolo minore di 180°" />
+                <Span text="Arco di circonferenza massima che sottende un angolo minore di 180° [2]." />
             </TextView>
-            <Image src="~/images/ortodromia.png" />
+            <Image src="res://ortodromia" />
             <TextView editable="false">
                 <FormattedString>
                     <Span text="L'ortodromia è una curva che, a differenza della lossodromia, appartiene alla categoria delle curve " />
@@ -133,6 +133,22 @@
                     <Span text="Minor distanza tra i due punti" />
                 </TextView>
             </GridLayout>
+
+            <!--Inserisco la parte relativa ai riferimenti bibliografici-->
+            <TextView editable="false">
+                <Span text="Riferimenti bibliografici" class="sub-title" />
+                <Span text="\n" />  <!--vado a capo-->
+                <Span text="[1] " />
+                <Span text="Aniello Russo. " class="grassetto" />
+                <Span text="NAVIGAZIONE, VOLUME PRIMO, Fondamenti di navigazione. " class="corsivo" />
+                <Span text="Laurenziana, Napoli, 2002." />
+                <Span text="\n" />  <!--vado a capo-->
+                <Span text="\n" />  <!--vado a capo-->
+                <Span text="[2] " />
+                <Span text="Aniello Russo. " class="grassetto" />
+                <Span text="NAVIGAZIONE, VOLUME TERZO, Lossodromia-Ortodromia Cinematica navale maree e correnti di marea. " class="corsivo" />
+                <Span text="Laurenziana, Napoli, 2002." />
+            </TextView>
         </StackLayout>
     </ScrollView>
 </Page>

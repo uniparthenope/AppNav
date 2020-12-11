@@ -1,6 +1,6 @@
 <Page>
     <Page.actionar>
-        <ActionBar title="AppNav"/>
+        <ActionBar title="Navigation path"/>
     </Page.actionar>
 
     <ScrollView>
@@ -13,16 +13,16 @@
 
                 <StackLayout row="0" col="0" colSpan="3" class="trasparente">
                     <StackLayout class="centro">
-                        <Label text="AppNav" class="testo" />
+                        <Label text="Navigation path" class="testo" />
                     </StackLayout>
-                    <Image src="~/images/logoAppNav.png" class="immagine" />
+                    <Image src="res://logoapp" class="immagine" />
                     <Label text="Versione 1.0.0" class="centro testo" fontSize="11" />
                     <Label text="___________________________"
                            class="centro testo" />
                 </StackLayout>
 
                 <StackLayout row="1" col="0" class="trasparente">
-                    <Image src="~/images/sv1.jpg" class="immagine immagineVolto" />
+                    <Image src="res://sv1" class="immagine immagineVolto" />
                 </StackLayout>
                 <StackLayout row="1" col="1" colSpan="2"
                              class="trasparente centro">
@@ -35,7 +35,7 @@
                 </StackLayout>
 
                 <StackLayout row="3" col="0" class="trasparente">
-                    <Image src="~/images/miaFoto.jpg" class="immagine immagineVolto" />
+                    <Image src="res://miafoto" class="immagine immagineVolto" />
                 </StackLayout>
                 <StackLayout row="3" col="1" colSpan="2"
                              class="trasparente centro">
@@ -48,7 +48,7 @@
                 </StackLayout>
 
                 <StackLayout row="5" col="0" class="trasparente">
-                    <Image src="~/images/nn.jpg" class="immagine immagineVolto" />
+                    <Image src="res://nn" class="immagine immagineVolto" />
                 </StackLayout>
                 <StackLayout row="5" col="1" colSpan="2"
                              class="trasparente centro">
@@ -63,7 +63,7 @@
 
                 <StackLayout row="7" col="0" colSpan="3" class="trasparente">
                     <Label textWrap="true"
-                           text="Per i diritti alla prvacy si rimanda al link"
+                           text="Per i diritti sulla prvacy si rimanda al link"
                            class="centro testo" fontSize="17" />
                     <Label text=" " fontSize="30" />
                     <Label tap="onLink" text="tap on link"

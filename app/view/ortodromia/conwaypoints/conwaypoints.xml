@@ -1,6 +1,6 @@
 <Page loaded="onLoaded">
     <Page.actionbar>
-        <ActionBar title="AppNav" />
+        <ActionBar title="Navigation path" />
     </Page.actionbar>
 
     <ScrollView>

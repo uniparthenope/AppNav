@@ -1,16 +1,16 @@
 <Page>
     <Page.actionar>
-        <ActionBar title="AppNav"/>
+        <ActionBar title="Navigation path"/>
     </Page.actionar>
 
     <ScrollView>
         <StackLayout>
             <TextView editable="false" class="title">
-                <Span text="Istruzioni per l'uso di AppNav" />
+                <Span text="Istruzioni per l'uso di Navigation path" />
             </TextView>
             <TextView editable="false">
                 <FormattedString>
-                    <Span text="AppNav è stata progettata per poter risolvere i vari problemi di navigazione associati a " />
+                    <Span text="Navigation path è stata progettata per poter risolvere i vari problemi di navigazione associati a " />
                     <Span text="Lossodromia " class="corsivo" />
                     <Span text="e " />
                     <Span text="Ortodromia." class="corsivo" />

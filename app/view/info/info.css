@@ -7,7 +7,7 @@
     animation-name: animaInfo;
     animation-duration: 5s;
     animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
+    animation-iteration-count: 3;
 }
 
 .sfondoColore{
@@ -15,7 +15,7 @@
 }
 
 .sfondo{
-    background-image: url("~/images/logo1.png");
+    background-image: url("res://logo1");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
