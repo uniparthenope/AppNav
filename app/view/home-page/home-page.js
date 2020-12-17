@@ -1,8 +1,16 @@
-var frames = require("tns-core-modules/ui/frame").Frame;
+const frames = require("tns-core-modules/ui/frame").Frame;
+const observableModule = require("tns-core-modules/data/observable");
 
+exports.onNavigatingTo = function (args) {
+    let page = args.object;
+    let viewModel = observableModule.fromObject({});
+
+
+    page.bindingContext = viewModel;
+};
 
 function onIstruzioniTap() {
-    var navigationEntry = {
+    let navigationEntry = {
         moduleName: "view/istruzioni/istruzioni",
         transition: {
             name: "fade",
@@ -14,7 +22,7 @@ function onIstruzioniTap() {
 exports.onIstruzioniTap = onIstruzioniTap;
 
 function onTeoriaTap() {
-    var navigationEntryTeoria = {
+    let navigationEntryTeoria = {
         moduleName: "view/cenniTeoria/cenniTeoria",
         transition: {
             name: "fade",
@@ -26,7 +34,7 @@ function onTeoriaTap() {
 exports.onTeoriaTap = onTeoriaTap;
 
 function onPrimoproblemaTap() {
-    var navigationEntryPrimo = {
+    let navigationEntryPrimo = {
         moduleName: "view/lossodromia/primoProblema/primoProblema",
         transition: {
             name: "fade",
@@ -38,7 +46,7 @@ function onPrimoproblemaTap() {
 exports.onPrimoproblemaTap = onPrimoproblemaTap;
 
 function onSecondoproblemaTap() {
-    var navigationEntrySecondo = {
+    let navigationEntrySecondo = {
         moduleName: "view/lossodromia/secondoProblema/secondoProblema",
         transition: {
             name: "fade",
@@ -50,7 +58,7 @@ function onSecondoproblemaTap() {
 exports.onSecondoproblemaTap = onSecondoproblemaTap;
 
 function onConwaypointsTap() {
-    var navigationEntryConway = {
+    let navigationEntryConway = {
         moduleName: "view/ortodromia/conwaypoints/conwaypoints",
         transition: {
             name: "fade",
@@ -62,7 +70,7 @@ function onConwaypointsTap() {
 exports.onConwaypointsTap = onConwaypointsTap;
 
 function onSenzawaypointsTap() {
-    var navigationEntrySenzaway = {
+    let navigationEntrySenzaway = {
         moduleName: "view/ortodromia/senzawaypoints/senzawaypoints",
         transition: {
             name: "fade",
@@ -74,7 +82,7 @@ function onSenzawaypointsTap() {
 exports.onSenzawaypointsTap = onSenzawaypointsTap;
 
 function onAbout(){
-    var navigationEntryAbout = {
+    let navigationEntryAbout = {
         moduleName: "view/info/info",
         transition: {
             name: "fade",
@@ -84,3 +92,4 @@ function onAbout(){
     frames.topmost().navigate(navigationEntryAbout);
 }
 exports.onAbout = onAbout;
+

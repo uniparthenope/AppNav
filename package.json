@@ -1,7 +1,9 @@
 {
   "name": "@nativescript/template-hello-world",
   "main": "app.js",
-  "version": "7.0.1",
+  "displayName": "NavigationPath",
+  "templateType": "App template",
+  "version": "7.0.3",
   "author": "NativeScript Team <oss@nativescript.org>",
   "description": "NativeScript Application",
   "license": "SEE LICENSE IN <your-license-filename>",
@@ -26,7 +28,7 @@
     "@nativescript/theme": "~2.3.0"
   },
   "devDependencies": {
-    "@nativescript/android": "7.0.0",
+    "@nativescript/android": "7.0.1",
     "@nativescript/ios": "7.0.6",
     "@nativescript/webpack": "~3.0.0"
   },

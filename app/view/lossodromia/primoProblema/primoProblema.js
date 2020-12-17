@@ -324,7 +324,7 @@ function RottaQuadrantale(rotta){
 function DeltaLambdaLonArr(){
     let rottaRad = Deg2Rad(RottaQuadrantale(rottaVera));
 
-    deltaLambda = (deltaPhiCre/60) * Math.tan(rottaRad);
+    deltaLambda = Math.abs((deltaPhiCre/60) * Math.tan(rottaRad));
 
     //creo ciclo condizonale per controllare se il deltaLambda è maggiore di 360°
     if (deltaLambda>180){
@@ -344,7 +344,6 @@ function DeltaLambdaLonArr(){
     }else{
         alert("Errore valutazione lettera delta lambda.");
     }
-
     //calcolo longitudine punto di arrivo
     switch (letteraLon){
         case "E":
@@ -377,6 +376,7 @@ function DeltaLambdaLonArr(){
                     longitudeArr = (-longitude)+deltaLambda;
                     if(longitudeArr<0){
                         letteraLonArr="W";
+                        longitudeArr = Math.abs(longitudeArr);
                     }else{
                         letteraLonArr="E";
                     }
