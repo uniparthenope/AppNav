@@ -527,7 +527,7 @@ function RottaIniziale(){
 *
 * dopo aver ottenuto il valore trasformare in circolare
 * */
-function   RottaFinale(){
+function   RottaFinale(){  //vecchia
     if(letteraLatArr!==letteraLat){
         latitudeArr*=(-1);
     }
