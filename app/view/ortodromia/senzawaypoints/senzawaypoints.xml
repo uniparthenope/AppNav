@@ -45,11 +45,11 @@
                     <!--Creo UI per inserimento latitudine-->
                     <StackLayout row="3" col="0" class="riquadro">
                         <TextField id="idGradiLat1" text="{{ inputGradiLat1 }}"
-                                   hint="gradi" />
+                                   hint="gradi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="3" col="1" class="riquadro">
                         <TextField id="idPrimiLat1" text="{{ inputPrimiLat1 }}"
-                                   hint="primi" />
+                                   hint="primi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="3" col="2" class="riquadro">
                         <TextField id="idLetteraLat1" text="{{ inputLetteraLat1 }}"
@@ -63,11 +63,11 @@
                     </StackLayout>
                     <StackLayout row="5" col="0" class="riquadro">
                         <TextField id="idGradiLon1" text="{{ inputGradiLon1 }}"
-                                   hint="gradi" />
+                                   hint="gradi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="5" col="1" class="riquadro">
                         <TextField id="idPrimiLon1" text="{{ inputPrimiLon1 }}"
-                                   hint="primi" />
+                                   hint="primi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="5" col="2" class="riquadro">
                         <TextField id="idLetteraLon1" text="{{ inputLetteraLon1 }}"
@@ -82,7 +82,7 @@
                         </StackLayout>
                         <StackLayout>
                             <TextField id="idCammino" text="{{ inputCammino }}"
-                                       hint="NM" />
+                                       hint="NM" keyboardType="number" />
                         </StackLayout>
                     </StackLayout>
 
@@ -97,7 +97,7 @@
                             <Label textWrap="true" text="Rotta [°]" fontSize="17" />
                         </StackLayout>
                         <TextField id="idRotta" text="{{ inputRotta }}"
-                                   hint="gradi" />
+                                   hint="gradi" keyboardType="number" />
                     </StackLayout>
 
                     <!--Creo Ui per effettuare i calcoli-->
@@ -192,11 +192,11 @@
                     <!--Creo UI per l'inserimento latitudine-->
                     <StackLayout row="3" col="0" class="riquadro">
                         <TextField id="idGradiLat" text="{{ inputGradiLat }}"
-                                   hint="gradi" />
+                                   hint="gradi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="3" col="1" class="riquadro">
                         <TextField id="idPrimiLat" text="{{ inputPrimiLat }}"
-                                   hint="primi" />
+                                   hint="primi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="3" col="2" class="riquadro">
                         <TextField id="idLetteraLat"
@@ -213,11 +213,11 @@
                     <!--Creo UI per l'inserimento della longitudine-->
                     <StackLayout row="5" col="0" class="riquadro">
                         <TextField id="idGradiLon" text="{{ inputGradiLon }}"
-                                   hint="gradi" />
+                                   hint="gradi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="5" col="1" class="riquadro">
                         <TextField id="idPrimiLon" text="{{ inputPrimiLon }}"
-                                   hint="primi" />
+                                   hint="primi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="5" col="2" class="riquadro">
                         <TextField id="idLetteraLon"
@@ -241,11 +241,11 @@
                     <!--Creo UI per l'inserimento della latitudine-->
                     <StackLayout row="8" col="0" class="riquadro">
                         <TextField id="idGradiLatArr"
-                                   text="{{ inputGradiLatArr }}" hint="gradi" />
+                                   text="{{ inputGradiLatArr }}" hint="gradi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="8" col="1" class="riquadro">
                         <TextField id="idPrimiLatArr"
-                                   text="{{ inputPrimiLatArr }}" hint="primi" />
+                                   text="{{ inputPrimiLatArr }}" hint="primi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="8" col="2" class="riquadro">
                         <TextField id="idLetteraLatArr"
@@ -262,11 +262,11 @@
                     <!--Creo UI per l'inserimento della longitudine-->
                     <StackLayout row="10" col="0" class="riquadro">
                         <TextField id="idGradiLonArr"
-                                   text="{{ inputGradiLonArr }}" hint="gradi" />
+                                   text="{{ inputGradiLonArr }}" hint="gradi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="10" col="1" class="riquadro">
                         <TextField id="idPrimiLonArr"
-                                   text="{{ inputPrimiLonArr }}" hint="primi" />
+                                   text="{{ inputPrimiLonArr }}" hint="primi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="10" col="2" class="riquadro">
                         <TextField id="idLetteraLonArr"
@@ -365,12 +365,12 @@
                     <StackLayout row="2" col="0" class="riquadro">
                         <TextField id="idGradiParalleloLimite"
                                    text="{{ inputGradiParalleloLimite }}"
-                                   hint="gradi" />
+                                   hint="gradi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="2" col="1" class="riquadro">
                         <TextField id="idPrimiParalleloLimite"
                                    text="{{ inputPrimiParalleloLimite }}"
-                                   hint="Primi" />
+                                   hint="Primi" keyboardType="number" />
                     </StackLayout>
                     <StackLayout row="2" col="2" class="riquadro">
                         <TextField id="idLetteraParalleloLimite"

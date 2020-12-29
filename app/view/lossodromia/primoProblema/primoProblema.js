@@ -117,6 +117,7 @@ function SetInput(){
     cammino=parseFloat(idCammino.text);//memorizzo il cammino
     letteraLat=idLetteraLat.text;//memorizzo lettera coordinata latitudine
     letteraLon=idLetteraLon.text;//memorizzo lettera coordinata longitudine
+    bug=0;
 
     //ciclo condizionale che controlla l'inserimento della latitudine
     if(parseInt(idGradiLat.text)===90){
@@ -596,23 +597,23 @@ function RisolviPrimoProblema(){
 //___________________________________________________________
 //funzione che gestisce gli output del primo problema di lossodromia
 function SetOutput(){
-    let gradiLatArr=Math.floor(latitudeArr), primiLatArr=60*(latitudeArr-gradiLatArr).toFixed(5);
-    let gradiLonArr=Math.floor(longitudeArr), primiLonArr=60*(longitudeArr-gradiLonArr).toFixed(5);
-    let gradiLatGeo=Math.floor(latitudeGeocentrica), primiLatGeo=60*(latitudeGeocentrica-gradiLatGeo).toFixed(5);
-    let gradiLatGeoArr=Math.floor(latitudeGeocentricaArr), primiLatGeoArr=60*(latitudeGeocentricaArr-gradiLatGeoArr).toFixed(5);
+    let gradiLatArr=Math.floor(latitudeArr), primiLatArr=60*(latitudeArr-gradiLatArr);
+    let gradiLonArr=Math.floor(longitudeArr), primiLonArr=60*(longitudeArr-gradiLonArr);
+    let gradiLatGeo=Math.floor(latitudeGeocentrica), primiLatGeo=60*(latitudeGeocentrica-gradiLatGeo);
+    let gradiLatGeoArr=Math.floor(latitudeGeocentricaArr), primiLatGeoArr=60*(latitudeGeocentricaArr-gradiLatGeoArr);
 
     switch (bug){
         case 0:
             if(eccentricita===0){
-                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr}' ${letteraLatArr}
-Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr}' ${letteraLonArr}
+                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}
+Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
 Δϕ Crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPhi}
 ϕ Crescente Arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}
 ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}
 Δλ: ${deltaLambda.toFixed(9)}° ${letteraDeltaLambda}`;
             }else{
-                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr}' ${letteraLatArr}
-Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr}' ${letteraLonArr}
+                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}
+Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
 ΔΨ: ${deltaPsi.toFixed(5)}'
 Ψ Partenza: ${gradiLatGeo}° ${primiLatGeo.toFixed(5)} ${letteraLat}
 Ψ Arrivo: ${gradiLatGeoArr}° ${primiLatGeoArr.toFixed(5)}' ${letteraLatArr}`;

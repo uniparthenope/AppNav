@@ -38,10 +38,10 @@
             <!--Creo UI per inserire la latitudine-->
             <StackLayout row="3" col="0" class="riquadro">
                 <TextField id="idGradiLat" text="{{ inputGradi }}"
-                           hint="gradi" />
+                           hint="gradi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="3" col="1" class="riquadro">
-                <TextField id="idPrimiLat" text="{{ inputPrimilat }}" hint="primi" />
+                <TextField id="idPrimiLat" text="{{ inputPrimilat }}" hint="primi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="3" col="2" class="riquadro">
                 <TextField id="idLetteraLat" text="{{ inputLetteralat }}" hint="N/S" />
@@ -55,10 +55,10 @@
             </StackLayout>
             <!--Creo UI per inserire la longitudine-->
             <StackLayout row="5" col="0" class="riquadro">
-                <TextField id="idGradiLon" text="{{ inputGradilon }}" hint="gradi" />
+                <TextField id="idGradiLon" text="{{ inputGradilon }}" hint="gradi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="5" col="1" class="riquadro">
-                <TextField id="idPrimiLon" text="{{ inputPrimilon }}" hint="primi" />
+                <TextField id="idPrimiLon" text="{{ inputPrimilon }}" hint="primi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="5" col="2" class="riquadro">
                 <TextField id="idLetteraLon" text="{{ inputLetteralon }}" hint="E/W" />
@@ -70,7 +70,7 @@
                     <Label textWrap="true" text="Cammino [NM]"
                            fontSize="17" />
                 </StackLayout>
-                <TextField id="idCammino" text="{{ inputCammino }}" hint="miglia" />
+                <TextField id="idCammino" text="{{ inputCammino }}" hint="miglia" keyboardType="number" />
             </StackLayout>
 
             <!--Per non lasciare spazio vuoto inserisco il logo dell'università-->
@@ -83,7 +83,7 @@
                 <StackLayout class="titolo-riquadro">
                     <Label textWrap="true" text="Rotta vera" fontSize="17" />
                 </StackLayout>
-                <TextField id="idRottaVera" text="{{ inputRottavera }}" hint="gradi" />
+                <TextField id="idRottaVera" text="{{ inputRottavera }}" hint="gradi" keyboardType="number" />
             </StackLayout>
 
             <!--Creo UI selezionare il modello terrestre-->

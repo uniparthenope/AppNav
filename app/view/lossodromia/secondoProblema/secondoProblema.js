@@ -119,6 +119,7 @@ function SetInput(){
     letteraLon=idLetteraLon.text;
     letteraLatArr=idLetteraLatArr.text;
     letteraLonArr=idLetteraLonArr.text;
+    bug=0;
 
     //ciclo condizionale che controlla l'inserimento della latitudine di partenza
     if(parseInt(idGradiLat.text)===90){
@@ -626,8 +627,8 @@ Rotta vera: ${rottaVera.toFixed(2)}°
 ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}
 ϕ Crescente Arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}`;
             }else if (eccentricita!==0){
-                let gradiLatCre = Math.floor(latitudeCre), primiLatCre = (latitudeCre-gradiLatCre)*60;
-                let gradiLatCreArr = Math.floor(latitudeArrCre), primiLatArrCre = (latitudeArrCre-gradiLatCreArr)*60;
+                //let gradiLatCre = Math.floor(latitudeCre), primiLatCre = (latitudeCre-gradiLatCre)*60;
+                //let gradiLatCreArr = Math.floor(latitudeArrCre), primiLatArrCre = (latitudeArrCre-gradiLatCreArr)*60;
                 let gradiLatGeo = Math.floor(latitudeGeocentrica), primiLatGeo = (latitudeGeocentrica-gradiLatGeo)*60;
                 let gradiLatGeoArr = Math.floor(latitudeGeocentricaArr), primiLatGeoArr = (latitudeGeocentricaArr-gradiLatGeoArr)*60;
 
@@ -637,8 +638,8 @@ Rotta Vera: ${rottaVera.toFixed(2)}°
 Ψ Partenza: ${gradiLatGeo}° ${primiLatGeo.toFixed(5)}' ${letteraLat}
 Ψ Arrivo: ${gradiLatGeoArr}° ${primiLatGeoArr.toFixed(5)}' ${letteraLatArr}
 ΔΨ crescente: ${deltaPhiCre}'
-Ψ Partenza crescente: ${gradiLatCre}° ${primiLatCre.toFixed(5)}' ${letteraLat}
-Ψ Arrivo crescente: ${gradiLatCreArr}° ${primiLatArrCre.toFixed(5)}' ${letteraLatArr}`;
+Ψ Partenza crescente: ${latitudeCre.toFixed(5)}' ${letteraLat}
+Ψ Arrivo crescente: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}`;
             }
             break;
         case 1:

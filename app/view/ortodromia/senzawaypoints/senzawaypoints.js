@@ -162,6 +162,7 @@ function SetInput(){
     letteraLon=idLetteraLon.text;
     letteraLatArr=idLetteraLatArr.text;
     letteraLonArr=idLetteraLonArr.text;
+    bug=0;
 
     //ciclo condizionale che controlla l'inserimento della latitudine di partenza
     if(parseInt(idGradiLat.text)===90){
@@ -517,47 +518,48 @@ function RottaIniziale(){
 
 //___________________________________________________________
 /*funzione che calcola la rotta finale. Per il calcolo della rotta
-* finale si adopera il teorema di Clairout, teorema valido solo per
-* le geodetiche, che recita: "il prodotto tra il raggio del parallelo
-* per il punto e il seno dell'angolo che la geodetica forma con il
-* meridiano rimane costante". Detto ciò si ha
-*      cos(phiA)*sin(Ri)=cos(phiB)*sin(Rf)
-* quindi:
-*      Rf=arcsin(cos(phiA)/cos(phiB) * sin(Ri))
-*
-* dopo aver ottenuto il valore trasformare in circolare
+* finale si adopera il teorema di Eulero usando le variabili calcolate
+*    cos(90-phi)=cos(d0)*cos(90-phi')+sin(d0)*sin(90-phi')*cos(beta)
+*    beta=arccos(...)
+*    Rf=180-beta     se deltaLambda>0
+*    Rf=180+beta     se deltaLambda<0
 * */
-function   RottaFinale(){  //vecchia
-    if(letteraLatArr!==letteraLat){
+function   RottaFinale(){
+    if (letteraLat==="S"){
+        latitude*=(-1);
+    }
+
+    if (letteraLatArr==="S"){
         latitudeArr*=(-1);
     }
-    let rottaInizialeQuadrantale=Circolare2Quadrantale(rottaIniziale);
 
-    let num=Math.cos(Deg2Rad(latitude)) * Math.sin(Deg2Rad(rottaInizialeQuadrantale));
-    let den=Math.cos(Deg2Rad(latitudeArr));
-    let rottaFinaleQuad=Rad2Deg(Math.asin(num/den));
-    rottaFinale=Quadrantale2Circolare(rottaFinaleQuad,letteraDeltaPhi,letteraDeltaLambda);
+    let beta, num, den;
+    num= Math.cos(Deg2Rad((90-latitude)))-(Math.cos(Deg2Rad((cammino/60)))*Math.cos(Deg2Rad((90-latitudeArr))));
+    den= Math.sin(Deg2Rad((cammino/60)))*Math.sin(Deg2Rad((90-latitudeArr)));
 
+    beta = Rad2Deg(Math.acos(num/den));
 
-    if (letteraLatVertice===letteraLatArr){
-        if (letteraDeltaLambdaPrima==="E"){
-            if (longitudeVertice<longitudeArr){
-                rottaFinale=180-rottaFinale;
-            }
-        }
-    }else if (letteraLatVerticeOpp===letteraLatArr){
-        if (letteraDeltaLambdaPrima==="E"){
-            if (longitudeVerticeOpp<longitudeArr){
-                rottaFinale=180-rottaFinale;
-            }
-        }
+    switch (letteraDeltaLambda){
+        case "E":
+            rottaFinale=180-beta;
+            break;
+        case "W":
+            rottaFinale=180+beta;
+            break;
+        default:
+            alert("Errore determinazione rotta finale");
+            break;
     }
 
+    if (latitude<0){
+        latitude=Math.abs(latitude);
+    }
 
-    if(latitudeArr<0){
+    if (latitudeArr<0){
         latitudeArr=Math.abs(latitudeArr);
     }
-}//end function RottaFinale
+
+}//end function RottaFinale()
 //___________________________________________________________
 
 
@@ -649,6 +651,7 @@ function Vertici(){
             break;
         default:
             alert("Errore valutazione lettera latitudine vertice.");
+            break;
     }
 
     /*calcolo la longitudine del vertice con il metodo alternativo, ovvero seguendo la rotta iniziale, calcolo il
@@ -710,9 +713,9 @@ function Vertici(){
             break;
     }
 
-    if (latitudeVertice<0){
+  /*  if (latitudeVertice<0){
         latitudeVertice=Math.abs(latitudeVertice);
-    }
+    }*/
 
 
     //ciclo condizionale che determina la longitudine del vertice opposto
@@ -730,7 +733,7 @@ function Vertici(){
             alert("Errore valutazione longitudine vertice oppposto al primo.");
             break;
     }
-
+/*
     //ciclo che assegna le latitudini ai vertici
     switch (letteraLon){
         case "E":
@@ -771,7 +774,33 @@ function Vertici(){
             alert("Errore valutazione lettere coordinate vertici.");
             break;
     }
+*/
 
+    switch (letteraLat){
+        case "N":
+            if (latitudeVertice<0){
+                letteraLatVertice="S";
+                letteraLatVerticeOpp="N";
+                latitudeVertice=Math.abs(latitudeVertice);
+            }else {
+                letteraLatVertice="N";
+                letteraLatVerticeOpp="S";
+            }
+            break;
+        case "S":
+            if (latitudeVertice<0){
+                letteraLatVertice="N";
+                letteraLatVerticeOpp="S";
+                latitudeVertice=Math.abs(latitudeVertice);
+            }else {
+                letteraLatVertice="S";
+                letteraLatVerticeOpp="N";
+            }
+            break;
+        default:
+            alert("Erroe determinazione lettera coordinata vertici.");
+            break;
+    }
 }//end function Vertici();
 //___________________________________________________________
 
@@ -1240,6 +1269,7 @@ exports.onNavigazioneMistaTap=onNavigazioneMistaTap;
 //___________________________________________________________
 function SetParalleloLimite(){
     letteraLatParalleloLimite=idLetteraParalleloLimite.text;
+    bug=0;
 
     if (parseInt(idGradiParalleloLimite.text)===90){
         latitudeParalleloLimite=parseInt(idGradiParalleloLimite.text);
@@ -1385,6 +1415,7 @@ function DeltaLambdaVerticiNavMista(){
                     longitudeV1 = longitude+deltaLambdaV1;
                     if (longitudeV1>=180){
                         longitudeV1=360-longitudeV1;
+                        letteraLonV1="W";
                     }else if (longitudeV1>=0 && longitudeV1<180){
                         letteraLonV1="E";
                     }else {
@@ -1419,7 +1450,7 @@ function DeltaLambdaVerticiNavMista(){
                     longitudeV2 = (-longitudeArr)-deltaLambdaV2;
                     if (longitudeV2<0 && Math.abs(longitudeV2)>=180){
                         letteraLonV2="E";
-                        longitudeV2=360-longitudeV2;
+                        longitudeV2=360-Math.abs(longitudeV2);
                     }else if (longitudeV2<0 && Math.abs(longitudeV2)<180){
                         letteraLonV2="W";
                         longitudeV2=Math.abs(longitudeV2);
@@ -1505,7 +1536,61 @@ function RottaInizialeNavMista(){
     let rottaQuadrantale=Math.cos(Deg2Rad(latitudeParalleloLimite))/Math.cos(Deg2Rad(latitude));
     rottaQuadrantale=Rad2Deg(Math.asin(rottaQuadrantale));
 
-    rottaInizialeNavMista=Quadrantale2Circolare(rottaQuadrantale,letteraDeltaPhi,letteraDeltaLambda);
+    //prima di passarla in circolare devo determinare la lettera associata alla differenza di latitudine tra il punto di
+    //partenza e il vertice V1
+    let dPhiV, letteradPhiV;
+    switch (letteraLatParalleloLimite){
+        case "N":
+            switch (letteraLat){
+                case "N":
+                    dPhiV=latitudeParalleloLimite-latitude;
+                    if (dPhiV>=0){
+                        letteradPhiV="N";
+                    }else {
+                        letteradPhiV="S";
+                        dPhiV=Math.abs(dPhiV);
+                    }
+                    break;
+                case "S":
+                    dPhiV=latitudeParalleloLimite-(-latitude);
+                    if (dPhiV>=0){
+                        letteradPhiV="N";
+                    }else {
+                        letteradPhiV="S";
+                        dPhiV=Math.abs(dPhiV);
+                    }
+                    break;
+            }
+            break;
+        case "S":
+            switch (letteraLat){
+                case "N":
+                    dPhiV=(-latitudeParalleloLimite)-latitude;
+                    if (dPhiV>=0){
+                        letteradPhiV="N";
+                    }else {
+                        letteradPhiV="S";
+                        dPhiV=Math.abs(dPhiV);
+                    }
+                    break;
+                case "S":
+                    dPhiV=(-latitudeParalleloLimite)-(-latitude);
+                    if (dPhiV>=0){
+                        letteradPhiV="N";
+                    }else {
+                        letteradPhiV="S";
+                        dPhiV=Math.abs(dPhiV);
+                    }
+                    break;
+            }
+            break;
+        default:
+            alert("Errore valutazione rotta iniziale navigazione mista.");
+            break;
+    }
+
+    //trasformo la rotta da quadrantale in circolare
+    rottaInizialeNavMista=Quadrantale2Circolare(rottaQuadrantale,letteradPhiV,letteraDeltaLambda);
 }//end function RottaInizialeNavMista()
 //___________________________________________________________
 
@@ -1513,7 +1598,7 @@ function RottaInizialeNavMista(){
 //___________________________________________________________
 //funzione che calcola la rotta finale della navigazione mista
 function RottaFinaleNavMista(){
-    let rottaFinaleNavMistaQuad=Math.cos(Deg2Rad(latitudeParalleloLimite))/Math.cos(Deg2Rad(latitudeArr));
+   /* let rottaFinaleNavMistaQuad=Math.cos(Deg2Rad(latitudeParalleloLimite))/Math.cos(Deg2Rad(latitudeArr));
     rottaFinaleNavMistaQuad=Rad2Deg(Math.asin(rottaFinaleNavMistaQuad));
 
     rottaFinaleNavMista=Quadrantale2Circolare(rottaFinaleNavMistaQuad,letteraDeltaPhi,letteraDeltaLambda);
@@ -1530,6 +1615,40 @@ function RottaFinaleNavMista(){
                 rottaFinaleNavMista=180-rottaFinaleNavMista;
             }
         }
+    }*/
+
+    if (letteraLatArr==="S"){
+        latitude*=(-1);
+    }
+
+    if (letteraLatParalleloLimite==="S"){
+        latitudeArr*=(-1);
+    }
+
+    let beta, num, den;
+    num= Math.cos(Deg2Rad((90-latitudeParalleloLimite)))-(Math.cos(Deg2Rad((d2/60)))*Math.cos(Deg2Rad((90-latitudeArr))));
+    den= Math.sin(Deg2Rad((d2/60)))*Math.sin(Deg2Rad((90-latitudeArr)));
+
+    beta = Rad2Deg(Math.acos(num/den));
+
+    switch (letteraDeltaLambda){
+        case "E":
+            rottaFinaleNavMista=180-beta;
+            break;
+        case "W":
+            rottaFinaleNavMista=180+beta;
+            break;
+        default:
+            alert("Errore determinazione rotta finale");
+            break;
+    }
+
+    if (latitudeArr<0){
+        latitudeArr=Math.abs(latitudeArr);
+    }
+
+    if (latitudeParalleloLimite<0){
+        latitudeParalleloLimite=Math.abs(latitudeParalleloLimite);
     }
 
 }//end function RottaFinaleNavMista()
@@ -1549,6 +1668,9 @@ function DeltaLambdaV1V2(){
                         deltaLambdaVerticiNavMista=360-deltaLambdaVerticiNavMista;
                     }else if (deltaLambdaVerticiNavMista>=0 && deltaLambdaVerticiNavMista<180){
                         letteraDeltaLambdaNavMista="E";
+                    }else if (deltaLambdaVerticiNavMista<0){
+                        letteraDeltaLambdaNavMista="W";
+                        deltaLambdaVerticiNavMista=Math.abs(deltaLambdaVerticiNavMista);
                     }
                     break;
                 case "W":
@@ -1573,7 +1695,7 @@ function DeltaLambdaV1V2(){
                     if (deltaLambdaVerticiNavMista>=0 && deltaLambdaVerticiNavMista<180){
                         letteraDeltaLambdaNavMista="E";
                     }else if (deltaLambdaVerticiNavMista>=180){
-                        letteraDeltaLambdaNavMista="E";
+                        letteraDeltaLambdaNavMista="W";
                         deltaLambdaVerticiNavMista=360-deltaLambdaVerticiNavMista;
                     }
                     break;
@@ -1626,27 +1748,75 @@ function RottaParallelo(){
 
 
 //___________________________________________________________
+/*funzione che controlla la longitudine del vertice, per poter effettuare la navigazione mista
+Per il controllo trasformo le rotte iniziale e finale in semicircolare e poi faccio il confronto, ricordando che la
+rotta nel vertice è pari 90°
+*/
+
+function ControllaVerticeNavMista(){
+
+    let rottaInizialeSemiCircolare, letteraRottainiziale, rottaFinaleSemiCircolare, letteraRottaFinale;
+
+    if((rottaIniziale>0 && rottaIniziale<180)){
+        rottaInizialeSemiCircolare=rottaIniziale;
+        letteraRottainiziale="E";
+    }else if((rottaIniziale>180 && rottaIniziale<360)){
+        rottaInizialeSemiCircolare = 360-rottaIniziale;
+        letteraRottainiziale="W";
+    }
+
+    if((rottaFinale>0 && rottaFinale<180)){
+        rottaFinaleSemiCircolare=rottaFinale;
+        letteraRottaFinale="E";
+    }else if((rottaFinale>180 && rottaFinale<360)){
+        rottaFinaleSemiCircolare=360-rottaFinale;
+        letteraRottaFinale="W";
+    }
+
+    if ( (rottaInizialeSemiCircolare<90) && (rottaFinaleSemiCircolare<90) ){
+        bug=2; //non è possibile la navigazione mista
+    }else if ( ((rottaInizialeSemiCircolare>90)&&(rottaInizialeSemiCircolare<180)) && ((rottaFinaleSemiCircolare>90)&&(rottaFinaleSemiCircolare<180)) ){
+        bug=2; //non è possibile effettuare la navigazione mista
+    }else {
+        bug=0;
+    }
+
+
+
+
+
+}//end function ControllaVerticeNavMista()
+//___________________________________________________________
+
+
+//___________________________________________________________
 //funzione che risolve la navigazione mista
 function RisolviNavMista(){
-    SetParalleloLimite();
-switch (bug){
-    case 0:
-        CamminiOrtodromieNavMista();
-        RottaInizialeNavMista();
-        DeltaLambdaVerticiNavMista();
-        DeltaLambdaV1V2();
-        NavigazioneParallelo();
-        RottaParallelo();
-        RottaFinaleNavMista();
-        SetOutputNavMista();
-        break;
-    case 1:
-        alert("Errore risoluzione navigazione mista per controllo di bug.");
-        break;
-    default:
-        alert("Errore valutazione risoluzione navigazione mista.");
-        break;
-}
+    ControllaVerticeNavMista();
+    if (bug===2){
+        alert("Non si può risolvere la navigazione mista! \n Il vertice non è tra il punto di partenza e arrivo!");
+    }else {
+        SetParalleloLimite();
+        switch (bug){
+            case 0:
+                CamminiOrtodromieNavMista();
+                RottaInizialeNavMista();
+                DeltaLambdaVerticiNavMista();
+                DeltaLambdaV1V2();
+                NavigazioneParallelo();
+                RottaParallelo();
+                RottaFinaleNavMista();
+                SetOutputNavMista();
+                break;
+            case 1:
+                alert("Errore risoluzione navigazione mista per controllo di bug.");
+                break;
+            default:
+                alert("Errore valutazione risoluzione navigazione mista.");
+                break;
+        }
+    }
+
 }//end function RisolviNavMista()
 //___________________________________________________________
 
@@ -1714,6 +1884,7 @@ function SetInputPrimoProblema(){
     letteraLon=idLetteraLon1.text;
     cammino=parseFloat(idCammino.text);
     rottaIniziale=parseFloat(idRotta.text);
+    bug=0;
 
     //ciclo condizionale che memorizza la latitudine inserita e assegna eventuali bug, riuso come variabile di memoria
     //la variabile latitude dichiarata per il secondo problema di ortodromia

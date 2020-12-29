@@ -38,10 +38,10 @@
             </StackLayout>
             <!--Creo UI per inserimento latitudine-->
             <StackLayout row="3" col="0" class="riquadro">
-                <TextField id="idGradiLat" text="{{ inputGradiLat }}" hint="gradi" />
+                <TextField id="idGradiLat" text="{{ inputGradiLat }}" hint="gradi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="3" col="1" class="riquadro">
-                <TextField id="idPrimiLat" text="{{ inputPrimiLat }}" hint="primi" />
+                <TextField id="idPrimiLat" text="{{ inputPrimiLat }}" hint="primi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="3" col="2" class="riquadro">
                 <TextField id="idLetteraLat" text="{{ inputLetteraLat }}" hint="N/S" />
@@ -54,10 +54,10 @@
             </StackLayout>
             <!--Creo UI per inserimento longitudine-->
             <StackLayout row="5" col="0" class="riquadro">
-                <TextField id="idGradiLon" text="{{ inputGradiLon }}" hint="gradi" />
+                <TextField id="idGradiLon" text="{{ inputGradiLon }}" hint="gradi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="5" col="1" class="riquadro">
-                <TextField id="idPrimiLon" text="{{ inputPrimiLon }}" hint="primi" />
+                <TextField id="idPrimiLon" text="{{ inputPrimiLon }}" hint="primi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="5" col="2" class="riquadro">
                 <TextField id="idLetteraLon" text="{{ inputLetteraLon }}" hint="E/W" />
@@ -79,10 +79,10 @@
             </StackLayout>
             <!--Creo UI per inserimento latitudine-->
             <StackLayout row="8" col="0" class="riquadro">
-                <TextField id="idGradiLatArr" text="{{ inputGradiLatArr }}" hint="gradi" />
+                <TextField id="idGradiLatArr" text="{{ inputGradiLatArr }}" hint="gradi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="8" col="1" class="riquadro">
-                <TextField id="idPrimiLatArr" text="{{ inputPrimiLatArr }}" hint="primi" />
+                <TextField id="idPrimiLatArr" text="{{ inputPrimiLatArr }}" hint="primi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="8" col="2" class="riquadro">
                 <TextField id="idLetteraLatArr" text="{{ inputLetteraLatArr }}" hint="N/S" />
@@ -95,10 +95,10 @@
             </StackLayout>
             <!--Creo Ui per inserimento longitudine-->
             <StackLayout row="10" col="0" class="riquadro">
-                <TextField id="idGradiLonArr" text="{{ inputGradiLonArr }}" hint="gradi" />
+                <TextField id="idGradiLonArr" text="{{ inputGradiLonArr }}" hint="gradi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="10" col="1" class="riquadro">
-                <TextField id="idPrimiLonArr" text="{{ inputPrimiLonArr }}" hint="primi" />
+                <TextField id="idPrimiLonArr" text="{{ inputPrimiLonArr }}" hint="primi" keyboardType="number" />
             </StackLayout>
             <StackLayout row="10" col="2" class="riquadro">
                 <TextField id="idLetteraLonArr" text="{{ inputLetteraLonArr }}" hint="E/W" />
@@ -122,7 +122,7 @@
             <!--Creo UI per inserimento numero waypoints e scelta tipologia di calclolo-->
             <StackLayout row="12" col="0" colSpan="1" class="riquadro waypoints">
                 <TextField id="idNumeroWaypoints" text="{{ inputNumeroWaypoints }}"
-                           hint="numero waypoints"/>
+                           hint="numero waypoints" keyboardType="number" />
             </StackLayout>
             <StackLayout row="12" col="1" colSpan="2" class="riquadro">
                 <ListPicker id="tipolist" items="{{ tipologia }}"

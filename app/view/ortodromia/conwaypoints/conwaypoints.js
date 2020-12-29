@@ -141,6 +141,7 @@ function SetInput(){
     letteraLatArr=idLetteraLatArr.text;
     letteraLonArr=idLetteraLonArr.text;
     numeroWaypoints=parseInt(idNumeroWaypoints.text);
+    bug=0;
 
     //ciclo condizionale che controlla l'inserimento della latitudine di partenza
     if(parseInt(idGradiLat.text)===90){
@@ -496,47 +497,49 @@ function RottaIniziale(){
 
 //___________________________________________________________
 /*funzione che calcola la rotta finale. Per il calcolo della rotta
-* finale si adopera il teorema di Clairout, teorema valido solo per
-* le geodetiche, che recita: "il prodotto tra il raggio del parallelo
-* per il punto e il seno dell'angolo che la geodetica forma con il
-* meridiano rimane costante". Detto ciò si ha
-*      cos(phiA)*sin(Ri)=cos(phiB)*sin(Rf)
-* quindi:
-*      Rf=arcsin(cos(phiA)/cos(phiB) * sin(Ri))
-*
-* dopo aver ottenuto il valore trasformare in circolare
+* finale si adopera il teorema di Eulero usando le variabili calcolate
+*    cos(90-phi)=cos(d0)*cos(90-phi')+sin(d0)*sin(90-phi')*cos(beta)
+*    beta=arccos(...)
+*    Rf=180-beta     se deltaLambda>0
+*    Rf=180+beta     se deltaLambda<0
 * */
-function RottaFinale(){
-    if(letteraLatArr!==letteraLat){
+function   RottaFinale(){
+    if (letteraLat==="S"){
+        latitude*=(-1);
+    }
+
+    if (letteraLatArr==="S"){
         latitudeArr*=(-1);
     }
-    let rottaInizialeQuadrantale=Circolare2Quadrantale(rottaIniziale);
 
-    let num=Math.cos(Deg2Rad(latitude)) * Math.sin(Deg2Rad(rottaInizialeQuadrantale));
-    let den=Math.cos(Deg2Rad(latitudeArr));
-    let rottaFinaleQuad=Rad2Deg(Math.asin(num/den));
-    rottaFinale=Quadrantale2Circolare(rottaFinaleQuad,letteraDeltaPhi,letteraDeltaLambda);
+    let beta, num, den;
+    num= Math.cos(Deg2Rad((90-latitude)))-(Math.cos(Deg2Rad((cammino/60)))*Math.cos(Deg2Rad((90-latitudeArr))));
+    den= Math.sin(Deg2Rad((cammino/60)))*Math.sin(Deg2Rad((90-latitudeArr)));
 
-    if (letteraLatVertice===letteraLatArr){
-        if (letteraDeltaLambdaPrima==="E"){
-            if (longitudeVertice<longitudeArr){
-                rottaFinale=180-rottaFinale;
-            }
-        }
-    }else if (letteraLatVerticeOpp===letteraLatArr){
-        if (letteraDeltaLambdaPrima==="E"){
-            if (longitudeVerticeOpp<longitudeArr){
-                rottaFinale=180-rottaFinale;
-            }
-        }
+    beta = Rad2Deg(Math.acos(num/den));
+
+    switch (letteraDeltaLambda){
+        case "E":
+            rottaFinale=180-beta;
+            break;
+        case "W":
+            rottaFinale=180+beta;
+            break;
+        default:
+            alert("Errore determinazione rotta finale");
+            break;
     }
 
-    if(latitudeArr<0){
+    if (latitude<0){
+        latitude=Math.abs(latitude);
+    }
+
+    if (latitudeArr<0){
         latitudeArr=Math.abs(latitudeArr);
     }
-}//end function RottaFinale
-//___________________________________________________________
 
+}//end function RottaFinale()
+//___________________________________________________________
 
 //___________________________________________________________
 //funzione che trasforma il valore, passato in input, in rotta quadrantale
@@ -626,6 +629,7 @@ function Vertici(){
             break;
         default:
             alert("Errore valutazione lettera latitudine vertice.");
+            break;
     }
 
     /*calcolo la longitudine del vertice con il metodo alternativo, ovvero seguendo la rotta iniziale, calcolo il
@@ -687,9 +691,9 @@ function Vertici(){
             break;
     }
 
-    if (latitudeVertice<0){
-        latitudeVertice=Math.abs(latitudeVertice);
-    }
+    /*  if (latitudeVertice<0){
+          latitudeVertice=Math.abs(latitudeVertice);
+      }*/
 
 
     //ciclo condizionale che determina la longitudine del vertice opposto
@@ -707,48 +711,74 @@ function Vertici(){
             alert("Errore valutazione longitudine vertice oppposto al primo.");
             break;
     }
+    /*
+        //ciclo che assegna le latitudini ai vertici
+        switch (letteraLon){
+            case "E":
+                if (letteraLonVertice==="E"){
+                    letteraLatVertice=letteraLat;
+                    if (letteraLatVertice==="N"){
+                        letteraLatVerticeOpp="S";
+                    }else if (letteraLatVertice==="S"){
+                        letteraLatVerticeOpp="N";
+                    }
+                }else {
+                    letteraLatVertice=letteraLatArr;
+                    if (letteraLatVertice==="N"){
+                        letteraLatVerticeOpp="S";
+                    }else if (letteraLatVertice==="S"){
+                        letteraLatVerticeOpp="N";
+                    }
+                }
+                break;
+            case "W":
+                if (letteraLonVertice==="W"){
+                    letteraLatVertice=letteraLat;
+                    if (letteraLatVertice==="N"){
+                        letteraLatVerticeOpp="S";
+                    }else if (letteraLatVertice==="S"){
+                        letteraLatVerticeOpp="N";
+                    }
+                }else {
+                    letteraLatVertice=letteraLatArr;
+                    if (letteraLatVertice==="N"){
+                        letteraLatVerticeOpp="S";
+                    }else if (letteraLatVertice==="S"){
+                        letteraLatVerticeOpp="N";
+                    }
+                }
+                break;
+            default:
+                alert("Errore valutazione lettere coordinate vertici.");
+                break;
+        }
+    */
 
-    //ciclo che assegna le latitudini ai vertici
-    switch (letteraLon){
-        case "E":
-            if (letteraLonVertice==="E"){
-                letteraLatVertice=letteraLat;
-                if (letteraLatVertice==="N"){
-                    letteraLatVerticeOpp="S";
-                }else if (letteraLatVertice==="S"){
-                    letteraLatVerticeOpp="N";
-                }
+    switch (letteraLat){
+        case "N":
+            if (latitudeVertice<0){
+                letteraLatVertice="S";
+                letteraLatVerticeOpp="N";
+                latitudeVertice=Math.abs(latitudeVertice);
             }else {
-                letteraLatVertice=letteraLatArr;
-                if (letteraLatVertice==="N"){
-                    letteraLatVerticeOpp="S";
-                }else if (letteraLatVertice==="S"){
-                    letteraLatVerticeOpp="N";
-                }
+                letteraLatVertice="N";
+                letteraLatVerticeOpp="S";
             }
             break;
-        case "W":
-            if (letteraLonVertice==="W"){
-                letteraLatVertice=letteraLat;
-                if (letteraLatVertice==="N"){
-                    letteraLatVerticeOpp="S";
-                }else if (letteraLatVertice==="S"){
-                    letteraLatVerticeOpp="N";
-                }
+        case "S":
+            if (latitudeVertice<0){
+                letteraLatVertice="N";
+                letteraLatVerticeOpp="S";
+                latitudeVertice=Math.abs(latitudeVertice);
             }else {
-                letteraLatVertice=letteraLatArr;
-                if (letteraLatVertice==="N"){
-                    letteraLatVerticeOpp="S";
-                }else if (letteraLatVertice==="S"){
-                    letteraLatVerticeOpp="N";
-                }
+                letteraLatVertice="S";
+                letteraLatVerticeOpp="N";
             }
             break;
         default:
-            alert("Errore valutazione lettere coordinate vertici.");
+            alert("Erroe determinazione lettera coordinata vertici.");
             break;
     }
-
 }//end function Vertici();
 //___________________________________________________________
 
@@ -1276,7 +1306,7 @@ function SetOutputWay(){
         gradiLonWay[i]=Math.floor(lonWaypoints[i]);
         primiLonWay[i]=((lonWaypoints[i]-gradiLonWay[i])*60).toFixed(5);
 
-        out = out + i+"°"+" Waypoint\n"+gradiLatWay[i]+"°"+" "+primiLatWay[i]+"'"+letteraLatWaypoints[i]+" "+gradiLonWay[i]+"°"+" "+primiLonWay[i]+"'"+letteraLonWaypoints[i]+"\n";
+        out = out +"\n"+ i+"°"+" Waypoint\n"+gradiLatWay[i]+"°"+" "+primiLatWay[i]+"'"+letteraLatWaypoints[i]+" "+gradiLonWay[i]+"°"+" "+primiLonWay[i]+"'"+letteraLonWaypoints[i]+"\n";
 
     }
 
@@ -1284,7 +1314,7 @@ function SetOutputWay(){
 
     gradiLatWay[j]=Math.floor(latWaypoints[j]); primiLatWay[j]=((latWaypoints[j]-gradiLatWay[j])*60).toFixed(5);
     gradiLonWay[j]=Math.floor(lonWaypoints[j]); primiLonWay[j]=((lonWaypoints[j]-gradiLonWay[j])*60).toFixed(5);
-    out=out+"Punto di Arrivo\n"+gradiLatWay[j]+"°"+" "+primiLatWay[j]+"'"+letteraLatWaypoints[j]+" "+gradiLonWay[j]+"°"+" "+primiLonWay[j]+"'"+letteraLonWaypoints[j];
+    out=out+"\nPunto di Arrivo\n"+gradiLatWay[j]+"°"+" "+primiLatWay[j]+"'"+letteraLatWaypoints[j]+" "+gradiLonWay[j]+"°"+" "+primiLonWay[j]+"'"+letteraLonWaypoints[j];
 
     risultatiWaypoints.text=`\n COORDINATE WAYPOINTS
 
