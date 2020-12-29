@@ -25,7 +25,8 @@
   "homepage": "https://github.com/NativeScript/nativescript-app-templates",
   "dependencies": {
     "@nativescript/core": "~7.0.0",
-    "@nativescript/theme": "~2.3.0"
+    "@nativescript/theme": "~2.3.0",
+    "nativescript-appversion": "^1.4.4"
   },
   "devDependencies": {
     "@nativescript/android": "7.0.1",
