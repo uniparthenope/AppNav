@@ -533,23 +533,45 @@ function   RottaFinale(){
         latitudeArr*=(-1);
     }
 
-    let beta, num, den;
-    num= Math.cos(Deg2Rad((90-latitude)))-(Math.cos(Deg2Rad((cammino/60)))*Math.cos(Deg2Rad((90-latitudeArr))));
-    den= Math.sin(Deg2Rad((cammino/60)))*Math.sin(Deg2Rad((90-latitudeArr)));
-
-    beta = Rad2Deg(Math.acos(num/den));
-
-    switch (letteraDeltaLambda){
-        case "E":
-            rottaFinale=180-beta;
+    /*
+    * Creo ciclo condizionale che permette di risolvere le ambiguità quando sin(cammino/60)=0, che coincidono quando il
+    * valore del cammino è tale di aver percorso il giro completo del globo o mezzo giro,
+    * quindi quando cammino=21600NM o cammino=10800NM
+    * */
+    switch (cammino){
+        case 21600:
+            rottaFinale = rottaIniziale;
             break;
-        case "W":
-            rottaFinale=180+beta;
+
+        case 10800:
+            rottaFinale = rottaIniziale+180;
+            if (rottaFinale>360){
+                rottaFinale = rottaFinale-360;
+            }
             break;
+
         default:
-            alert("Errore determinazione rotta finale");
-            break;
-    }
+            let beta, num, den;
+            num= Math.cos(Deg2Rad((90-latitude)))-(Math.cos(Deg2Rad((cammino/60)))*Math.cos(Deg2Rad((90-latitudeArr))));
+            den= Math.sin(Deg2Rad((cammino/60)))*Math.sin(Deg2Rad((90-latitudeArr)));
+
+            beta = Rad2Deg(Math.acos(num/den));
+
+            switch (letteraDeltaLambda){
+                case "E":
+                    rottaFinale=180-beta;
+                    break;
+                case "W":
+                    rottaFinale=180+beta;
+                    break;
+                default:
+                    alert("Errore determinazione rotta finale");
+                    break;
+            }
+
+        break;
+
+    }//end switch(cammino)
 
     if (latitude<0){
         latitude=Math.abs(latitude);
@@ -1088,7 +1110,14 @@ exports.onConfrontaTap=onConfrontaTap;
 //___________________________________________________________
 function SetLatDeltaPhiCre(latA,latB,letteraLatA,letteraLatB){
     let lat45=45+(latA/2);
-    let lat45Arr=45+(latB/2);
+    let lat45Arr;
+
+    if (latB===90){
+        lat45Arr = 45+(89.99999/2);
+    }else {
+        lat45Arr=45+(latB/2);
+    }
+
 
     //calcolo le latitudini crescenti dei punti, valori espressi in primi sessaggesimali
     let latitudeCreA = (10800/Math.PI) * Math.log(Math.tan(Deg2Rad(lat45)));
@@ -1964,6 +1993,10 @@ function LatitudineArrivo(){
         latitude*=(-1);
     }
 
+
+
+
+
     latitudeArr = Math.sin(Deg2Rad(latitude))*Math.cos(Deg2Rad(cammino/60))+Math.cos(Deg2Rad(latitude))*Math.sin(Deg2Rad(cammino/60))*Math.cos(Deg2Rad(rottaIniziale));
     latitudeArr=Rad2Deg(Math.asin(latitudeArr));
 
@@ -1976,6 +2009,9 @@ function LatitudineArrivo(){
     }else {
         alert("Errorre valutazione lettera latitudine arrivo, primo problema di ortodromia.");
     }
+
+
+
 
     if (latitude<0){
         latitude=Math.abs(latitude);
@@ -1997,14 +2033,30 @@ function DeltaLambdaPrimoProblema(){
         latitude*=(-1);
     }
 
+    switch (cammino){ //costrutto condizionale che risolve l'ambiguità che si verifica nel calcolare arccos(1), dall'instabilità numerica esce NaN
+        case 21600:
+            deltaLambda=0;
+            break;
+        case 10800:
+            deltaLambda=180;
+            break;
+        default:
+            let num = Math.cos(Deg2Rad(cammino/60))-Math.sin(Deg2Rad(latitude))*Math.sin((Deg2Rad(latitudeArr)));
+            let den = Math.cos(Deg2Rad(latitude))*Math.cos(Deg2Rad(latitudeArr));
+
+            deltaLambda = Rad2Deg(Math.acos(num/den));
+            break;
+    }
+/*
     let num = Math.cos(Deg2Rad(cammino/60))-Math.sin(Deg2Rad(latitude))*Math.sin((Deg2Rad(latitudeArr)));
     let den = Math.cos(Deg2Rad(latitude))*Math.cos(Deg2Rad(latitudeArr));
 
     deltaLambda = Rad2Deg(Math.acos(num/den));
+*/
 
     //ciclo condizionale innestato che assegna la lettera coordinata alla differenza di longitudine
     let semipiano;
-    if ((rottaIniziale>0 && rottaIniziale<90) || (rottaIniziale>90 && rottaIniziale<180)){//semipiano est
+    if ((rottaIniziale>0 && rottaIniziale<=90) || (rottaIniziale>90 && rottaIniziale<180)){//semipiano est
         semipiano="est";
         if (deltaLambda>=0 && deltaLambda<180){
             letteraDeltaLambda="E";
@@ -2014,7 +2066,7 @@ function DeltaLambdaPrimoProblema(){
             letteraDeltaLambdaPrima="E";
             deltaLambda=360-deltaLambda;
         }
-    }else if ((rottaIniziale>180 && rottaIniziale<270) || (rottaIniziale>270 && rottaIniziale<360)){
+    }else if ((rottaIniziale>180 && rottaIniziale<=270) || (rottaIniziale>270 && rottaIniziale<360)){
         semipiano="ovest";
         if (deltaLambda<=0 && Math.abs(deltaLambda)<180){
             letteraDeltaLambda="W";
@@ -2137,6 +2189,17 @@ function RisolviPrimoProblema(){
 function SetOutputPrimoProblema(){
    switch (tipoProblema){
        case "navigazione generale":
+           switch (cammino){
+               case 21600:
+                   latitudeArr=Math.abs(latitude);
+                   longitudeArr=Math.abs(longitude);
+                   letteraLonArr=letteraLon;
+                   break;
+               case 10800:
+                   latitudeArr=Math.abs(latitude);
+                   break;
+           }
+
            let gradiLat=Math.floor(latitudeArr), primiLat=(latitudeArr-gradiLat)*60;
            let gradiLon=Math.floor(longitudeArr), primiLon=(longitudeArr-gradiLon)*60;
            let gradiLatVert=Math.floor(latitudeVertice), primiLatVert=(latitudeVertice-gradiLatVert)*60;
@@ -2550,18 +2613,32 @@ function SetLatxDeltaPhiCrex(){
              latitudeX=latitude+(deltaPhiX/60);
              if (latitudeX>=0){
                  letteraLatX="N";
+                 if (latitudeX>90){
+                     latitudeX=90;
+                 }
              }else{
                  letteraLatX="S";
-                 latitudeX=Math.abs(latitudeX);
+                 if (Math.abs(latitudeX)>90){
+                     latitudeX=90;
+                 }else {
+                     latitudeX=Math.abs(latitudeX);
+                 }
              }
              break;
          case "S":
              latitudeX=(-latitude)+(deltaPhiX/60);
              if (latitudeX>=0){
                  letteraLatX="N";
+                 if (latitudeX>90){
+                     latitudeX=90;
+                 }
              }else {
                  letteraLatX="S";
-                 latitudeX=Math.abs(latitudeX);
+                 if (Math.abs(latitudeX)>90){
+                     latitudeX=90;
+                 }else {
+                     latitudeX=Math.abs(latitudeX);
+                 }
              }
              break;
          default:
@@ -2586,21 +2663,32 @@ function DeltaLambdaPrimoProblemaLosso(deltaPhiCreAB, letteraDeltaPhiAB, lonA, l
         lonA=Math.abs(lonA)
     }
 
-    deltaLambdaX=deltaPhiCreAB*Math.tan(Deg2Rad(Circolare2Quadrantale(rotta)));
-    deltaLambdaX=deltaLambdaX/60;
+    if (rotta===90 || rotta===270){
+        deltaLambdaX = (cammino/Math.cos(Deg2Rad(latitude)))/60;
+    }else{
+        deltaLambdaX=deltaPhiCreAB*Math.tan(Deg2Rad(Circolare2Quadrantale(rotta)));
+        deltaLambdaX=deltaLambdaX/60;
+    }
+
+
+
+    if (deltaLambdaX/360 > 1){ //cioè se il deltaLambda appena calcolato fa sì di percorrere più giri della superficie terrestre
+        let n = Math.floor(deltaLambdaX/360); //numero delle rotazioni attorno al globo
+        deltaLambdaX = deltaLambdaX - (n*360);
+    }
 
     if (deltaLambdaX>180){
-        if ((rotta>0&&rotta<90) ||(rotta>90&&rotta<180)){//caso il mobile supera antimeridiano da E->W
+        if ((rotta>0&&rotta<=90) ||(rotta>90&&rotta<180)){//caso il mobile supera antimeridiano da E->W
             deltaLambdaX=360-deltaLambdaX;
             letteraDeltaLambdaX="W";
-        }else if ((rotta>180&&rotta<270) || (rotta>270&&rotta<360)){//caso il mobile supera antimeridiano da W->E
+        }else if ((rotta>180&&rotta<=270) || (rotta>270&&rotta<360)){//caso il mobile supera antimeridiano da W->E
             deltaLambdaX=360-deltaLambdaX;
             letteraDeltaLambdaX="E";
         }
     }else if (deltaLambdaX<=180){
-        if((rotta>0&&rotta<90) || (rotta>90&&rotta<180)){
+        if((rotta>0&&rotta<=90) || (rotta>90&&rotta<180)){
             letteraDeltaLambdaX="E";
-        }else if ((rotta>180&&rotta<270) || (rotta>270&&rotta<360)){
+        }else if ((rotta>180&&rotta<=270) || (rotta>270&&rotta<360)){
             letteraDeltaLambdaX="W";
         }
     }else {
@@ -2838,11 +2926,15 @@ function RisolviEquatorePrimoProblema(){
 function RisolviPrimoProblemaLossodromia(){
     switch (tipoProblema){
         case "navigazione generale":
-            let risultatiCalcoli=SetLatDeltaPhiCre(latitude,latitudeArr,letteraLat,letteraLatArr);
-            latitudeCre=risultatiCalcoli[0];
-            latitudeArrCre=risultatiCalcoli[1];
-            deltaPhiCre=risultatiCalcoli[2];
-            RottaVera();
+            if (cammino===21600){
+                rottaVera = rottaIniziale;
+            }else {
+                let risultatiCalcoli=SetLatDeltaPhiCre(latitude,latitudeArr,letteraLat,letteraLatArr);
+                latitudeCre=risultatiCalcoli[0];
+                latitudeArrCre=risultatiCalcoli[1];
+                deltaPhiCre=risultatiCalcoli[2];
+                RottaVera();
+            }
             SetLatxDeltaPhiCrex();
             let risultatiCalcoli1=SetLatDeltaPhiCre(latitude,latitudeX,letteraLat,letteraLatX);
             latitudeCre=risultatiCalcoli1[0];
@@ -2917,10 +3009,10 @@ Rotta Vera: ${rottaVera.toFixed(2)}°`;
             break;
 
         case "navigazione equatore":
-            let gradiLonX=Math.floor(longitudeX), primiLonX=(longitudeX-gradiLonX)*60;
+            let gradiLonX=Math.floor(longitudeArr), primiLonX=(longitudeArr-gradiLonX)*60;
 
             risultatiLossodromia1.text=`Punto di Arrivo
-Longitudine: ${gradiLonX}° ${primiLonX.toFixed(5)}' ${letteraLonX}`;
+Longitudine: ${gradiLonX}° ${primiLonX.toFixed(5)}' ${letteraLonArr}`;
             break;
 
         case "navigazione meridiano":

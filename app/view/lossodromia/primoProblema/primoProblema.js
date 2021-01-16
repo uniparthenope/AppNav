@@ -93,7 +93,7 @@ function onTapCalcolo(args){
     var button = args.object;
     SetInput();
     RisolviPrimoProblema();
-    SetOutput();
+
 
     console.log(tipolist);
     console.log(eccentricita);
@@ -161,7 +161,7 @@ function SetInput(){
             eccentricita=0;
             break;
         case "WGS84":
-            let a=6378137; let schiacciamento=1/298.3;
+            let a=6378137; let schiacciamento=1/298.26;
             let b=a-(a*schiacciamento);
             let num=Math.pow(a,2)-Math.pow(b,2); let den=Math.pow(a,2);
             eccentricita = Math.sqrt(num/den);
@@ -175,7 +175,7 @@ function SetInput(){
     //ciclo condizionale che definisce la tipologia di problema
     switch (rottaVera){
         case 90:
-            tipoProblema="navigazioe parallelo";
+            tipoProblema="navigazione parallelo";
             break;
         case 270:
             tipoProblema="navigazione parallelo";
@@ -255,9 +255,16 @@ function DeltaPhiLatArr(){
 
     if (latitudeGeocentricaArr>=0){
         letteraLatArr = "N";
+        if (latitudeGeocentricaArr>90){
+            latitudeGeocentricaArr=90;
+        }
     }else if (latitudeGeocentricaArr<0){
         letteraLatArr = "S";
-        latitudeGeocentricaArr=Math.abs(latitudeGeocentricaArr);
+        if (Math.abs(latitudeGeocentricaArr)>90){
+            latitudeGeocentricaArr=90;
+        }else {
+            latitudeGeocentricaArr=Math.abs(latitudeGeocentricaArr);
+        }
     }else{
         alert("Errore valutazione lettera latitudine arrivo.");
     }
@@ -277,10 +284,15 @@ function DeltaPhiCrescente(){
     //calcolo le latitudini crescenti
     let lat45 = 45 + (latitudeGeocentrica/2);
     lat45 = Deg2Rad(lat45);
-    let lat45Arr = 45 + (latitudeGeocentricaArr/2);
-    lat45Arr = Deg2Rad(lat45Arr);
     latitudeCre = (10800/Math.PI) * Math.log(Math.tan(lat45));
-    latitudeArrCre = (10800/Math.PI) * Math.log(Math.tan(lat45Arr));
+
+    if (latitudeGeocentricaArr===90){
+        latitudeArrCre=(10800/Math.PI)*Math.log(Math.tan(Deg2Rad((45+(89.99999/2)))));
+    }else {
+        let lat45Arr = 45 + (latitudeGeocentricaArr/2);
+        lat45Arr = Deg2Rad(lat45Arr);
+        latitudeArrCre = (10800/Math.PI) * Math.log(Math.tan(lat45Arr));
+    }
 
 
     if (letteraLatArr==="N" && letteraLat==="N"){
@@ -327,6 +339,11 @@ function DeltaLambdaLonArr(){
 
     deltaLambda = Math.abs((deltaPhiCre/60) * Math.tan(rottaRad));
 
+    if (deltaLambda/360 > 1){ //cioè se il deltaLambda appena calcolato fa sì di percorrere più giri della superficie terrestre
+        let n = Math.floor(deltaLambda/360); //numero delle rotazioni attorno al globo
+        deltaLambda = deltaLambda - (n*360);
+    }
+
     //creo ciclo condizonale per controllare se il deltaLambda è maggiore di 360°
     if (deltaLambda>180){
         if ((rottaVera>0&&rottaVera<90)||(rottaVera>90&&rottaVera<180)){//caso il mobile supera antimeridiano da E->W
@@ -364,6 +381,7 @@ function DeltaLambdaLonArr(){
                         letteraLonArr="E";
                     }else{
                         letteraLonArr="W";
+                        longitudeArr=Math.abs(longitudeArr);
                     }
                     break;
                 default:
@@ -426,6 +444,9 @@ function NavigazioneMeridiano(){
                 latitudeArr=Math.atan(num/den);
                 latitudeArr=Rad2Deg(latitudeArr);
                 letteraLatArr="N";
+                longitudeArr=longitude;
+                letteraLonArr=letteraLon;
+
             }else if ((rottaVera===180)&&(cammino<(90+latitudeGeocentrica)*60)){
                 latitudeGeocentricaArr=latitudeGeocentrica-deltaPsi;
                 if (latitudeGeocentricaArr>=0){
@@ -438,6 +459,8 @@ function NavigazioneMeridiano(){
                 let den=1-Math.pow(eccentricita,2);
                 latitudeArr=Math.atan(num/den);
                 latitudeArr=Rad2Deg(latitudeArr);
+                longitudeArr=longitude;
+                letteraLonArr=letteraLon;
             }
             break;
         case "S":
@@ -457,6 +480,9 @@ function NavigazioneMeridiano(){
                 let den=1-Math.pow(eccentricita,2);
                 latitudeArr=Math.atan(num/den);
                 latitudeArr=Rad2Deg(latitudeArr);
+                longitudeArr=longitude;
+                letteraLonArr=letteraLon;
+
             }else if ((rottaVera===180)&&(cammino<colatitudine*60)){
                 latitudeGeocentricaArr=(-latitudeGeocentrica)-deltaPsi;
                 latitudeGeocentricaArr=Math.abs(latitudeGeocentricaArr);
@@ -465,13 +491,17 @@ function NavigazioneMeridiano(){
                 let den=1-Math.pow(eccentricita,2);
                 latitudeArr=Math.atan(num/den);
                 latitudeArr=Rad2Deg(latitudeArr);
+                longitudeArr=longitude;
+                letteraLonArr=letteraLon;
+
             }
             break;
         default:
             alert("Errore calcolo navigazione su meridiano.");
+            break;
     }
 
-    longitudeArr=longitude; letteraLonArr=letteraLon;
+
 }//end function NavigazioneMeridiano()
 //___________________________________________________________
 
@@ -484,6 +514,11 @@ function NavigazioneParallelo(){
     latitudeGeocentrica = Math.atan((1-Math.pow(eccentricita,2))*Math.tan(Deg2Rad(latitude)));
 
     deltaLambda = (cammino/Math.cos(latitudeGeocentrica))/60;
+
+    if (deltaLambda/360 > 1){ //cioè se il deltaLambda appena calcolato fa sì di percorrere più giri della superficie terrestre
+        let n = Math.floor(deltaLambda/360); //numero delle rotazioni attorno al globo
+        deltaLambda = deltaLambda - (n*360);
+    }
 
     if ((deltaLambda>180) && (rottaVera===90)){//caso passaggio antimeridiano da E->W
         deltaLambda=360-deltaLambda;
@@ -533,6 +568,7 @@ function NavigazioneParallelo(){
                         letteraLonArr="E";
                     }else{
                         letteraLonArr="W";
+                        longitudeArr=Math.abs(longitudeArr);
                     }
                     break;
                 case "W":
@@ -572,12 +608,15 @@ function RisolviPrimoProblema(){
                     DeltaPhiLatArr();
                     DeltaPhiCrescente();
                     DeltaLambdaLonArr();
+                    SetOutput();
                     break;
                 case "navigazione meridiano":
                     NavigazioneMeridiano();
+                    SetOutputParticolari();
                     break;
                 case "navigazione parallelo":
                     NavigazioneParallelo();
+                    SetOutputParticolari();
                     break;
                 default:
                     alert("Errore nella risoluzione del primo problema di lossodromia.");
@@ -601,6 +640,7 @@ function SetOutput(){
     let gradiLonArr=Math.floor(longitudeArr), primiLonArr=60*(longitudeArr-gradiLonArr);
     let gradiLatGeo=Math.floor(latitudeGeocentrica), primiLatGeo=60*(latitudeGeocentrica-gradiLatGeo);
     let gradiLatGeoArr=Math.floor(latitudeGeocentricaArr), primiLatGeoArr=60*(latitudeGeocentricaArr-gradiLatGeoArr);
+    deltaLambda=Math.abs(deltaLambda);
 
     switch (bug){
         case 0:
@@ -609,13 +649,13 @@ function SetOutput(){
 Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
 Δϕ Crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPhi}
 ϕ Crescente Arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}
-ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}
-Δλ: ${deltaLambda.toFixed(9)}° ${letteraDeltaLambda}`;
+ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}`;
+                //come output per sfera c'era anche   Δλ: ${deltaLambda.toFixed(9)}° ${letteraDeltaLambda}
             }else{
                 risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}
 Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
 ΔΨ: ${deltaPsi.toFixed(5)}'
-Ψ Partenza: ${gradiLatGeo}° ${primiLatGeo.toFixed(5)} ${letteraLat}
+Ψ Partenza: ${gradiLatGeo}° ${primiLatGeo.toFixed(5)}' ${letteraLat}
 Ψ Arrivo: ${gradiLatGeoArr}° ${primiLatGeoArr.toFixed(5)}' ${letteraLatArr}`;
             }
             break;
@@ -624,4 +664,35 @@ Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
             break;
     }
 }//end function SetOutput()
+//___________________________________________________________
+
+
+//___________________________________________________________
+//funzione che gestisce gli output dei casi particolari, navigazione parallelo e meridiano
+function SetOutputParticolari(){
+    switch (bug){
+        case 0:
+            switch (tipoProblema){
+                case "navigazione meridiano":
+                    let gradiLatArr=Math.floor(latitudeArr), primiLatArr=(latitudeArr-gradiLatArr)*60;
+
+                    risultati.text=`Navigazione su meridiano
+Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}`;
+                    break;
+
+                case "navigazione parallelo":
+                    let gradiLonArr=Math.floor(longitudeArr), primiLonArr=(longitudeArr-gradiLonArr)*60;
+
+                    risultati.text=`Navigazione su parallelo
+Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}`;
+                    break;
+            }
+            break;
+
+        case 1:
+            risultati.text=` `;
+            break;
+    }//end switch bug
+
+}//end function SetOutputParticolari()
 //___________________________________________________________
