@@ -72,7 +72,7 @@
                     <Span text="ed una per la risoluzione del " />
                     <Span text="Secondo Problema." class="corsivo" />
                     <Span text="\n" />  <!--vado a capo-->
-                    <Span text="In entrambe le pagine viene fornita la possibilità di selezionare la superficie di riferimento su quale basare i calcoli." />
+                    <Span text="In entrambe le pagine viene fornita la possibilità di selezionare la superficie di riferimento sulla quale basare i calcoli." />
                 </FormattedString>
             </TextView>
 

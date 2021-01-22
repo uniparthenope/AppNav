@@ -28,16 +28,17 @@
                         tap="onSecondoproblemaTap" />
                 <Label textWrap="true" text="Ortodromia" fontWeight="Bold"
                        fontSize="17" color="lightsalmon" />
-                <Button class="btn btn-ortodromia" text="Con Waypoints"
-                        tap="onConwaypointsTap" />
                 <Button class="btn btn-ortodromia" text="Senza Waypoints"
                         tap="onSenzawaypointsTap" />
+                <Button class="btn btn-ortodromia" text="Con Waypoints"
+                        tap="onConwaypointsTap" />
+
 
                 <TextView editable="false">
                     <Span text=" " />
                 </TextView>
 
-                <Label textWrap="true" text="Univeristà degli studi di Napoli Parthenope" class="corsivo" color="White" />
+                <Label textWrap="true" text="Università degli studi di Napoli Parthenope" class="corsivo" color="White" />
                 <Label textWrap="true" id="version" text="Versione: xxx" class="corsivo" color="White" />
             </StackLayout>
 

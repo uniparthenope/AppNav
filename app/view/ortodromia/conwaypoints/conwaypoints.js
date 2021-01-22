@@ -929,39 +929,44 @@ function NavigazioneMeridianoAntiMeridianoOrto(){
 function SetoOutput(){
     switch (tipoProblema){
         case "navigazione generale":
-            let gradiLatVert=Math.floor(latitudeVertice), primiLatVert=(latitudeVertice-gradiLatVert)*60;
-            let gradiLonVert=Math.floor(longitudeVertice), primiLonVert=(longitudeVertice-gradiLonVert)*60;
-            let gradiLonVertOpp=Math.floor(longitudeVerticeOpp), primiLonVertOpp=(longitudeVerticeOpp-gradiLonVertOpp)*60;
-            let gradiLonNodo=Math.floor(longitudeNodoPrincipale), primiLonNodo=(longitudeNodoPrincipale-gradiLonNodo)*60;
-            let gradiLonNodoSec=Math.floor(longitudeNodoSecondario), primiLonNodoSec=(longitudeNodoSecondario-gradiLonNodoSec)*60;
+            let latitudineVertice=CorreggiRoundOff(latitudeVertice);
+            let gradiLatVert=Math.floor(latitudineVertice), primiLatVert=(latitudineVertice-gradiLatVert)*60;
+            let longitudineVertice=CorreggiRoundOff(longitudeVertice);
+            let gradiLonVert=Math.floor(longitudineVertice), primiLonVert=(longitudineVertice-gradiLonVert)*60;
+            longitudineVertice=CorreggiRoundOff(longitudeVerticeOpp);
+            let gradiLonVertOpp=Math.floor(longitudineVertice), primiLonVertOpp=(longitudineVertice-gradiLonVertOpp)*60;
+            let longitudeNodo=CorreggiRoundOff(longitudeNodoPrincipale);
+            let gradiLonNodo=Math.floor(longitudeNodo), primiLonNodo=(longitudeNodo-gradiLonNodo)*60;
+            longitudeNodo=CorreggiRoundOff(longitudeNodoSecondario);
+            let gradiLonNodoSec=Math.floor(longitudeNodo), primiLonNodoSec=(longitudeNodo-gradiLonNodoSec)*60;
 
-            risultati.text=`Cammino do: ${cammino.toFixed(5)} NM
+            risultati.text=`Cammino do: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale.toFixed(2)}°
 
 Rotta Finale: ${rottaFinale.toFixed(2)}°
 
 Coordinate Primo Vertice:
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(5)}' ${letteraLatVertice}
-Longtiudine: ${gradiLonVert}° ${primiLonVert.toFixed(5)}' ${letteraLonVertice}
+Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVertice}
+Longtiudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
 
 Coordinate Secondo Vertice:
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(5)}' ${letteraLatVerticeOpp}
-Longitudine: ${gradiLonVertOpp}° ${primiLonVertOpp.toFixed(5)}' ${letteraLonVerticeOpp}
+Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVerticeOpp}
+Longitudine: ${gradiLonVertOpp}° ${primiLonVertOpp.toFixed(2)}' ${letteraLonVerticeOpp}
 
 Nodo Principale:
-Longitudine: ${gradiLonNodo}° ${primiLonNodo.toFixed(5)}' E
+Longitudine: ${gradiLonNodo}° ${primiLonNodo.toFixed(2)}' E
 
 Nodo Secondario:
-Longitudine: ${gradiLonNodoSec}° ${primiLonNodoSec.toFixed(5)}' W`;
+Longitudine: ${gradiLonNodoSec}° ${primiLonNodoSec.toFixed(2)}' W`;
             break;
         case "navigazione equatoriale":
-            risultati.text=`Cammino d0: ${cammino.toFixed(5)} NM
+            risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale}°`;
             break;
         case "navigazione meridiano con arrivo meridiano":
-            risultati.text=`Cammino d0: ${cammino.toFixed(5)} NM
+            risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale}°
 
@@ -972,7 +977,7 @@ Nodi
 Sono dati dall'intersezione del piano meridiano con il piano equatoriale`;
             break;
         case "navigazione meridiano con arrivo antimeridiano":
-            risultati.text=`Cammino d0: ${cammino.toFixed(5)} NM
+            risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale}°
 
@@ -1294,17 +1299,20 @@ function SetOutputWay(){
     let gradiLatWay=[], primiLatWay=[];
     let gradiLonWay=[], primiLonWay=[];
 
-    gradiLatWay[0]=Math.floor(latWaypoints[0]); primiLatWay[0]=((latWaypoints[0]-gradiLatWay[0])*60).toFixed(5);
-    gradiLonWay[0]=Math.floor(lonWaypoints[0]); primiLonWay[0]=((lonWaypoints[0]-gradiLonWay[0])*60).toFixed(5);
+    gradiLatWay[0]=Math.floor(latWaypoints[0]); primiLatWay[0]=((latWaypoints[0]-gradiLatWay[0])*60).toFixed(2);
+    gradiLonWay[0]=Math.floor(lonWaypoints[0]); primiLonWay[0]=((lonWaypoints[0]-gradiLonWay[0])*60).toFixed(2);
 
     let out = "Punto di Partenza"+"\n"+gradiLatWay[0]+"°"+" "+primiLatWay[0]+"'"+letteraLatWaypoints[0]+" "+gradiLonWay[0]+"°"+" "+primiLonWay+"'"+letteraLonWaypoints[0]+"\n";
 
 
     for (i=1; i<(latWaypoints.length -1); i++){
-        gradiLatWay[i]=Math.floor(latWaypoints[i]);
-        primiLatWay[i]=((latWaypoints[i]-gradiLatWay[i])*60).toFixed(5);
-        gradiLonWay[i]=Math.floor(lonWaypoints[i]);
-        primiLonWay[i]=((lonWaypoints[i]-gradiLonWay[i])*60).toFixed(5);
+        let latWaySenzaRoundOff=CorreggiRoundOff(latWaypoints[i]);
+        gradiLatWay[i]=Math.floor(latWaySenzaRoundOff);
+        primiLatWay[i]=((latWaySenzaRoundOff-gradiLatWay[i])*60).toFixed(2);
+
+        let lonWaySenzaRoundOff=CorreggiRoundOff(lonWaypoints[i]);
+        gradiLonWay[i]=Math.floor(lonWaySenzaRoundOff);
+        primiLonWay[i]=((lonWaySenzaRoundOff-gradiLonWay[i])*60).toFixed(2);
 
         out = out +"\n"+ i+"°"+" Waypoint\n"+gradiLatWay[i]+"°"+" "+primiLatWay[i]+"'"+letteraLatWaypoints[i]+" "+gradiLonWay[i]+"°"+" "+primiLonWay[i]+"'"+letteraLonWaypoints[i]+"\n";
 
@@ -1312,11 +1320,11 @@ function SetOutputWay(){
 
     let j=latWaypoints.length-1;
 
-    gradiLatWay[j]=Math.floor(latWaypoints[j]); primiLatWay[j]=((latWaypoints[j]-gradiLatWay[j])*60).toFixed(5);
-    gradiLonWay[j]=Math.floor(lonWaypoints[j]); primiLonWay[j]=((lonWaypoints[j]-gradiLonWay[j])*60).toFixed(5);
+    gradiLatWay[j]=Math.floor(latWaypoints[j]); primiLatWay[j]=((latWaypoints[j]-gradiLatWay[j])*60).toFixed(2);
+    gradiLonWay[j]=Math.floor(lonWaypoints[j]); primiLonWay[j]=((lonWaypoints[j]-gradiLonWay[j])*60).toFixed(2);
     out=out+"\nPunto di Arrivo\n"+gradiLatWay[j]+"°"+" "+primiLatWay[j]+"'"+letteraLatWaypoints[j]+" "+gradiLonWay[j]+"°"+" "+primiLonWay[j]+"'"+letteraLonWaypoints[j];
 
-    risultatiWaypoints.text=`\n COORDINATE WAYPOINTS
+    risultatiWaypoints.text=`\n \n COORDINATE WAYPOINTS
 
 ${out}`;
 
@@ -1341,3 +1349,36 @@ function RisolviWayPoints(){
     }
 }//end function RisolviwayPoints()
 //___________________________________________________________
+
+
+
+/*
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ */
+//funzione che implementa la correzione di round-off negli output
+function CorreggiRoundOff(num){
+    let ris, differenza;
+    let decimali=num-Math.floor(num);
+
+    let int;
+    if (decimali>0.5){
+        int=Math.floor(num)+1;
+    }else {
+        int=Math.floor(num);
+    }
+
+    differenza=Math.abs(int-num);
+    if (differenza < (1e-5) ){
+        ris=int;
+    }else {
+        ris=num;
+    }
+
+    return ris;
+
+}//end function CorreggiRoundOff(num)
+/*
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ */

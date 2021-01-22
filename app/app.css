@@ -13,6 +13,7 @@ The imported CSS rules must precede all other types of rules.
 @import "~@nativescript/theme/css/core.css";
 @import "~@nativescript/theme/css/default.css";
 
+
 /* Place any CSS rules you want to apply on both iOS and Android here.
 This is where the vast majority of your CSS code goes. */
 
@@ -64,13 +65,14 @@ The following CSS rule changes the font size of all Buttons that have the
 .titolo-paragrafo{
     font-weight: bold;
     font-style: italic;
-    background-color: palegoldenrod;
+    background-color: darkkhaki;   /*palegoldenrod*/
 }
 
 .nome-casella{
     font-style: italic;
     font-weight: bold;
-    background-color: antiquewhite;
+    background-color: darkseagreen;     /*antiquewhite*/
+
 }
 
 .testo{                   /*stile per i testi descrittivi (non titoli o sottotitoli) delle pagine istruzioni e teoria*/

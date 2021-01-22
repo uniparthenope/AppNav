@@ -49,7 +49,7 @@
             </TextView>
             <TextView editable="false">
                 <FormattedString>
-                    <Span text="Le due principali traiettorie di navigazione sono " />
+                    <Span text="Le due principali traiettorie di navigazione sono la " />
                     <Span text="Lossodromia " class="grassetto" />
                     <Span text="e l'"/>
                     <Span text="Ortodromia. " class="grassetto" />

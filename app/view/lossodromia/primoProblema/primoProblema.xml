@@ -38,7 +38,7 @@
             <!--Creo UI per inserire la latitudine-->
             <StackLayout row="3" col="0" class="riquadro">
                 <TextField id="idGradiLat" text="{{ inputGradi }}"
-                           hint="gradi" keyboardType="number" />
+                           hint="gradi" keyboardType="number"  />
             </StackLayout>
             <StackLayout row="3" col="1" class="riquadro">
                 <TextField id="idPrimiLat" text="{{ inputPrimilat }}" hint="primi" keyboardType="number" />

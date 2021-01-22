@@ -39,6 +39,7 @@ var latitudeCre, latitudeArrCre;
 var deltaPhiCre;
 var camminoLossodromico, rottaVera;
 var risultatiLossodromia;
+var tipoLossodromia;
 
 //dichiaro di seguito tutte le variabili utili alla risoluzione della navigazione mista, prima le variabili per
 //memorizzare l'input dell'utente e dopo le variaili utili a tutti i calcoli
@@ -149,6 +150,7 @@ function onTap(fargs){
     console.log("deltaLambdaVertice: "+deltaLambdaVertice);
     console.log("nodo secondario: "+longitudeNodoSecondario);
 */
+    console.log("longitudine vertice: "+longitudeVertice+ letteraLonVertice);
 
 }
 exports.onTap=onTap;
@@ -383,7 +385,7 @@ function DeltaLambda(){
                     break;
                 case "W":
                     deltaLambda=(-longitudeArr)-longitude;
-                    if (deltaLambda<0 && Math.abs(deltaLambda)<180){
+                    if (deltaLambda<0 && Math.abs(deltaLambda)<=180){
                         letteraDeltaLambda="W";
                         letteraDeltaLambdaPrima=letteraDeltaLambda;
                         deltaLambda=Math.abs(deltaLambda);
@@ -404,7 +406,7 @@ function DeltaLambda(){
             switch (letteraLonArr){
                 case "E":
                     deltaLambda=longitudeArr-(-longitude);
-                    if (deltaLambda>=0 && deltaLambda<180){
+                    if (deltaLambda>=0 && deltaLambda<=180){
                         letteraDeltaLambda="E";
                         letteraDeltaLambdaPrima=letteraDeltaLambda;
                     }else if (deltaLambda>=0 && deltaLambda>180){//caso passaggio antimeridiano da W->E
@@ -820,7 +822,7 @@ function Vertici(){
             }
             break;
         default:
-            alert("Erroe determinazione lettera coordinata vertici.");
+            alert("Errore determinazione lettera coordinata vertici.");
             break;
     }
 }//end function Vertici();
@@ -987,39 +989,44 @@ function NavigazioneMeridianoAntiMeridianoOrto(){
 function SetoOutput(){
 switch (tipoProblema){
     case "navigazione generale":
-        let gradiLatVert=Math.floor(latitudeVertice), primiLatVert=(latitudeVertice-gradiLatVert)*60;
-        let gradiLonVert=Math.floor(longitudeVertice), primiLonVert=(longitudeVertice-gradiLonVert)*60;
-        let gradiLonVertOpp=Math.floor(longitudeVerticeOpp), primiLonVertOpp=(longitudeVerticeOpp-gradiLonVertOpp)*60;
-        let gradiLonNodo=Math.floor(longitudeNodoPrincipale), primiLonNodo=(longitudeNodoPrincipale-gradiLonNodo)*60;
-        let gradiLonNodoSec=Math.floor(longitudeNodoSecondario), primiLonNodoSec=(longitudeNodoSecondario-gradiLonNodoSec)*60;
+        let latitudineVertice=CorreggiRoundOff(latitudeVertice);
+        let gradiLatVert=Math.floor(latitudineVertice), primiLatVert=(latitudineVertice-gradiLatVert)*60;
+        let longitudineVertice=CorreggiRoundOff(longitudeVertice);
+        let gradiLonVert=Math.floor(longitudineVertice), primiLonVert=(longitudineVertice-gradiLonVert)*60;
+        longitudineVertice=CorreggiRoundOff(longitudeVerticeOpp);
+        let gradiLonVertOpp=Math.floor(longitudineVertice), primiLonVertOpp=(longitudineVertice-gradiLonVertOpp)*60;
+        let longitudeNodo=CorreggiRoundOff(longitudeNodoPrincipale);
+        let gradiLonNodo=Math.floor(longitudeNodo), primiLonNodo=(longitudeNodo-gradiLonNodo)*60;
+        longitudeNodo=CorreggiRoundOff(longitudeNodoSecondario);
+        let gradiLonNodoSec=Math.floor(longitudeNodo), primiLonNodoSec=(longitudeNodo-gradiLonNodoSec)*60;
 
-        risultati.text=`Cammino do: ${cammino.toFixed(5)} NM
+        risultati.text=`Cammino do: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale.toFixed(2)}°
 
 Rotta Finale: ${rottaFinale.toFixed(2)}°
 
 Coordinate Primo Vertice:
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(5)}' ${letteraLatVertice}
-Longtiudine: ${gradiLonVert}° ${primiLonVert.toFixed(5)}' ${letteraLonVertice}
+Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVertice}
+Longtiudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
 
 Coordinate Secondo Vertice:
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(5)}' ${letteraLatVerticeOpp}
-Longitudine: ${gradiLonVertOpp}° ${primiLonVertOpp.toFixed(5)}' ${letteraLonVerticeOpp}
+Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVerticeOpp}
+Longitudine: ${gradiLonVertOpp}° ${primiLonVertOpp.toFixed(2)}' ${letteraLonVerticeOpp}
 
 Nodo Principale:
-Longitudine: ${gradiLonNodo}° ${primiLonNodo.toFixed(5)}' E
+Longitudine: ${gradiLonNodo}° ${primiLonNodo.toFixed(2)}' E
 
 Nodo Secondario:
-Longitudine: ${gradiLonNodoSec}° ${primiLonNodoSec.toFixed(5)}' W`;
+Longitudine: ${gradiLonNodoSec}° ${primiLonNodoSec.toFixed(2)}' W`;
         break;
     case "navigazione equatoriale":
-        risultati.text=`Cammino d0: ${cammino.toFixed(5)} NM
+        risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale}°`;
         break;
     case "navigazione meridiano con arrivo meridiano":
-        risultati.text=`Cammino d0: ${cammino.toFixed(5)} NM
+        risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale}°
 
@@ -1030,7 +1037,7 @@ Nodi
 Sono dati dall'intersezione del piano meridiano con il piano equatoriale`;
         break;
     case "navigazione meridiano con arrivo antimeridiano":
-        risultati.text=`Cammino d0: ${cammino.toFixed(5)} NM
+        risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
 
 Rotta Iniziale: ${rottaIniziale}°
 
@@ -1233,46 +1240,168 @@ function CamminoLossodromia(){
 
 
 //___________________________________________________________
+//funzione che verifica il problema di lossodromia
+function VerificaLossodromia(){
+    if ((latitudeArr===latitude) && (letteraLatArr===letteraLat)){
+        tipoLossodromia="navigazione parallelo";
+    }else if ((longitudeArr===longitude) && (letteraLonArr===letteraLon)){
+        tipoLossodromia="navigazione meridiano";
+    }else {
+        tipoLossodromia="generale";
+    }
+}
+//___________________________________________________________
+
+
+//___________________________________________________________
+//funzione che risolve la navigazione per meridiano per lossodromia
+function NavigazioneMeridianoSecondoProbLosso(){
+    //ricordo che la differenza di latitudine sarà già determinata
+    camminoLossodromico = (deltaPhi*60);
+    switch (letteraDeltaPhi){
+        case "N":
+            rottaVera=0;
+            break;
+        case "S":
+            rottaVera=180;
+            break;
+        default:
+            alert("Errore risoluzione navigazione meridiano, confronta con lossodromia.");
+            break;
+    }
+}
+//___________________________________________________________
+
+
+//___________________________________________________________
+//funzione che risolve la navigazione su parallelo per la lossodromia
+function NavigazioneParalleloSecondoProbLosso(){
+    //si presuppone che la differenza di longitudine sia già determinata
+    camminoLossodromico = (deltaLambda*60)*Math.cos(Deg2Rad(latitude));
+    switch (letteraDeltaLambda){
+        case "E":
+            rottaVera=90;
+            break;
+        case "W":
+            rottaVera=270;
+            break;
+        default:
+            alert("Errore di valutazione rotta in navigazione su parallelo secondo problema di lossodromia.");
+            break;
+    }
+}
+//___________________________________________________________
+
+
+//___________________________________________________________
 //funzione che gestisce gli output dei risolutati di lossodromia per il confronto con il secodo problema di ortodromia
 function SetOutputLossodromia(){
     risultatiLossodromia.text=`Rotta Vera: ${rottaVera.toFixed(2)}°
 
-Cammino: ${camminoLossodromico.toFixed(5)} NM
-
-Differenza latitudine crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPhi}
-
-Latitudine crescente partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}
-
-Latitudine crescente arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}`;
+Cammino: ${camminoLossodromico.toFixed(2)} NM  `;
 }//end function SetOutputLossodromia()
+//___________________________________________________________
+
+
+//___________________________________________________________
+//funzione che gestisce gli output delle navigazioni su parallelo e meridiano
+function SetOutputCasiParticolari(){
+    switch (tipoLossodromia){
+        case "navigazione meridiano":
+            risultatiLossodromia.text=`Navigazione su meridiano!
+
+Cammino: ${camminoLossodromico.toFixed(2)}NM
+
+Rotta vera: ${rottaVera.toFixed(2)}°`;
+            break;
+
+        case "navigazione parallelo":
+            risultatiLossodromia.text=`Navigazione su parallelo!
+
+Cammino: ${camminoLossodromico.toFixed(2)}NM
+
+Rotta vera: ${rottaVera.toFixed(2)}°`;
+            break;
+    }
+}
 //___________________________________________________________
 
 
 //___________________________________________________________
 //funzionce che risolve il problema di lossodromia per il confronto con il secodo problema di ortodromia
 function RisolviLossodromia(){
-    switch (tipoProblema){
-        case "navigazione generale":
-            let risultatiCalcoli=SetLatDeltaPhiCre(latitude,latitudeArr,letteraLat,letteraLatArr);
-            latitudeCre=risultatiCalcoli[0];
-            latitudeArrCre=risultatiCalcoli[1];
-            deltaPhiCre=risultatiCalcoli[2];
-            RottaVera();
-            CamminoLossodromia();
-            SetOutputLossodromia();
+    switch (bug){
+        case 0:
+            switch (tipoProblema){
+
+                case "navigazione generale":
+                    VerificaLossodromia();
+                    switch (tipoLossodromia){
+                        case "navigazione meridiano":
+                            NavigazioneMeridianoSecondoProbLosso();
+                            SetOutputCasiParticolari();
+                            break;
+
+                        case "navigazione parallelo":
+                            NavigazioneParalleloSecondoProbLosso();
+                            SetOutputCasiParticolari();
+                            break;
+
+                        case "generale":
+                            let risultatiCalcoli=SetLatDeltaPhiCre(latitude,latitudeArr,letteraLat,letteraLatArr);
+                            latitudeCre=risultatiCalcoli[0];
+                            latitudeArrCre=risultatiCalcoli[1];
+                            deltaPhiCre=risultatiCalcoli[2];
+                            RottaVera();
+                            CamminoLossodromia();
+                            SetOutputLossodromia();
+                            break;
+                    }
+                    break;
+
+                case "navigazione meridiano con arrivo meridiano":
+                    rottaVera=rottaIniziale;
+                    camminoLossodromico=cammino;
+                    VerificaLossodromia();
+                    SetOutputCasiParticolari();
+                    break;
+
+                case "navigazione meridiano con arrivo antimeridiano":
+                    VerificaLossodromia();
+                    switch (tipoLossodromia){
+                        case "navigazione meridiano":
+                            NavigazioneMeridianoSecondoProbLosso();
+                            SetOutputCasiParticolari();
+                            break;
+
+                        case "navigazione parallelo":
+                            NavigazioneParalleloSecondoProbLosso();
+                            SetOutputCasiParticolari();
+                            break;
+
+                        case "generale":
+                            let risultatiCalcoli=SetLatDeltaPhiCre(latitude,latitudeArr,letteraLat,letteraLatArr);
+                            latitudeCre=risultatiCalcoli[0];
+                            latitudeArrCre=risultatiCalcoli[1];
+                            deltaPhiCre=risultatiCalcoli[2];
+                            DeltaPhi();
+                            DeltaLambda()
+                            RottaVera();
+                            CamminoLossodromia();
+                            SetOutputLossodromia();
+                            break;
+                    }
+                    break;
+
+            }//end switch(tipoProblema)
+
             break;
-        case "navigazione meridiano con arrivo meridiano":
-            rottaVera=rottaIniziale;
-            camminoLossodromico=cammino;
+
+        case 1:
+            alert("Errore, impossibile effetuare il confronto con la lossodromia.");
             break;
-        case "navigazione meridiano con arrivo antimeridiano":
-            risultatiLossodromia.text=`ATTENZIONE!!!
-Con la lossodromia non puoi oltrepassare il polo, il che comporta un cambio di rotta e ciò è in contrasto con la definizione di lossodromia.`;
-            break;
-        default:
-            alert("Errore valutazione risoluzione confronto lossodromia per il secondo problema di ortodromia.");
-            break;
-    }
+
+    }//end switch bug
 }//end function RisolviLossodromia()
 //___________________________________________________________
 
@@ -1853,25 +1982,29 @@ function RisolviNavMista(){
 //___________________________________________________________
 //funzione che gestisce gli output della navigazione mista
 function SetOutputNavMista(){
-    let gradiV1=Math.floor(longitudeV1), primiV1=(longitudeV1-gradiV1)*60;
-    let gradiV2=Math.floor(longitudeV2), primiV2=(longitudeV2-gradiV2)*60;
+    let longitudineV1=CorreggiRoundOff(longitudeV1);
+    let gradiV1=Math.floor(longitudineV1), primiV1=(longitudineV1-gradiV1)*60;
+    let longitudineV2=CorreggiRoundOff(longitudeV2);
+    let gradiV2=Math.floor(longitudineV2), primiV2=(longitudineV2-gradiV2)*60;
 
     risultatiNavigazioneMista.text=`Prima Ortodromia
-Cammino: ${d1.toFixed(5)} NM
+Cammino: ${d1.toFixed(2)} NM
 
 Rotta iniziale: ${rottaInizialeNavMista.toFixed(2)}°
 
+
 Arco Lossodromico
-Longitudine 1° Vertice: ${gradiV1}° ${primiV1.toFixed(5)}' ${letteraLonV1}
-
-Longitudine 2° Vertice: ${gradiV2}° ${primiV2.toFixed(5)}' ${letteraLonV2}
-
-Cammino: ${camminoV1V2.toFixed(5)} NM
+Cammino: ${camminoV1V2.toFixed(2)} NM
 
 Rotta: ${rottaV1V2}°
 
+Longitudine 1° Vertice: ${gradiV1}° ${primiV1.toFixed(2)}' ${letteraLonV1}
+
+Longitudine 2° Vertice: ${gradiV2}° ${primiV2.toFixed(2)}' ${letteraLonV2}
+
+
 Seconda Ortodromia
-Cammino: ${d2.toFixed(5)} NM
+Cammino: ${d2.toFixed(2)} NM
 
 Rotta finale: ${rottaFinaleNavMista.toFixed(2)}°`;
 
@@ -2200,33 +2333,40 @@ function SetOutputPrimoProblema(){
                    break;
            }
 
-           let gradiLat=Math.floor(latitudeArr), primiLat=(latitudeArr-gradiLat)*60;
-           let gradiLon=Math.floor(longitudeArr), primiLon=(longitudeArr-gradiLon)*60;
-           let gradiLatVert=Math.floor(latitudeVertice), primiLatVert=(latitudeVertice-gradiLatVert)*60;
-           let gradiLonVert=Math.floor(longitudeVertice), primiLonVert=(longitudeVertice-gradiLonVert)*60;
-           let gradiLonVertOpp=Math.floor(longitudeVerticeOpp), primiLonVertOpp=(longitudeVerticeOpp-gradiLonVertOpp)*60;
-           let gradiNodo=Math.floor(longitudeNodoPrincipale), primiNodo=(longitudeNodoPrincipale-gradiNodo)*60;
-           let gradiNodoSec=Math.floor(longitudeNodoSecondario), primiNodoSec=(longitudeNodoSecondario-gradiNodoSec)*60;
+           let latitudineArrivo=CorreggiRoundOff(latitudeArr);
+           let gradiLat=Math.floor(latitudineArrivo), primiLat=(latitudineArrivo-gradiLat)*60;
+           let longitudineArrivo=CorreggiRoundOff(longitudeArr);
+           let gradiLon=Math.floor(longitudineArrivo), primiLon=(longitudineArrivo-gradiLon)*60;
+           let latitudineVertice=CorreggiRoundOff(latitudeVertice);
+           let gradiLatVert=Math.floor(latitudineVertice), primiLatVert=(latitudineVertice-gradiLatVert)*60;
+           let longitudineVertice=CorreggiRoundOff(longitudeVertice);
+           let gradiLonVert=Math.floor(longitudineVertice), primiLonVert=(longitudineVertice-gradiLonVert)*60;
+           longitudineVertice=CorreggiRoundOff(longitudeVerticeOpp);
+           let gradiLonVertOpp=Math.floor(longitudineVertice), primiLonVertOpp=(longitudineVertice-gradiLonVertOpp)*60;
+           let longitudineNodo=CorreggiRoundOff(longitudeNodoPrincipale);
+           let gradiNodo=Math.floor(longitudineNodo), primiNodo=(longitudineNodo-gradiNodo)*60;
+           longitudineNodo=CorreggiRoundOff(longitudeNodoSecondario);
+           let gradiNodoSec=Math.floor(longitudineNodo), primiNodoSec=(longitudineNodo-gradiNodoSec)*60;
 
            risultatiPrimoProblema.text=`Punto di arrivo
-Latitudine: ${gradiLat}° ${primiLat.toFixed(5)}' ${letteraLatArr}
-Longitudine: ${gradiLon}° ${primiLon.toFixed(5)}' ${letteraLonArr}
+Latitudine: ${gradiLat}° ${primiLat.toFixed(2)}' ${letteraLatArr}
+Longitudine: ${gradiLon}° ${primiLon.toFixed(2)}' ${letteraLonArr}
 
 Rotta Finale: ${rottaFinale.toFixed(2)}°
 
 Coordinate Primo Vertice
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(5)}' ${letteraLatVertice}
-Longitudine: ${gradiLonVert}° ${primiLonVert.toFixed(5)}' ${letteraLonVertice}
+Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVertice}
+Longitudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
 
 Coordinate Secondo Vertice
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(5)}' ${letteraLatVerticeOpp}
-Longitudine: ${gradiLonVertOpp}° ${primiLonVertOpp.toFixed(5)}' ${letteraLonVerticeOpp}
+Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVerticeOpp}
+Longitudine: ${gradiLonVertOpp}° ${primiLonVertOpp.toFixed(2)}' ${letteraLonVerticeOpp}
 
 Coordinate Nodo Principale:
-Longitudine: ${gradiNodo}° ${primiNodo.toFixed(5)}' E
+Longitudine: ${gradiNodo}° ${primiNodo.toFixed(2)}' E
 
 Coordinate Nodo Secondario:
-Longitudine: ${gradiNodoSec}° ${primiNodoSec.toFixed(5)}' W`;
+Longitudine: ${gradiNodoSec}° ${primiNodoSec.toFixed(2)}' W`;
            break;
 
        case "navigazione meridiano":
@@ -2234,8 +2374,8 @@ Longitudine: ${gradiNodoSec}° ${primiNodoSec.toFixed(5)}' W`;
            let gradiLonArr=Math.floor(longitudeArr), primiLonArr=(longitudeArr-gradiLonArr)*60;
 
            risultatiPrimoProblema.text=`Punto di Arrivo
-Latitudine: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}
-Longitudine: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
+Latitudine: ${gradiLatArr}° ${primiLatArr.toFixed(2)}' ${letteraLatArr}
+Longitudine: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}
 
 Vertici
 Sono i poli geografici
@@ -2249,7 +2389,7 @@ Sono dati dall'intersezione del meridiano con l'equatore`;
 
            risultatiPrimoProblema.text=`Punto di Arrivo
 Latitudine: ${latitude}° ${letteraLat}
-Longitude: ${gradiLonArr1}° ${primiLonArr1.toFixed(5)}' ${letteraLonArr}`;
+Longitude: ${gradiLonArr1}° ${primiLonArr1.toFixed(2)}' ${letteraLonArr}`;
            break;
 
        default:
@@ -2589,7 +2729,8 @@ function onConfrontaTap1(gargs){
     const button=gargs.object;
 
     RisolviPrimoProblemaLossodromia();
-    SetOutputPrimoProblemaLossodromia();
+    console.log("Rv: "+rottaVera);
+
 }
 exports.onConfrontaTap1=onConfrontaTap1;
 //___________________________________________________________
@@ -2922,69 +3063,182 @@ function RisolviEquatorePrimoProblema(){
 
 
 //___________________________________________________________
-//funzione che risolve il primo problema di lossodromia
-function RisolviPrimoProblemaLossodromia(){
-    switch (tipoProblema){
-        case "navigazione generale":
-            if (cammino===21600){
-                rottaVera = rottaIniziale;
-            }else {
-                let risultatiCalcoli=SetLatDeltaPhiCre(latitude,latitudeArr,letteraLat,letteraLatArr);
-                latitudeCre=risultatiCalcoli[0];
-                latitudeArrCre=risultatiCalcoli[1];
-                deltaPhiCre=risultatiCalcoli[2];
-                RottaVera();
-            }
-            SetLatxDeltaPhiCrex();
-            let risultatiCalcoli1=SetLatDeltaPhiCre(latitude,latitudeX,letteraLat,letteraLatX);
-            latitudeCre=risultatiCalcoli1[0];
-            latitudeArrCre=risultatiCalcoli1[1];
-            let deltaPhiCreAX=risultatiCalcoli1[2];
+//funzione che risolve navigazione parallelo primo problema di losodromia
+function RisolviParalleloPrimaLossodromia(){
+    let deltaLambdaX = (cammino/60)/Math.cos(Deg2Rad(latitude));
+    let letteraDeltaLambdaX;
+    switch (rottaVera){
+        case 90:
+            letteraDeltaLambdaX="E";
+            break;
+        case 270:
+            letteraDeltaLambdaX="W";
+            break;
+    }
 
-            let letteraDeltaPhiX, diff;
-            switch (letteraLat){
-                case "N":
-                    switch (letteraLatX){
-                        case "N":
-                            diff=latitudeX-latitude;
-                            if (diff>=0){
-                                letteraDeltaPhiX="N";
-                            }else {
-                                letteraDeltaPhiX="S";
-                            }
-                            break;
-                        case "S":
-                            letteraDeltaPhiX="S";
-                            break
+    switch (letteraLon){
+        case "E":
+            switch (letteraDeltaLambdaX){
+                case "E":
+                    longitudeX=longitude+deltaLambdaX;
+                    if (longitudeX>180){
+                        longitudeX = 360-longitudeX;
+                        letteraLonX="W";
                     }
                     break;
-                case "S":
-                    switch (letteraLatX){
-                        case "N":
-                            letteraDeltaPhiX="N";
-                            break;
-                        case "S":
-                            diff=(-latitudeX)-(-latitude);
-                            if (diff>=0){
-                                letteraDeltaPhiX="N";
-                            }else {
-                                letteraDeltaPhiX="S";
-                            }
+                case "W":
+                    longitudeX=longitude-deltaLambdaX;
+                    if (longitudeX<0){
+                        letteraLonX="W";
+                        longitudeX=Math.abs(longitudeX);
+                    }else {
+                        letteraLonX="E";
+                    }
+                    break;
+            }
+            break;
+
+        case "W":
+            switch (letteraDeltaLambdaX){
+                case "E":
+                    longitudeX=(-longitude)+deltaLambdaX;
+                    if (longitudeX<0){
+                        letteraLonX="W";
+                        longitudeX=Math.abs(longitudeX);
+                    }else {
+                        letteraLonX="E";
+                    }
+                    break;
+                case "W":
+                    longitudeX=(-longitude)-deltaLambdaX;
+                    if (longitudeX<0 && Math.abs(longitudeX)>180){
+                        letteraLonX="E";
+                        longitudeX=360-Math.abs(longitudeX);
+                    }else if (longitudeX<0 && Math.abs(longitudeX)<180){
+                        letteraLonX="W";
+                        longitudeX=Math.abs(longitudeX);
+                    }else {
+                        letteraLonX="E";  //caso impossibile
                     }
             }
+    }
 
-            let risultatiCalcoliLon=DeltaLambdaPrimoProblemaLosso(deltaPhiCreAX,letteraDeltaPhiX,longitude,letteraLon,rottaVera);
-            longitudeX=risultatiCalcoliLon[0];
-            letteraLonX=risultatiCalcoliLon[1];
+}//end function RisolviParalleloPrimaLossodromia()
+
+//___________________________________________________________
+
+
+//___________________________________________________________
+//funzione che riconosce la tipologia di problema del primo problema di lossodromia
+function VerificaProblemaPrimaLossodromia(num){
+    let ris;
+    switch (num){
+        case 90:
+            ris = "navigazione parallelo";
+            break;
+        case 270:
+            ris = "navigazione parallelo";
+            break;
+        default:
+            ris = "generale";
+            break;
+    }
+    return ris;
+}
+//___________________________________________________________
+
+
+//___________________________________________________________
+//funzione che risolve il primo problema di lossodromia
+function RisolviPrimoProblemaLossodromia(){
+    switch (bug){
+        case 0:
+            switch (tipoProblema){
+                case "navigazione generale":
+                    if (cammino===21600){
+                        rottaVera = rottaIniziale;
+                    }else {
+                        let risultatiCalcoli=SetLatDeltaPhiCre(latitude,latitudeArr,letteraLat,letteraLatArr);
+                        latitudeCre=risultatiCalcoli[0];
+                        latitudeArrCre=risultatiCalcoli[1];
+                        deltaPhiCre=risultatiCalcoli[2];
+                        RottaVera();
+                    }
+                    rottaVera=CorreggiRoundOffRotte(rottaVera);
+                    let verificaLossodromia=VerificaProblemaPrimaLossodromia(rottaVera);
+                    switch (verificaLossodromia){
+                        case "navigazione parallelo":
+                            RisolviParalleloPrimaLossodromia();
+                            console.log("Ci sono quasi");
+                            SetOutputNavParalleloPrimoProbLosso();
+                            console.log("Fatto");
+                            break;
+
+                        case "generale":
+                            SetLatxDeltaPhiCrex();
+                            let risultatiCalcoli1=SetLatDeltaPhiCre(latitude,latitudeX,letteraLat,letteraLatX);
+                            latitudeCre=risultatiCalcoli1[0];
+                            latitudeArrCre=risultatiCalcoli1[1];
+                            let deltaPhiCreAX=risultatiCalcoli1[2];
+
+                            let letteraDeltaPhiX, diff;
+                            switch (letteraLat){
+                                case "N":
+                                    switch (letteraLatX){
+                                        case "N":
+                                            diff=latitudeX-latitude;
+                                            if (diff>=0){
+                                                letteraDeltaPhiX="N";
+                                            }else {
+                                                letteraDeltaPhiX="S";
+                                            }
+                                            break;
+                                        case "S":
+                                            letteraDeltaPhiX="S";
+                                            break
+                                    }
+                                    break;
+                                case "S":
+                                    switch (letteraLatX){
+                                        case "N":
+                                            letteraDeltaPhiX="N";
+                                            break;
+                                        case "S":
+                                            diff=(-latitudeX)-(-latitude);
+                                            if (diff>=0){
+                                                letteraDeltaPhiX="N";
+                                            }else {
+                                                letteraDeltaPhiX="S";
+                                            }
+                                    }
+                            }
+
+                            let risultatiCalcoliLon=DeltaLambdaPrimoProblemaLosso(deltaPhiCreAX,letteraDeltaPhiX,longitude,letteraLon,rottaVera);
+                            longitudeX=risultatiCalcoliLon[0];
+                            letteraLonX=risultatiCalcoliLon[1];
+                            SetOutputPrimoProblemaLossodromia();
+                            break
+                    }
+
+                    break;
+
+                case "navigazione meridiano":
+                    RisolviMeridianoPrimoProblema();
+                    SetOutputPrimoProblemaLossodromia();
+                    break;
+
+                case "navigazione equatore":
+                    RisolviEquatorePrimoProblema();
+                    SetOutputPrimoProblemaLossodromia();
+                    break;
+            }
             break;
 
-        case "navigazione meridiano":
-            RisolviMeridianoPrimoProblema();
+        case 1:
+            alert("Errore, impossibileeffettuare il confronto con lossodromia.");
             break;
 
-        case "navigazione equatore":
-            RisolviEquatorePrimoProblema();
-            break;
+
     }
 }//end function RisolviPrimoProblemaLossodromia()
 //___________________________________________________________
@@ -3001,8 +3255,8 @@ function SetOutputPrimoProblemaLossodromia(){
             risultatiLossodromia1.text=`A parità di cammino, le coordinate con il percorso lossodromico saranno differenti da quelle ottenute dal percorso ortodromico
 
 Coordinate Punto di arrivo:
-Latitudine: ${gradiLat}° ${primiLat.toFixed(5)}' ${letteraLatX}
-Longitudine: ${gradiLon}° ${primiLon.toFixed(5)}' ${letteraLonX}
+Latitudine: ${gradiLat}° ${primiLat.toFixed(2)}' ${letteraLatX}
+Longitudine: ${gradiLon}° ${primiLon.toFixed(2)}' ${letteraLonX}
 
 Rotta Vera: ${rottaVera.toFixed(2)}°`;
 
@@ -3012,7 +3266,7 @@ Rotta Vera: ${rottaVera.toFixed(2)}°`;
             let gradiLonX=Math.floor(longitudeArr), primiLonX=(longitudeArr-gradiLonX)*60;
 
             risultatiLossodromia1.text=`Punto di Arrivo
-Longitudine: ${gradiLonX}° ${primiLonX.toFixed(5)}' ${letteraLonArr}`;
+Longitudine: ${gradiLonX}° ${primiLonX.toFixed(2)}' ${letteraLonArr}`;
             break;
 
         case "navigazione meridiano":
@@ -3021,7 +3275,7 @@ Longitudine: ${gradiLonX}° ${primiLonX.toFixed(5)}' ${letteraLonArr}`;
                     let gradiLatX=Math.floor(latitudeArr), primiLatX=(latitudeArr-gradiLatX)*60;
 
                     risultatiLossodromia1.text=`Punto di Arrivo
-Latitudine: ${gradiLatX}° ${primiLatX.toFixed(5)}' ${letteraLatArr}`;
+Latitudine: ${gradiLatX}° ${primiLatX.toFixed(2)}' ${letteraLatArr}`;
                     break;
                 case 1:
                     risultatiLossodromia1.text=`ATTENZIONE! Con la lossodromia non si può superare il polo geografico.`;
@@ -3034,4 +3288,74 @@ Latitudine: ${gradiLatX}° ${primiLatX.toFixed(5)}' ${letteraLatArr}`;
 //___________________________________________________________
 
 
+//___________________________________________________________
+//funzione che gestisce output navigazione equatore primo problema di lossodromia
+function SetOutputNavParalleloPrimoProbLosso(){
+    let longitudineX=CorreggiRoundOff(longitudeX);
+    let gradiLonX=Math.floor(longitudineX), primiLonX=(longitudineX-gradiLonX)*60;
+    risultatiLossodromia1.text=`A parità di cammino, le coordinate con il percorso lossodromico saranno differenti da quelle ottenute dal percorso ortodromico
 
+Navigazione su parallelo!
+
+Longitudine arrivo: ${gradiLonX}° ${primiLonX.toFixed(2)}' ${letteraLonX}
+Rotta vera: ${rottaVera.toFixed(2)}°`;
+}
+
+
+
+
+/*
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ */
+//funzione che implementa la correzione di round-off negli output
+function CorreggiRoundOff(num){
+    let ris, differenza;
+    let decimali=num-Math.floor(num);
+
+    let int;
+    if (decimali>0.5){
+        int=Math.floor(num)+1;
+    }else {
+        int=Math.floor(num);
+    }
+
+    differenza=Math.abs(int-num);
+    if (differenza < (1e-5) ){
+        ris=int;
+    }else {
+        ris=num;
+    }
+
+    return ris;
+
+}//end function CorreggiRoundOff(num)
+/*
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ */
+
+
+//___________________________________________________________
+//funzione che correge l'errore di round-off per il calcolo delle rotte
+function CorreggiRoundOffRotte(num){
+    let ris, differenza;
+    let decimali=num-Math.floor(num);
+
+    let int;
+    if (decimali>0.5){
+        int=Math.floor(num)+1;
+    }else {
+        int=Math.floor(num);
+    }
+
+    differenza=Math.abs(int-num);
+    if (differenza < 0.01){
+        ris=int;
+    }else {
+        ris=num;
+    }
+
+    return ris;
+}//end function CorreggiRoundOffRotte(num)
+//___________________________________________________________

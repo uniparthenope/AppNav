@@ -105,7 +105,7 @@ function onTapCalcolo(args){
 
     SetInput();
     RisolviSecondoProblema();
-    SetOutput();
+
 
 }
 exports.onTapCalcolo=onTapCalcolo;
@@ -212,17 +212,32 @@ function SetInput(){
 
     if ((latitude!==latitudeArr) && (longitude!==longitudeArr)){
         tipoProblema="navigazione generale";
-    }else if ((longitude===longitudeArr) && (letteraLon===letteraLonArr) && (latitude!==latitudeArr)){
-        tipoProblema="navigazione meridiano";
-    }else if ((latitude===latitudeArr) && (letteraLat===letteraLatArr) && (longitude!==longitudeArr)){
-        tipoProblema="navigazione parallelo";
+    }else if ((longitude===longitudeArr) && (letteraLon===letteraLonArr) ){
+        if ((latitude===latitudeArr) && (letteraLat!==letteraLatArr)){
+            tipoProblema="navigazione meridiano";
+        }else {
+            tipoProblema="navigazione meridiano";
+        }
+
+    }else if ((latitude===latitudeArr) && (letteraLat===letteraLatArr)){
+        if ((longitude===longitudeArr) && (letteraLon!==letteraLonArr)){
+            tipoProblema="navigazione parallelo";
+        }else {
+            tipoProblema="navigazione parallelo";
+        }
+
     }else if ((latitude===latitudeArr) &&(letteraLat!==letteraLatArr)){
         tipoProblema="navigazione generale";
+
     }else if ((longitude===longitudeArr) && (letteraLon!==letteraLonArr)){
-        tipoProblema="navigazione generale";
+        if (letteraLat!==letteraLatArr){
+            tipoProblema="navigazione generale";
+        }
     }else{
         alert("Errore di valutazione tipologia di problema.");
     }
+
+
 
 }//end function SetInput()
 //___________________________________________________________
@@ -400,7 +415,7 @@ function DeltaLambda(){
                     break;
                 case "W":
                     deltaLambda=(-longitudeArr)-longitude;
-                    if (deltaLambda<0 && Math.abs(deltaLambda)<180){
+                    if (deltaLambda<0 && Math.abs(deltaLambda)<=180){
                         letteraDeltaLambda="W";
                         deltaLambda=Math.abs(deltaLambda);
                     }else if (deltaLambda<0 && Math.abs(deltaLambda)>180){//caso passaggio antimeridiano da E->W
@@ -419,7 +434,7 @@ function DeltaLambda(){
             switch (letteraLonArr){
                 case "E":
                     deltaLambda=longitudeArr-(-longitude);
-                    if (deltaLambda>=0 && deltaLambda<180){
+                    if (deltaLambda>=0 && deltaLambda<=180){
                         letteraDeltaLambda="E";
                     }else if (deltaLambda>=0 && deltaLambda>180){//caso passaggio antimeridiano da W->E
                         letteraDeltaLambda="W";
@@ -563,7 +578,9 @@ function NavigazioneMeridiano(){
 function NavigazioneParallelo(){
     DeltaLambda();
     latitudeGeocentrica = Math.atan((1-Math.pow(eccentricita,2)) * Math.tan(Deg2Rad(latitude)));
-    cammino = (deltaLambda*60) * Math.cos(Deg2Rad(latitudeGeocentrica));
+    cammino = (deltaLambda*60) * Math.cos(latitudeGeocentrica);
+    console.log(latitudeGeocentrica);
+    console.log("Cammino: "+cammino);
     switch (letteraDeltaLambda){
         case "E":
             rottaVera=90;
@@ -591,12 +608,15 @@ function RisolviSecondoProblema(){
                     DeltaLambda();
                     RottaVera();
                     Cammino();
+                    SetOutput();
                     break;
                 case "navigazione meridiano":
                     NavigazioneMeridiano();
+                    SetOutputCasiParticolari();
                     break;
                 case "navigazione parallelo":
                     NavigazioneParallelo();
+                    SetOutputCasiParticolari();
                     break;
                 default:
                     alert("Errore nella risoluzione del secondo problema di lossodromia.");
@@ -622,8 +642,12 @@ function SetOutput(){
             if (eccentricita===0){
 
                 risultati.text = `Cammino: ${cammino.toFixed(2)}NM
+
 Rotta vera: ${rottaVera.toFixed(2)}°
-Δϕ crescente: ${deltaPhiCre}'
+
+
+Maggiori dettagli
+Δϕ crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPsi}
 ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}
 ϕ Crescente Arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}`;
             }else if (eccentricita!==0){
@@ -633,11 +657,12 @@ Rotta vera: ${rottaVera.toFixed(2)}°
                 let gradiLatGeoArr = Math.floor(latitudeGeocentricaArr), primiLatGeoArr = (latitudeGeocentricaArr-gradiLatGeoArr)*60;
 
                 risultati.text=`Cammino: ${cammino.toFixed(2)}NM
+
 Rotta Vera: ${rottaVera.toFixed(2)}°
-ΔΨ: ${deltaPsi} ${letteraDeltaPsi}
-Ψ Partenza: ${gradiLatGeo}° ${primiLatGeo.toFixed(5)}' ${letteraLat}
-Ψ Arrivo: ${gradiLatGeoArr}° ${primiLatGeoArr.toFixed(5)}' ${letteraLatArr}
-ΔΨ crescente: ${deltaPhiCre}'
+
+
+Maggiori dettagli
+ΔΨ crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPsi}
 Ψ Partenza crescente: ${latitudeCre.toFixed(5)}' ${letteraLat}
 Ψ Arrivo crescente: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}`;
             }
@@ -651,3 +676,41 @@ Rotta Vera: ${rottaVera.toFixed(2)}°
     }
 }//end function SetOutput()
 //___________________________________________________________
+
+
+//___________________________________________________________
+//funzione che gestisce gli output dei casi particolari, navigazione su parallelo e navigazione meridiano
+function SetOutputCasiParticolari(){
+    switch (bug){
+        case 0:
+            switch (tipoProblema) {
+                case "navigazione parallelo":
+                    risultati.text=`Navigazione su parallelo!
+
+Cammino: ${cammino.toFixed(2)} NM
+
+Rotta vera: ${rottaVera.toFixed(2)}°`;
+                    break;
+
+                case "navigazione meridiano":
+                    risultati.text=`Navigazione su meridiano!
+
+Cammino: ${cammino.toFixed(2)} NM
+
+Rotta vera: ${rottaVera.toFixed(2)}`;
+                    break;
+            }
+            break;
+
+        case 1:
+            risultati.text=` `;
+            break;
+
+        default:
+            alert("Errore di valutazione restituzione risultati tramite valutazione di bug.");
+            break;
+    }
+}//end function SetOutputCasiParticolari()
+//___________________________________________________________
+
+

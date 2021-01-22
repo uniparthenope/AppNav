@@ -636,8 +636,10 @@ function RisolviPrimoProblema(){
 //___________________________________________________________
 //funzione che gestisce gli output del primo problema di lossodromia
 function SetOutput(){
-    let gradiLatArr=Math.floor(latitudeArr), primiLatArr=60*(latitudeArr-gradiLatArr);
-    let gradiLonArr=Math.floor(longitudeArr), primiLonArr=60*(longitudeArr-gradiLonArr);
+    let latitudineArrivo=CorreggiRoundOff(latitudeArr);
+    let gradiLatArr=Math.floor(latitudineArrivo), primiLatArr=60*(latitudineArrivo-gradiLatArr);
+    let longitudineArrivo=CorreggiRoundOff(longitudeArr);
+    let gradiLonArr=Math.floor(longitudineArrivo), primiLonArr=60*(longitudineArrivo-gradiLonArr);
     let gradiLatGeo=Math.floor(latitudeGeocentrica), primiLatGeo=60*(latitudeGeocentrica-gradiLatGeo);
     let gradiLatGeoArr=Math.floor(latitudeGeocentricaArr), primiLatGeoArr=60*(latitudeGeocentricaArr-gradiLatGeoArr);
     deltaLambda=Math.abs(deltaLambda);
@@ -645,15 +647,21 @@ function SetOutput(){
     switch (bug){
         case 0:
             if(eccentricita===0){
-                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}
-Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
+                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(2)}' ${letteraLatArr}
+Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}
+
+
+Maggiori dettagli
 Δϕ Crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPhi}
 ϕ Crescente Arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}
 ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}`;
                 //come output per sfera c'era anche   Δλ: ${deltaLambda.toFixed(9)}° ${letteraDeltaLambda}
             }else{
-                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}
-Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
+                risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(2)}' ${letteraLatArr}
+Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}
+
+
+Maggiori dettagli
 ΔΨ: ${deltaPsi.toFixed(5)}'
 Ψ Partenza: ${gradiLatGeo}° ${primiLatGeo.toFixed(5)}' ${letteraLat}
 Ψ Arrivo: ${gradiLatGeoArr}° ${primiLatGeoArr.toFixed(5)}' ${letteraLatArr}`;
@@ -677,14 +685,14 @@ function SetOutputParticolari(){
                     let gradiLatArr=Math.floor(latitudeArr), primiLatArr=(latitudeArr-gradiLatArr)*60;
 
                     risultati.text=`Navigazione su meridiano
-Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(5)}' ${letteraLatArr}`;
+Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(2)}' ${letteraLatArr}`;
                     break;
 
                 case "navigazione parallelo":
                     let gradiLonArr=Math.floor(longitudeArr), primiLonArr=(longitudeArr-gradiLonArr)*60;
 
                     risultati.text=`Navigazione su parallelo
-Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}`;
+Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}`;
                     break;
             }
             break;
@@ -696,3 +704,37 @@ Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(5)}' ${letteraLonArr}
 
 }//end function SetOutputParticolari()
 //___________________________________________________________
+
+
+
+
+/*
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ */
+//funzione che implementa la correzione di round-off negli output
+function CorreggiRoundOff(num){
+    let ris, differenza;
+    let decimali=num-Math.floor(num);
+
+    let int;
+    if (decimali>0.5){
+        int=Math.floor(num)+1;
+    }else {
+        int=Math.floor(num);
+    }
+
+    differenza=Math.abs(int-num);
+    if (differenza < (1e-5) ){
+        ris=int;
+    }else {
+        ris=num;
+    }
+
+    return ris;
+
+}//end function CorreggiRoundOff(num)
+/*
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ */
