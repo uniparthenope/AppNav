@@ -103,7 +103,9 @@ exports.onListPickerLoaded = onListPickerLoaded;
 function onTapCalcolo(args){
     var button=args.object;
 
+    console.log("Inizio");
     SetInput();
+    console.log("Tipo: "+tipoProblema+" Bug: "+bug);
     RisolviSecondoProblema();
 
 
@@ -212,29 +214,58 @@ function SetInput(){
 
     if ((latitude!==latitudeArr) && (longitude!==longitudeArr)){
         tipoProblema="navigazione generale";
-    }else if ((longitude===longitudeArr) && (letteraLon===letteraLonArr) ){
-        if ((latitude===latitudeArr) && (letteraLat!==letteraLatArr)){
-            tipoProblema="navigazione meridiano";
-        }else {
-            tipoProblema="navigazione meridiano";
-        }
 
-    }else if ((latitude===latitudeArr) && (letteraLat===letteraLatArr)){
-        if ((longitude===longitudeArr) && (letteraLon!==letteraLonArr)){
-            tipoProblema="navigazione parallelo";
-        }else {
-            tipoProblema="navigazione parallelo";
-        }
+    }else if ((latitude===latitudeArr)){
+        switch (latitude){
+            case 0:
+                tipoProblema="navigazione parallelo";
+                break;
 
-    }else if ((latitude===latitudeArr) &&(letteraLat!==letteraLatArr)){
-        tipoProblema="navigazione generale";
+            default:
+                if (letteraLat===letteraLatArr){
+                    tipoProblema="navigazione parallelo";
+                }else if (letteraLat!==letteraLatArr){
+                    if (longitude===longitudeArr){
+                        switch (longitude){
+                            case 0:
+                                tipoProblema="navigazione meridiano";
+                                break;
+                            case 180:
+                                tipoProblema="navigazione meridiano";
+                                break;
+                            default:
+                                if (letteraLon===letteraLonArr){
+                                    tipoProblema="navigazione meridiano";
+                                }else{
+                                    tipoProblema="navigazione generale";
+                                }
+                        }//end switch(longitude)
+                    }
+                }
+                break;
 
-    }else if ((longitude===longitudeArr) && (letteraLon!==letteraLonArr)){
-        if (letteraLat!==letteraLatArr){
-            tipoProblema="navigazione generale";
+        }//end switch(latitude)
+
+    }else if(latitude!==latitudeArr){
+        if (longitude===longitudeArr){
+            switch (longitude){
+                case 0:
+                    tipoProblema="navigazione meridiano";
+                    break;
+                case 180:
+                    tipoProblema="navigazione meridiano";
+                    break;
+                default:
+                    if (letteraLon===letteraLonArr){
+                        tipoProblema="navigazione meridiano";
+                    }else {
+                        tipoProblema="navigazione generale";
+                    }
+
+            }
         }
-    }else{
-        alert("Errore di valutazione tipologia di problema.");
+    }else {
+        alert("Errore valutazione tipologia di problema.");
     }
 
 
@@ -697,7 +728,7 @@ Rotta vera: ${rottaVera.toFixed(2)}°`;
 
 Cammino: ${cammino.toFixed(2)} NM
 
-Rotta vera: ${rottaVera.toFixed(2)}`;
+Rotta vera: ${rottaVera.toFixed(2)}°`;
                     break;
             }
             break;

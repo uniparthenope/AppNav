@@ -1242,12 +1242,55 @@ function CamminoLossodromia(){
 //___________________________________________________________
 //funzione che verifica il problema di lossodromia
 function VerificaLossodromia(){
-    if ((latitudeArr===latitude) && (letteraLatArr===letteraLat)){
-        tipoLossodromia="navigazione parallelo";
-    }else if ((longitudeArr===longitude) && (letteraLonArr===letteraLon)){
-        tipoLossodromia="navigazione meridiano";
-    }else {
-        tipoLossodromia="generale";
+    if ((latitude===latitudeArr)){
+        switch (latitude){
+            case 0:
+                tipoLossodromia="navigazione parallelo";
+                break;
+
+            default:
+                if (letteraLat===letteraLatArr){
+                    tipoLossodromia="navigazione parallelo";
+                }else if (letteraLat!==letteraLatArr){
+                    if (longitude===longitudeArr){
+                        switch (longitude){
+                            case 0:
+                                tipoLossodromia="navigazione meridiano";
+                                break;
+                            case 180:
+                                tipoLossodromia="navigazione meridiano";
+                                break;
+                            default:
+                                if (letteraLon===letteraLonArr){
+                                    tipoLossodromia="navigazione meridiano";
+                                }else{
+                                    tipoLossodromia="generale";
+                                }
+                        }//end switch(longitude)
+                    }
+                }
+                break;
+
+        }//end switch(latitude)
+
+    }else if(latitude!==latitudeArr){
+        if (longitude===longitudeArr){
+            switch (longitude){
+                case 0:
+                    tipoLossodromia="navigazione meridiano";
+                    break;
+                case 180:
+                    tipoLossodromia="navigazione meridiano";
+                    break;
+                default:
+                    if (letteraLon===letteraLonArr){
+                        tipoLossodromia="navigazione meridiano";
+                    }else {
+                        tipoLossodromia="generale";
+                    }
+
+            }
+        }
     }
 }
 //___________________________________________________________
@@ -1391,6 +1434,12 @@ function RisolviLossodromia(){
                             SetOutputLossodromia();
                             break;
                     }
+                    break;
+
+                case "navigazione equatoriale":
+                    VerificaLossodromia();
+                    NavigazioneParalleloSecondoProbLosso();
+                    SetOutputCasiParticolari();
                     break;
 
             }//end switch(tipoProblema)
