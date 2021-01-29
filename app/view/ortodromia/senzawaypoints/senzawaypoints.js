@@ -1008,7 +1008,7 @@ Rotta Finale: ${rottaFinale.toFixed(2)}°
 
 Coordinate Primo Vertice:
 Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVertice}
-Longtiudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
+Longitudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
 
 Coordinate Secondo Vertice:
 Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVerticeOpp}
@@ -1242,7 +1242,9 @@ function CamminoLossodromia(){
 //___________________________________________________________
 //funzione che verifica il problema di lossodromia
 function VerificaLossodromia(){
-    if ((latitude===latitudeArr)){
+    if ( (latitude!==latitudeArr) && (longitude!==longitudeArr) ){
+        tipoLossodromia="generale";
+    }else if ((latitude===latitudeArr)){
         switch (latitude){
             case 0:
                 tipoLossodromia="navigazione parallelo";
@@ -1378,7 +1380,9 @@ function RisolviLossodromia(){
             switch (tipoProblema){
 
                 case "navigazione generale":
+                    
                     VerificaLossodromia();
+
                     switch (tipoLossodromia){
                         case "navigazione meridiano":
                             NavigazioneMeridianoSecondoProbLosso();
@@ -1989,6 +1993,13 @@ function ControllaVerticeNavMista(){
     }
 
 
+    //costrutto condizionale che verifica la latitudine del parallelo limite con quella del vertice
+    if (Math.abs(latitudeParalleloLimite)>Math.abs(latitudeVertice)){
+        bug=2;
+    }
+
+
+
 
 
 
@@ -1999,11 +2010,12 @@ function ControllaVerticeNavMista(){
 //___________________________________________________________
 //funzione che risolve la navigazione mista
 function RisolviNavMista(){
+    SetParalleloLimite();
     ControllaVerticeNavMista();
     if (bug===2){
         alert("Non si può risolvere la navigazione mista! \n Il vertice non è tra il punto di partenza e arrivo!");
     }else {
-        SetParalleloLimite();
+        //SetParalleloLimite();
         switch (bug){
             case 0:
                 CamminiOrtodromieNavMista();

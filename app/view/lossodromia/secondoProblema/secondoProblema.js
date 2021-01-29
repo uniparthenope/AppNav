@@ -678,9 +678,9 @@ Rotta vera: ${rottaVera.toFixed(2)}°
 
 
 Maggiori dettagli
-Δϕ crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPsi}
-ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}
-ϕ Crescente Arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}`;
+Δϕ crescente: ${Math.abs( deltaPhiCre.toFixed(2) )}' ${letteraDeltaPsi}
+ϕ Crescente Partenza: ${Math.abs( latitudeCre.toFixed(2) )}' ${letteraLat}
+ϕ Crescente Arrivo: ${Math.abs( latitudeArrCre.toFixed(2) )}' ${letteraLatArr}`;
             }else if (eccentricita!==0){
                 //let gradiLatCre = Math.floor(latitudeCre), primiLatCre = (latitudeCre-gradiLatCre)*60;
                 //let gradiLatCreArr = Math.floor(latitudeArrCre), primiLatArrCre = (latitudeArrCre-gradiLatCreArr)*60;
@@ -693,9 +693,9 @@ Rotta Vera: ${rottaVera.toFixed(2)}°
 
 
 Maggiori dettagli
-ΔΨ crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPsi}
-Ψ Partenza crescente: ${latitudeCre.toFixed(5)}' ${letteraLat}
-Ψ Arrivo crescente: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}`;
+ΔΨ crescente: ${Math.abs( deltaPhiCre.toFixed(2) )}' ${letteraDeltaPsi}
+Ψ Partenza crescente: ${Math.abs( latitudeCre.toFixed(2) )}' ${letteraLat}
+Ψ Arrivo crescente: ${Math.abs( latitudeArrCre.toFixed(2) )}' ${letteraLatArr}`;
             }
             break;
         case 1:

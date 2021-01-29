@@ -948,7 +948,7 @@ Rotta Finale: ${rottaFinale.toFixed(2)}°
 
 Coordinate Primo Vertice:
 Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVertice}
-Longtiudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
+Longitudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
 
 Coordinate Secondo Vertice:
 Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVerticeOpp}

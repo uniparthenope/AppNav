@@ -652,9 +652,9 @@ Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}
 
 
 Maggiori dettagli
-Δϕ Crescente: ${deltaPhiCre.toFixed(5)}' ${letteraDeltaPhi}
-ϕ Crescente Arrivo: ${latitudeArrCre.toFixed(5)}' ${letteraLatArr}
-ϕ Crescente Partenza: ${latitudeCre.toFixed(5)}' ${letteraLat}`;
+Δϕ Crescente: ${Math.abs( deltaPhiCre.toFixed(2) )}' ${letteraDeltaPhi}
+ϕ Crescente Arrivo: ${Math.abs( latitudeArrCre.toFixed(2) )}' ${letteraLatArr}
+ϕ Crescente Partenza: ${Math.abs( latitudeCre.toFixed(2) )}' ${letteraLat}`;
                 //come output per sfera c'era anche   Δλ: ${deltaLambda.toFixed(9)}° ${letteraDeltaLambda}
             }else{
                 risultati.text=`Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(2)}' ${letteraLatArr}
@@ -662,9 +662,9 @@ Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}
 
 
 Maggiori dettagli
-ΔΨ: ${deltaPsi.toFixed(5)}'
-Ψ Partenza: ${gradiLatGeo}° ${primiLatGeo.toFixed(5)}' ${letteraLat}
-Ψ Arrivo: ${gradiLatGeoArr}° ${primiLatGeoArr.toFixed(5)}' ${letteraLatArr}`;
+ΔΨ crescente: ${Math.abs( deltaPhiCre.toFixed(2) )}' ${letteraDeltaPhi}
+Ψ Partenza crescente: ${Math.abs( latitudeCre.toFixed(2) )}' ${letteraLat}
+Ψ Arrivo crescente: ${Math.abs( latitudeArrCre.toFixed(2) )}' ${letteraLatArr}`;
             }
             break;
         case 1:
