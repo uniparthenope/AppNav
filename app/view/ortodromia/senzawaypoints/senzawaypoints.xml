@@ -133,7 +133,7 @@
                     <!--Mostro i risultati della lossdormia-->
                     <StackLayout row="13" col="0" colSpan="3" class="riquadro">
                         <StackLayout class="titolo-riquadro-ortodromia">
-                            <Label textWrap="true" text="Risultati Lossodromia"/>
+                            <Label textWrap="true" text="Risultati Lossodromia" fontSize="17"/>
                         </StackLayout>
                     </StackLayout>
 

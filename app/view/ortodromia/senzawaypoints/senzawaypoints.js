@@ -1380,7 +1380,7 @@ function RisolviLossodromia(){
             switch (tipoProblema){
 
                 case "navigazione generale":
-                    
+
                     VerificaLossodromia();
 
                     switch (tipoLossodromia){
@@ -1481,6 +1481,10 @@ exports.onNavigazioneMistaTap=onNavigazioneMistaTap;
 function SetParalleloLimite(){
     letteraLatParalleloLimite=idLetteraParalleloLimite.text;
     bug=0;
+
+    if (tipoProblema==="navigazione equatore"){
+        bug=3;
+    }
 
     if (parseInt(idGradiParalleloLimite.text)===90){
         latitudeParalleloLimite=parseInt(idGradiParalleloLimite.text);
@@ -1829,11 +1833,11 @@ function RottaFinaleNavMista(){
     }*/
 
     if (letteraLatArr==="S"){
-        latitude*=(-1);
+        latitudeArr*=(-1);
     }
 
     if (letteraLatParalleloLimite==="S"){
-        latitudeArr*=(-1);
+        latitudeParalleloLimite*=(-1);
     }
 
     let beta, num, den;
@@ -1841,6 +1845,7 @@ function RottaFinaleNavMista(){
     den= Math.sin(Deg2Rad((d2/60)))*Math.sin(Deg2Rad((90-latitudeArr)));
 
     beta = Rad2Deg(Math.acos(num/den));
+    console.log(("beta: "+beta));
 
     switch (letteraDeltaLambda){
         case "E":
@@ -1853,6 +1858,7 @@ function RottaFinaleNavMista(){
             alert("Errore determinazione rotta finale");
             break;
     }
+    console.log("Rf: "+rottaFinaleNavMista);
 
     if (latitudeArr<0){
         latitudeArr=Math.abs(latitudeArr);
@@ -2011,7 +2017,12 @@ function ControllaVerticeNavMista(){
 //funzione che risolve la navigazione mista
 function RisolviNavMista(){
     SetParalleloLimite();
-    ControllaVerticeNavMista();
+    if (bug===3){
+        alert("Non si può risolvere la navigazione mista!");
+    }else {
+        ControllaVerticeNavMista();
+    }
+
     if (bug===2){
         alert("Non si può risolvere la navigazione mista! \n Il vertice non è tra il punto di partenza e arrivo!");
     }else {
@@ -2029,6 +2040,8 @@ function RisolviNavMista(){
                 break;
             case 1:
                 alert("Errore risoluzione navigazione mista per controllo di bug.");
+                break;
+            case 3:
                 break;
             default:
                 alert("Errore valutazione risoluzione navigazione mista.");
@@ -2201,7 +2214,7 @@ function LatitudineArrivo(){
         letteraLatArr="S";
         latitudeArr=Math.abs(latitudeArr);
     }else {
-        alert("Errorre valutazione lettera latitudine arrivo, primo problema di ortodromia.");
+        alert("Errore valutazione lettera latitudine arrivo, primo problema di ortodromia.");
     }
 
 
@@ -2438,6 +2451,8 @@ Longitudine: ${gradiNodoSec}° ${primiNodoSec.toFixed(2)}' W`;
 Latitudine: ${gradiLatArr}° ${primiLatArr.toFixed(2)}' ${letteraLatArr}
 Longitudine: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}
 
+Rotta finale: ${rottaFinale.toFixed(2)}°
+
 Vertici
 Sono i poli geografici
 
@@ -2446,7 +2461,7 @@ Sono dati dall'intersezione del meridiano con l'equatore`;
            break;
 
        case "navigazione equatore":
-           let gradiLonArr1=Math.floor(longitudeArr), primiLonArr1=(longitudeArr-gradiLonArr1);
+           let gradiLonArr1=Math.floor(longitudeArr), primiLonArr1=(longitudeArr-gradiLonArr1)*60;
 
            risultatiPrimoProblema.text=`Punto di Arrivo
 Latitudine: ${latitude}° ${letteraLat}
@@ -2476,209 +2491,280 @@ function NavigazioneMeridianoPrimoProbOrto(){
     * i valori che può assumere a rotta iniziale, dopodichè effettuo i controlli, in base alla lettera coordinata
     * associata alla latitudine di partenza, se il valore del cammino supera le colatitudini o 90+latitudinePartenza;
     * solo dopo tali controlli posso determinare la latitudine di arrivo e la rotta finale*/
+    var colat, differenza;
+
     if (rottaIniziale===0 || rottaIniziale===360){
         switch (letteraLat){
             case "N":
-                let colatitudine=90-latitude;
-                let differenza;
-                if (cammino>(colatitudine*60)){//caso partenza emisfero nord e passo il polo nord
-                    differenza=cammino-(colatitudine*60);
-                    differenza/=60;
-                    latitudeArr=90-differenza;
+                colat=90-latitude;
+                if ( cammino>(colat*60) ){//CASO partenza emisfero nord e superamento del polo nord
 
-                    if (latitudeArr>=0){
-                        letteraLatArr="N";
-                    }else if (latitudeArr<0){
-                        letteraLatArr="S";
-                    }else{
-                        alert("Errore valutazione lettera coordinata latitudine arrivo, navigazione meridiano primo problema di ortodromia.");
+                    differenza=(cammino-(colat*60))/60;
+                    if (differenza>360){
+                        differenza = differenza-360;
                     }
 
-                    switch (letteraLon){
-                        case "E":
-                            longitudeArr=longitude+180;
-                            longitudeArr=360-longitudeArr;
-                            letteraLonArr="W";
-                            break;
-                        case "W":
-                            longitudeArr=-longitude+180;
-                            letteraLonArr="E";
-                            break;
-                        default:
-                            alert("Errore valutazione longitudine e lettera longitudine arrivo, navigazione meridiano primo problema ortodromia.");
-                            break;
+                    if (differenza<=90){//arrivo emisfero nord nell'antimeridiano
+                        latitudeArr = 90-differenza;
+                        letteraLatArr = "N";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }//end switch(letteraLon
+                        rottaFinale = 180;
+
+                    }else  if ( differenza>90 && differenza<=180){//arrivo emisfero sud nell'antimeridiano
+                        latitudeArr = differenza-90;
+                        letteraLatArr = "S";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }
+                        rottaFinale = 180;
+
+                    }else if ( differenza>180 && differenza<270 ){//arrivo emisfero sud nel meridiano di partenza
+                        latitudeArr = 270-differenza;
+                        letteraLatArr = "S";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
+
+                    }else if ( differenza>=270 && differenza<=360 ){//arrivo emisfero nord nel meridiano di partenza
+                        latitudeArr = differenza-270;
+                        letteraLatArr = "N";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
                     }
 
-                    rottaFinale=180;
-
-                }else if (cammino<=(colatitudine*60)){//caso emisfero nord e non passo il polo nord
-                    longitudeArr=longitude; letteraLonArr=letteraLon;
-
-                    latitudeArr=latitude+(cammino/60);
-                    letteraLatArr="N";
-
-                    rottaFinale=rottaIniziale;
-                }else {
-                    alert("Errore risoluzione primo caso navigazione meridiano primo problema ortodromia.");
+                }else  if ( cammino<=(colat*60) ){//CASO partenza emisfero nord e non superamento del polo nord
+                    latitudeArr = latitude+(cammino/60);
+                    letteraLatArr = "N";
+                    longitudeArr = longitude;
+                    letteraLonArr = letteraLon;
+                    rottaFinale = rottaIniziale;
                 }
                 break;
 
             case "S":
-                if (cammino>((90+latitude)*60)){//caso che dall'emisfero sud passo il polo nord
-                    let differenza = cammino-((90+latitude)*60);
-                    latitudeArr=90-(differenza/60);
-                    if (latitudeArr>=0){
-                        letteraLatArr="N";
-                    }else if(latitudeArr<0){
-                        letteraLatArr="S";
+                if ( cammino>(90+latitude)*60 ){//CASO partenza emisfero su e superamento polo nord
+
+                    differenza = (cammino-((90+latitude)*60))/60;
+                    if (differenza>360){
+                        differenza=differenza-360;
+                    }
+
+                    if ( differenza<=90 ){//arrivo emisfero nord nell'antimeridiano
+                        latitudeArr = 90-differenza;
+                        letteraLatArr = "N";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }
+                        rottaFinale = 180;
+
+                    }else if ( differenza>90 && differenza<=180 ){//arrivo emisfero sud nell'antimeridiano
+                        latitudeArr = differenza-90;
+                        letteraLatArr = "S";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }
+                        rottaFinale = 180;
+
+                    }else if ( differenza>180 && differenza<270 ){//arrivo emisfero su nel meridiano di partenza
+                        latitudeArr = 270-differenza;
+                        letteraLatArr = "S";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
+
+                    }else if ( differenza>=270 && differenza<=360 ){//arrivo emisfero nord nel meridiano di partenza
+                        latitudeArr = differenza-270;
+                        letteraLatArr = "N";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
+
+                    }
+
+                }else if ( cammino<=(90+latitude)*60 ){//CASO partenza emisfero sud e non superamento del polo nord
+                    latitudeArr = (-latitude)+(cammino/60);
+                    if ( latitudeArr>=0){
+                        letteraLatArr = "N";
                     }else {
-                        alert("Errore valutazione lettera coordinata latitudine arrivo, navigazione meridiano primo problema ortodromia.");
+                        letteraLatArr = "S";
+                        latitudeArr = Math.abs(latitudeArr);
                     }
-
-                    switch (letteraLon){
-                        case "E":
-                            longitudeArr=360-(longitude+180);
-                            letteraLonArr="W";
-                            break;
-                        case "W":
-                            longitudeArr=-longitude+180;
-                            letteraLonArr="E";
-                            break;
-                        default:
-                            alert("Errore valutazione longitudine e lettera longitudine, navigazione meridiano primo problema ortodromia.");
-                            break;
-                    }
-
-                    rottaFinale=180;
-
-                }else if (cammino<=((90+latitude)*60)){//caso emisfero sud, rotta nord ma non supero il polo nord
-
-                    latitudeArr=(-latitude)+(cammino/60);
-                    if (latitudeArr>=0){
-                        letteraLatArr="N";
-                    }else if (latitudeArr<0){
-                        letteraLatArr="S";
-                    }else {
-                        alert("Errore valutazione lettera coordinata latitudine, navigaizione meridiano primo problema ortodromia.");
-                    }
-
-                    longitudeArr=longitude; letteraLonArr=letteraLon;
-
-                    rottaFinale=rottaIniziale;
-
-                }else {
-                    alert("Errore risoluzione secondo caso navigazione meridiano primo problema ortodromia.");
+                    longitudeArr = longitude;
+                    letteraLonArr = letteraLon;
+                    rottaFinale = rottaIniziale;
                 }
-                break;
-            default:
-                alert("Errore risoluzione navigazione meridiano primo problema di ortodromia.");
                 break;
         }//end switch(letteraLat)
 
-    }else if (rottaIniziale===180){
+    }else if ( rottaIniziale===180 ){
+
         switch (letteraLat){
             case "N":
-                if (cammino>((90+latitude)*60)){//caso emisfero nord rotta sud e passaggio polo sud
-                    let differenza=cammino-((90+latitude)*60);
-                    latitudeArr=(-90)+differenza;
-                    if (latitudeArr<0){
-                        letteraLatArr="S";
-                    }else if (latitudeArr>=0){
-                        letteraLatArr="N";
-                    }else {
-                        alert("Errore valutazione lettera coordinata latitudine, navigazione meridiano primo problema ortodromia.");
+                if ( cammino>(90+latitude)*60 ){//CASO partenza emisfero nord e superamento del polo sud
+
+                    differenza = (cammino - ((90+latitude)*60))/60;
+                    if (differenza>360){
+                        differenza=differenza-360;
                     }
 
-                    switch (letteraLon){
-                        case "E":
-                            longitudeArr=360-(longitude+180);
-                            letteraLonArr="W";
-                            break;
-                        case "W":
-                            longitudeArr=-longitude+180;
-                            letteraLonArr="E";
-                            break;
-                        default:
-                            alert("Errore valutazione longitudine e lettera coordinata, navigazione meridiano primo problema ortodromia.");
-                            break;
+                    if ( differenza<90){//arrivo emisfero su nell'antimeridiano
+                        latitudeArr = 90-differenza;
+                        letteraLatArr = "S";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }
+                        rottaFinale = 0;
+
+                    }else if ( differenza>=90 && differenza<=180 ){//arrivo emisfero nord nell'antimeridiano
+                        latitudeArr = differenza-90;
+                        letteraLatArr = "N";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }
+                        rottaFinale = 0;
+
+                    }else  if ( differenza>180 && differenza<=270 ){//arrivo emisfero nord nel meridiano di partenza
+                        latitudeArr = 270-differenza;
+                        letteraLatArr = "N";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
+
+                    }else if ( differenza>270 && differenza<=360 ){//arrivo emisfero su nel meridiano di partenza
+                        latitudeArr = differenza-270;
+                        letteraLatArr = "S";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
+
                     }
 
-                    rottaFinale=0;
-
-                }else if (cammino<=((90+latitude)*60)){
-                    longitudeArr=longitude; letteraLonArr=letteraLon;
-
-                    latitudeArr=latitude-(cammino/60);
+                }else if ( cammino<=(90+latitude)*60 ){//CASO partenza emisfero nord e non superamento del polo sud
+                    latitudeArr = latitude - (cammino/60);
                     if (latitudeArr>=0){
-                        letteraLonArr="N";
-                    }else if (latitudeArr<0){
-                        letteraLonArr="S";
+                        letteraLatArr = "N";
                     }else {
-                        alert("Errore valutazione lettera coordinata latitudine, navigazione meridiano prio problema ortodromia.");
+                        letteraLatArr = "S";
+                        latitudeArr = Math.abs(latitudeArr);
                     }
-
-                    rottaFinale=rottaIniziale;
-
-                }else {
-                    alert("Errore risoluzione terzo caso navigazione meridiano primo problema ortodromia.");
+                    longitudeArr = longitude;
+                    letteraLonArr = letteraLon;
+                    rottaFinale = rottaIniziale;
                 }
                 break;
 
             case "S":
-                let colatitudine=90-latitude;
-                let differenza;
+                colat = 90-latitude;
+                if ( cammino>(colat*60) ){//CASO partenza emisfero sud e superameto del polo sud
 
-                if (cammino>(colatitudine*60)){
-                    differenza=cammino-(colatitudine*60);
-
-                    latitudeArr=-90+(differenza/60);
-                    if (latitudeArr>=0){
-                        letteraLatArr="N";
-                    }else if (latitudeArr<0){
-                        letteraLatArr="S";
-                    }else {
-                        alert("Errore vlautazione lettera coordinata latitudine, navigazione meridiano primo problema ortodromia.");
+                    differenza = (cammino-(colat*60))/60;
+                    if (differenza>360){
+                        differenza=differenza-360;
                     }
 
-                    switch (letteraLon){
-                        case "E":
-                            longitudeArr=360-(longitude+180);
-                            letteraLonArr="W";
-                            break;
-                        case "W":
-                            longitudeArr=(-longitude)+180;
-                            letteraLonArr="E";
-                            break;
-                        default:
-                            alert("Errore valutazione lettera coordinata longitudine, navigazione meridiano primo problema ortodromia.");
-                            break;
+                    if ( differenza<90 ){//arrivo emisfero sud nell'antimeridiano
+                        latitudeArr = 90-differenza;
+                        letteraLatArr = "S";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }
+                        rottaFinale = 0;
+
+                    }else if ( differenza>=90 && differenza<=180 ){//arrivo emisfero nord nell'antimeridiano
+                        latitudeArr = differenza-90;
+                        letteraLatArr = "N";
+                        switch (letteraLon){
+                            case "E":
+                                longitudeArr = 360-(longitude+180);
+                                letteraLonArr = "W";
+                                break;
+                            case "W":
+                                longitudeArr = (-longitude)+180;
+                                letteraLonArr = "E";
+                                break;
+                        }
+                        rottaFinale = 0;
+
+                    }else if ( differenza>180 && differenza<=270 ){//arrivo emisfero nord nel meridiano di partenza
+                        latitudeArr = 270-differenza;
+                        letteraLatArr = "N";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
+
+                    }else if ( differenza>270 && differenza<=360 ){//arrivo emisfero sud nel meridiano di partenza
+                        latitudeArr = differenza-270;
+                        letteraLatArr = "S";
+                        longitudeArr = longitude;
+                        letteraLonArr = letteraLon;
+                        rottaFinale = rottaIniziale;
+
                     }
 
-                    rottaFinale=0;
+                }else if ( cammino<=(colat*60) ){
+                    latitudeArr = latitude+(cammino/60);
+                    letteraLatArr = "S";
+                    longitudeArr = longitude;
+                    letteraLonArr = letteraLon;
+                    rottaFinale = rottaIniziale;
 
-                }else if (cammino<=(colatitudine*60)){
-                    longitudeArr=longitude; letteraLonArr=letteraLon;
-
-                    latitudeArr=latitude+(cammino/60);
-                    letteraLatArr="S";
-
-                    rottaFinale=rottaIniziale;
-
-                }else {
-                    alert("Errore risoluzione quarto caso navigazione meridiano primo problema ortodromia.");
                 }
                 break;
-
-            default:
-                alert("Errore risoluzione navigazione meridiano primo problema di ortodromia.");
-                break;
-
         }//end switch(letteraLat)
 
-    }else {
-        alert("Errore valutazione rotta nella risoluzione navigazione meridiano primo problema ortodromia.");
-    }
-
+    }//end if (rottaIniziale)
 }//end function NavigazioneMeridianoPrimoProbOrto()
 //___________________________________________________________
 
@@ -2688,74 +2774,126 @@ function NavigazioneMeridianoPrimoProbOrto(){
 function NavigazioneEquatorePrimoProbOrto(){
     latitudeArr=latitude; letteraLatArr=letteraLat;
 
-    deltaLambda=(cammino/60);
-    switch (letteraLon){
-        case "E":
-            switch (rottaIniziale){
-                case 90:
-                    longitudeArr=longitude+deltaLambda;
-                    if (longitudeArr>=180){
-                        letteraLonArr="W";
-                        longitudeArr=360-longitudeArr;
-                    }else if (longitudeArr<180){
-                        letteraLonArr="E";
-                    }else {
-                        alert("Errore valutazione lettera coordinata longitudine, navigazione equatore primo problema ortodromia.");
-                    }
-                    break;
-                case 270:
-                    longitudeArr=longitude-deltaLambda;
-                    if (longitudeArr>=0){
-                        letteraLonArr="E";
-                    }else if (longitudeArr<0){
-                        letteraLonArr="W";
-                        longitudeArr=Math.abs(longitudeArr);
-                    }else{
-                        alert("Erorre valutazione lettera coorinata longitudine, navigazione equatore primo problema ortodromia.");
-                    }
-                    break;
-                default:
-                    alert("Errore risoluzione primo caso navigazine equatore primo problema ortodromia.");
-                    break;
-            }
-            break;
+    var colong, differenza;
 
-        case "W":
-            switch (rottaIniziale){
-                case 90:
-                    longitudeArr=(-longitude)+deltaLambda;
-                    if (longitudeArr>=0){
-                        letteraLonArr="E";
-                    }else if (longitudeArr<0){
-                        letteraLonArr="W";
-                        longitudeArr=Math.abs(longitudeArr);
-                    }else {
-                        alert("Erorre valutazione lettera coorinata longitudine, navigazione equatore primo problema ortodromia.");
-                    }
-                    break;
-                case 270:
-                    longitudeArr=(-longitude)-deltaLambda;
-                    if (Math.abs(longitudeArr)>=180){
-                        letteraLonArr="E";
-                        longitudeArr=360-Math.abs(longitudeArr);
-                    }else if (Math.abs(longitudeArr)<180){
-                        letteraLonArr="W";
-                        longitudeArr=Math.abs(longitudeArr);
-                    }else {
-                        alert("Erorre valutazione lettera coorinata longitudine, navigazione equatore primo problema ortodromia.");
-                    }
-                    break;
-                default:
-                    alert("Erroe risoluzione secondo caso navigazione equatore primo problema ortodromia.");
-                    break;
-            }
-            break;
+    if (rottaIniziale===90){
+        switch (letteraLon){
+            case "E":
+                colong=180-longitude;
+                if ( cammino>(colong*60) ){//CASO partenza emisfero est e superamento dell'antimeridiano di Gre.
 
-        default:
-            alert("Errore risoluzione navigazione equatore primo proiblrma di ortodromia.");
-            break;
-    }//end switch(letteraLon)
+                    differenza = (cammino-(colong*60))/60;
+                    if ( differenza<180 ){//arrivo emisfero ovest
+                        longitudeArr = 180-differenza;
+                        letteraLonArr = "W";
 
+                    }else if ( differenza>=180 && differenza<=360 ){//arrivo emisfero est
+                        longitudeArr = differenza-180;
+                        letteraLonArr = letteraLon;
+
+                    }else if ( differenza>360 && differenza<540 ){//arrivo emisfero ovest dopo aver percorso più di un giro del globo
+                        longitudeArr = 540-differenza;
+                        letteraLonArr = "W";
+
+                    }
+
+                }else  if ( cammino<(colong*60) ){//CASO partenza emisfero est ee non superamento dell'antimeridiano di Gre.
+                    longitudeArr = longitude+(cammino/60);
+                    letteraLonArr = letteraLon;
+
+                }
+                break;
+
+            case "W":
+                if ( cammino>(180+longitude)*60 ){//CASO partenza emisfero ovest e superamento dell'antimeridiano di Gre.
+
+                    differenza = (cammino-(180+longitude)*60)/60;
+                    if ( differenza<180){//arrivo emisfero ovest
+                        longitudeArr = 180-differenza;
+                        letteraLonArr = "W";
+
+                    }else if ( differenza>=180 && differenza<=360 ){//arrivo emisfero est
+                        longitudeArr = differenza-180;
+                        letteraLonArr = "E";
+
+                    }else if ( differenza>360 && differenza<540 ){//arrivo emisfero ovest dopo aver percorso un giro del globo
+                        longitudeArr = 540-differenza;
+                        letteraLonArr = "W";
+
+                    }
+
+                }else if ( cammino<(180+longitude)*60 ){//CASO partenza emisfero ovest e non superamento dell'antimeridiano di Gre.
+                    longitudeArr = (-longitude)+(cammino/60);
+                    if ( longitudeArr>=0){
+                        letteraLonArr = "E";
+                    }else {
+                        letteraLonArr = "W";
+                        longitudeArr = Math.abs(longitudeArr);
+                    }
+
+                }
+                break;
+        }//end switch(letteraLon)
+
+    }else if ( rottaIniziale===270 ){
+        switch (letteraLon){
+            case "E":
+                if ( cammino>=(180+longitude)*60 ){//CASO partenza emisfero est e superamento antimeridiano di Gre.
+
+                    differenza = (cammino-(180+longitude)*60)/60;
+                    if ( differenza<=180 ){//arrivo emisfero est
+                        longitudeArr = 180-differenza;
+                        letteraLonArr = letteraLon;
+
+                    }else if ( differenza>180 && differenza<360 ){//arrivo emisfero ovest
+                        longitudeArr = differenza-180;
+                        letteraLonArr = "W";
+
+                    }else if ( differenza>=360 && differenza<=540 ){//arrivo emisfero est dopo un giro del globo
+                        longitudeArr = 540-differenza;
+                        longitudeArr = "E";
+
+                    }
+
+                }else if ( cammino<(180+longitude)*60 ){//CASO partenza emisfero est e non superamento antimeridiano di Gre.
+                    longitudeArr = longitude-(cammino/60);
+                    if ( longitudeArr>=0 ){
+                        letteraLonArr = letteraLon;
+                    }else {
+                        letteraLonArr = "W";
+                        longitudeArr = Math.abs(longitudeArr);
+                    }
+                }
+                break;
+
+            case "W":
+                colong = 180-longitude;
+
+                if ( cammino>=(colong*60) ){//CASO partenza emisfero ovest e superamento antimeridiano di Gre.
+
+                    differenza = (cammino-(colong*60))/60;
+                    if ( differenza<=180 ){//arrivo emisfero est
+                        longitudeArr = 180-differenza;
+                        letteraLonArr = "E";
+
+                    }else if ( differenza>180 && differenza<360 ){
+                        longitudeArr = differenza-180;
+                        letteraLonArr = letteraLon;
+
+                    }else if ( differenza>=360 && differenza<=540 ){//arrivo emisfero est dopo un giro del globo
+                        longitudeArr = 540-differenza;
+                        letteraLonArr = "E";
+
+                    }
+
+                }else if ( cammino<(colong*60) ){//CASO partenza emisfero ovest e non superamento antimeridiano di Gre.
+                    longitudeArr = longitude+(cammino/60);
+                    letteraLonArr = letteraLon;
+
+                }
+                break;
+        }
+    }
 }//end function NavigazioneEquatorePrimoProbOrto()
 //___________________________________________________________
 
@@ -3289,7 +3427,7 @@ function RisolviPrimoProblemaLossodromia(){
                     break;
 
                 case "navigazione equatore":
-                    RisolviEquatorePrimoProblema();
+                    //RisolviEquatorePrimoProblema(); non serve perché la risoluzione equatoriale è uguale con quella per l'ortodromia del primo problema
                     SetOutputPrimoProblemaLossodromia();
                     break;
             }
