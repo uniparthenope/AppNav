@@ -437,7 +437,7 @@ function NavigazioneMeridiano(){
                 alert("ATTENZIONE, non puoi superare il polo!");
             }else if (((rottaVera===180)&&(cammino>(90+latitudeGeocentrica)*60))){
                 alert("ATTENSIONE, non puoi superare il polo!");
-            }else if ((rottaVera===0||rottaVera===360)&&(cammino<(colatitudine*60))){
+            }else if ((rottaVera===0||rottaVera===360)&&(cammino<=(colatitudine*60))){
                 latitudeGeocentricaArr=latitudeGeocentrica+deltaPsi;
                 let num=Math.tan(Deg2Rad(latitudeGeocentricaArr));
                 let den=1-Math.pow(eccentricita,2);
@@ -447,7 +447,7 @@ function NavigazioneMeridiano(){
                 longitudeArr=longitude;
                 letteraLonArr=letteraLon;
 
-            }else if ((rottaVera===180)&&(cammino<(90+latitudeGeocentrica)*60)){
+            }else if ((rottaVera===180)&&(cammino<=(90+latitudeGeocentrica)*60)){
                 latitudeGeocentricaArr=latitudeGeocentrica-deltaPsi;
                 if (latitudeGeocentricaArr>=0){
                     letteraLatArr="N";
@@ -468,7 +468,7 @@ function NavigazioneMeridiano(){
                 alert("ATTENZIONE, non puoi superare il polo!");
             }else if ((rottaVera===180)&&(cammino>colatitudine*60)){
                 alert("ATTENZIONE, non puoi superare il polo!");
-            }else if ((rottaVera===0||rottaVera===360)&&(cammino<(90+latitudeGeocentrica)*60)){
+            }else if ((rottaVera===0||rottaVera===360)&&(cammino<=(90+latitudeGeocentrica)*60)){
                 latitudeGeocentricaArr=(-latitudeGeocentrica)+deltaPsi;
                 if (latitudeGeocentricaArr>=0){
                     letteraLatArr="N";
@@ -483,7 +483,7 @@ function NavigazioneMeridiano(){
                 longitudeArr=longitude;
                 letteraLonArr=letteraLon;
 
-            }else if ((rottaVera===180)&&(cammino<colatitudine*60)){
+            }else if ((rottaVera===180)&&(cammino<=colatitudine*60)){
                 latitudeGeocentricaArr=(-latitudeGeocentrica)-deltaPsi;
                 latitudeGeocentricaArr=Math.abs(latitudeGeocentricaArr);
                 letteraLatArr="S";

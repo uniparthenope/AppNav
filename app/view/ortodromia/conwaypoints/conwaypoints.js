@@ -250,6 +250,8 @@ function SetInput(){
         tipoProblema="navigazione meridiano con arrivo meridiano";
     }else if (latitude===0 && latitudeArr===0){
         tipoProblema="navigazione equatoriale";
+    }else if ( ((longitude===0) || (longitude===180)) && (longitude===longitudeArr) ){
+        tipoProblema="navigazione meridiano con arrivo meridiano";
     }else{
         tipoProblema="navigazione generale";
     }
@@ -1349,6 +1351,10 @@ function WaypointsCammino(){
             }else if ( rottaIniziale===270 ){
 
                 for (i=1;i<=numeroWaypoints;i++){
+
+                    latWaypoints[i] = latitude;
+                    letteraLatWaypoints[i] = letteraLat;
+                    
                     if (letteraLonWaypoints[i-1]==="W"){
                         lonWaypoints[i-1]*=(-1);
                     }

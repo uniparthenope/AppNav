@@ -53,6 +53,7 @@ var rottaInizialeNavMista, rottaFinaleNavMista;
 var deltaLambdaVerticiNavMista, letteraDeltaLambdaNavMista;
 var camminoV1V2, rottaV1V2;
 var risultatiNavigazioneMista;
+var bugNav;
 
 //dichiaro di seguito tutte le variabili per ricevere gli input relativi al primo problema di ortodromia
 var idGradiLat1, idPrimiLat1, idLetteraLat1;
@@ -273,6 +274,8 @@ function SetInput(){
         tipoProblema="navigazione meridiano con arrivo meridiano";
     }else if (latitude===0 && latitudeArr===0){
         tipoProblema="navigazione equatoriale";
+    }else if ( ((longitude===0) || (longitude===180)) && (longitude===longitudeArr) ){
+        tipoProblema="navigazione meridiano con arrivo meridiano";
     }else{
         tipoProblema="navigazione generale";
     }
@@ -1481,9 +1484,10 @@ exports.onNavigazioneMistaTap=onNavigazioneMistaTap;
 function SetParalleloLimite(){
     letteraLatParalleloLimite=idLetteraParalleloLimite.text;
     bug=0;
+    bugNav=0;
 
-    if (tipoProblema==="navigazione equatore"){
-        bug=3;
+    if (tipoProblema==="navigazione equatoriale" || tipoProblema==="navigazione equatore" || tipoProblema==="navigazione meridiano con arrivo meridiano" || tipoProblema==="navigazione meridiano"){
+        bugNav=3;
     }
 
     if (parseInt(idGradiParalleloLimite.text)===90){
@@ -2016,38 +2020,41 @@ function ControllaVerticeNavMista(){
 //___________________________________________________________
 //funzione che risolve la navigazione mista
 function RisolviNavMista(){
+
     SetParalleloLimite();
-    if (bug===3){
+
+    if (bugNav===3){
         alert("Non si può risolvere la navigazione mista!");
     }else {
         ControllaVerticeNavMista();
-    }
-
-    if (bug===2){
-        alert("Non si può risolvere la navigazione mista! \n Il vertice non è tra il punto di partenza e arrivo!");
-    }else {
-        //SetParalleloLimite();
-        switch (bug){
-            case 0:
-                CamminiOrtodromieNavMista();
-                RottaInizialeNavMista();
-                DeltaLambdaVerticiNavMista();
-                DeltaLambdaV1V2();
-                NavigazioneParallelo();
-                RottaParallelo();
-                RottaFinaleNavMista();
-                SetOutputNavMista();
-                break;
-            case 1:
-                alert("Errore risoluzione navigazione mista per controllo di bug.");
-                break;
-            case 3:
-                break;
-            default:
-                alert("Errore valutazione risoluzione navigazione mista.");
-                break;
+        if (bug===2){
+            alert("Non si può risolvere la navigazione mista! \n Il vertice non è tra il punto di partenza e arrivo!");
+        }else {
+            //SetParalleloLimite();
+            switch (bug){
+                case 0:
+                    CamminiOrtodromieNavMista();
+                    RottaInizialeNavMista();
+                    DeltaLambdaVerticiNavMista();
+                    DeltaLambdaV1V2();
+                    NavigazioneParallelo();
+                    RottaParallelo();
+                    RottaFinaleNavMista();
+                    SetOutputNavMista();
+                    break;
+                case 1:
+                    alert("Errore risoluzione navigazione mista per controllo di bug.");
+                    break;
+                case 3:
+                    break;
+                default:
+                    alert("Errore valutazione risoluzione navigazione mista.");
+                    break;
+            }
         }
     }
+
+
 
 }//end function RisolviNavMista()
 //___________________________________________________________
@@ -3108,6 +3115,7 @@ function RisolviMeridianoPrimoProblema(){
         case "N":
             switch (rottaIniziale){
                 case 0:
+                    console.log(cammino/60);
                     if ((cammino/60)<=(90-latitude)){
                         deltaPhi=cammino/60;
                         latitudeArr=latitude+deltaPhi;
@@ -3422,6 +3430,8 @@ function RisolviPrimoProblemaLossodromia(){
                     break;
 
                 case "navigazione meridiano":
+                    rottaVera=rottaIniziale;
+                    bugMeiridiano=0;
                     RisolviMeridianoPrimoProblema();
                     SetOutputPrimoProblemaLossodromia();
                     break;
@@ -3434,7 +3444,7 @@ function RisolviPrimoProblemaLossodromia(){
             break;
 
         case 1:
-            alert("Errore, impossibileeffettuare il confronto con lossodromia.");
+            alert("Errore, impossibile effettuare il confronto con lossodromia.");
             break;
 
 
@@ -3481,6 +3491,7 @@ Latitudine: ${gradiLatX}° ${primiLatX.toFixed(2)}' ${letteraLatArr}`;
                     break;
                 default:
                     alert("Errore risoluzione output con valutazione bug meridiano.");
+                    break;
             }
     }
 }//end function SetOutputPrimoProblemaLossodromia()
