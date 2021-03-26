@@ -240,7 +240,9 @@ function SetInput(){
                                     tipoProblema="navigazione generale";
                                 }
                         }//end switch(longitude)
-                    }
+                    }else if (longitude!==longitudeArr){
+                        tipoProblema="navigazione generale";
+                    }//end if longitude
                 }
                 break;
 

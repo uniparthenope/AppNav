@@ -930,6 +930,7 @@ function NavigazioneMeridianoOrto(){
 * nell'antimeridiano del punto di partenza*/
 function NavigazioneMeridianoAntiMeridianoOrto(){
     let coLat=90-latitude, coLatArr=90-latitudeArr;
+    DeltaLambda();
 
     if (letteraLat===letteraLatArr){
         cammino=(coLat+coLatArr)*60;
@@ -1272,7 +1273,9 @@ function VerificaLossodromia(){
                                     tipoLossodromia="generale";
                                 }
                         }//end switch(longitude)
-                    }
+                    }else if (longitude!==longitudeArr){
+                        tipoLossodromia="generale";
+                    }//end if longitude
                 }
                 break;
 
@@ -1485,6 +1488,44 @@ function SetParalleloLimite(){
     letteraLatParalleloLimite=idLetteraParalleloLimite.text;
     bug=0;
     bugNav=0;
+    console.log("tipoProblema: "+tipoProblema);
+
+    /*di seguito vado a calcolare l'antimeridiano del punto di partenza
+    * in modo da poter verificare, solo dopo aver fatto tale calcolo, se
+    * si rientra in un caso particolare di ortodromia*/
+    let antiMeridiano, letteraAntiMeridiano;
+
+    switch (letteraLon){
+        case "E":
+            antiMeridiano=longitude+180;
+            if(antiMeridiano>=180){
+                antiMeridiano=360-antiMeridiano;
+                letteraAntiMeridiano="W";
+            }else{
+                letteraAntiMeridiano="E";
+            }
+            break;
+        case "W":
+            antiMeridiano=(-longitude)+180;
+            if(antiMeridiano>=0){
+                letteraAntiMeridiano="E";
+            }else {
+                letteraAntiMeridiano="W";
+            }
+            break;
+        default:
+            alert("Errore valutazione antimeridiano.");
+            break;
+    }
+
+    //ciclo condizionale che riconosce i casi particolari
+    if ((antiMeridiano===longitudeArr) && (letteraAntiMeridiano===letteraLonArr)){
+        tipoProblema="navigazione meridiano con arrivo antimeridiano";
+        DeltaLambda();
+    }
+    console.log("tipoProblema: "+tipoProblema);
+
+
 
     if (tipoProblema==="navigazione equatoriale" || tipoProblema==="navigazione equatore" || tipoProblema==="navigazione meridiano con arrivo meridiano" || tipoProblema==="navigazione meridiano"){
         bugNav=3;
@@ -1850,6 +1891,7 @@ function RottaFinaleNavMista(){
 
     beta = Rad2Deg(Math.acos(num/den));
     console.log(("beta: "+beta));
+    console.log(letteraDeltaLambda);
 
     switch (letteraDeltaLambda){
         case "E":
@@ -2034,6 +2076,7 @@ function RisolviNavMista(){
             switch (bug){
                 case 0:
                     CamminiOrtodromieNavMista();
+                    console.log("cammini nav mista: "+d1+" "+d2);
                     RottaInizialeNavMista();
                     DeltaLambdaVerticiNavMista();
                     DeltaLambdaV1V2();
@@ -2451,7 +2494,8 @@ Longitudine: ${gradiNodoSec}° ${primiNodoSec.toFixed(2)}' W`;
            break;
 
        case "navigazione meridiano":
-           let gradiLatArr=Math.floor(latitudeArr), primiLatArr=(latitudeArr-gradiLatArr)*60;
+           let latitudineArrivo1=CorreggiRoundOff(latitudeArr);
+           let gradiLatArr=Math.floor(latitudineArrivo1), primiLatArr=(latitudineArrivo1-gradiLatArr)*60;
            let gradiLonArr=Math.floor(longitudeArr), primiLonArr=(longitudeArr-gradiLonArr)*60;
 
            risultatiPrimoProblema.text=`Punto di Arrivo
@@ -2468,7 +2512,8 @@ Sono dati dall'intersezione del meridiano con l'equatore`;
            break;
 
        case "navigazione equatore":
-           let gradiLonArr1=Math.floor(longitudeArr), primiLonArr1=(longitudeArr-gradiLonArr1)*60;
+           let longitudineArrivo1 = CorreggiRoundOff(longitudeArr);
+           let gradiLonArr1=Math.floor(longitudineArrivo1), primiLonArr1=(longitudineArrivo1-gradiLonArr1)*60;
 
            risultatiPrimoProblema.text=`Punto di Arrivo
 Latitudine: ${latitude}° ${letteraLat}
@@ -3458,7 +3503,9 @@ function RisolviPrimoProblemaLossodromia(){
 function SetOutputPrimoProblemaLossodromia(){
     switch (tipoProblema){
         case "navigazione generale":
+            latitudeX=CorreggiRoundOff(latitudeX);
             let gradiLat=Math.floor(latitudeX), primiLat=(latitudeX-gradiLat)*60;
+            longitudeX=CorreggiRoundOff(longitudeX);
             let gradiLon=Math.floor(longitudeX), primiLon=(longitudeX-gradiLon)*60;
 
             risultatiLossodromia1.text=`A parità di cammino, le coordinate con il percorso lossodromico saranno differenti da quelle ottenute dal percorso ortodromico
@@ -3472,7 +3519,8 @@ Rotta Vera: ${rottaVera.toFixed(2)}°`;
             break;
 
         case "navigazione equatore":
-            let gradiLonX=Math.floor(longitudeArr), primiLonX=(longitudeArr-gradiLonX)*60;
+            let longitudeX1=CorreggiRoundOff(longitudeArr);
+            let gradiLonX=Math.floor(longitudeX1), primiLonX=(longitudeX1-gradiLonX)*60;
 
             risultatiLossodromia1.text=`Punto di Arrivo
 Longitudine: ${gradiLonX}° ${primiLonX.toFixed(2)}' ${letteraLonArr}`;
@@ -3481,7 +3529,8 @@ Longitudine: ${gradiLonX}° ${primiLonX.toFixed(2)}' ${letteraLonArr}`;
         case "navigazione meridiano":
             switch (bugMeiridiano){
                 case 0:
-                    let gradiLatX=Math.floor(latitudeArr), primiLatX=(latitudeArr-gradiLatX)*60;
+                    let latitudeX1=CorreggiRoundOff(latitudeArr);
+                    let gradiLatX=Math.floor(latitudeX1), primiLatX=(latitudeX1-gradiLatX)*60;
 
                     risultatiLossodromia1.text=`Punto di Arrivo
 Latitudine: ${gradiLatX}° ${primiLatX.toFixed(2)}' ${letteraLatArr}`;
@@ -3520,7 +3569,7 @@ Rotta vera: ${rottaVera.toFixed(2)}°`;
  */
 //funzione che implementa la correzione di round-off negli output
 function CorreggiRoundOff(num){
-    let ris, differenza;
+    let ris, differenza, primi;
     let decimali=num-Math.floor(num);
 
     let int;
@@ -3534,7 +3583,13 @@ function CorreggiRoundOff(num){
     if (differenza < (1e-5) ){
         ris=int;
     }else {
-        ris=num;
+        //ris=num;
+        primi = (num-Math.floor(num))*60;
+        if (Math.abs(60-primi)<(1e-2)){
+            ris=Math.floor(num)+1;
+        }else {
+            ris=num;
+        }
     }
 
     return ris;

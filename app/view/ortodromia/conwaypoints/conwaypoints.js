@@ -1354,7 +1354,7 @@ function WaypointsCammino(){
 
                     latWaypoints[i] = latitude;
                     letteraLatWaypoints[i] = letteraLat;
-                    
+
                     if (letteraLonWaypoints[i-1]==="W"){
                         lonWaypoints[i-1]*=(-1);
                     }
@@ -1712,7 +1712,7 @@ function RisolviWayPoints(){
  */
 //funzione che implementa la correzione di round-off negli output
 function CorreggiRoundOff(num){
-    let ris, differenza;
+    let ris, differenza, primi;
     let decimali=num-Math.floor(num);
 
     let int;
@@ -1726,7 +1726,13 @@ function CorreggiRoundOff(num){
     if (differenza < (1e-5) ){
         ris=int;
     }else {
-        ris=num;
+        //ris=num;
+        primi = (num-Math.floor(num))*60;
+        if (Math.abs(60-primi)<(1e-2)){
+            ris=Math.floor(num)+1;
+        }else {
+            ris=num;
+        }
     }
 
     return ris;

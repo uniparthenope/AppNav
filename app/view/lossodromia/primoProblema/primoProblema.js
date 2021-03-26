@@ -682,14 +682,16 @@ function SetOutputParticolari(){
         case 0:
             switch (tipoProblema){
                 case "navigazione meridiano":
-                    let gradiLatArr=Math.floor(latitudeArr), primiLatArr=(latitudeArr-gradiLatArr)*60;
+                    let latitudineArrivo=CorreggiRoundOff(latitudeArr);
+                    let gradiLatArr=Math.floor(latitudineArrivo), primiLatArr=(latitudineArrivo-gradiLatArr)*60;
 
                     risultati.text=`Navigazione su meridiano
 Latitudine Arrivo: ${gradiLatArr}° ${primiLatArr.toFixed(2)}' ${letteraLatArr}`;
                     break;
 
                 case "navigazione parallelo":
-                    let gradiLonArr=Math.floor(longitudeArr), primiLonArr=(longitudeArr-gradiLonArr)*60;
+                    let longitudineArrivo=CorreggiRoundOff(longitudeArr);
+                    let gradiLonArr=Math.floor(longitudineArrivo), primiLonArr=(longitudineArrivo-gradiLonArr)*60;
 
                     risultati.text=`Navigazione su parallelo
 Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}`;
@@ -714,7 +716,7 @@ Longitudine Arrivo: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${letteraLonArr}
  */
 //funzione che implementa la correzione di round-off negli output
 function CorreggiRoundOff(num){
-    let ris, differenza;
+    let ris, differenza, primi;
     let decimali=num-Math.floor(num);
 
     let int;
@@ -728,7 +730,13 @@ function CorreggiRoundOff(num){
     if (differenza < (1e-5) ){
         ris=int;
     }else {
-        ris=num;
+        //ris=num;
+        primi = (num-Math.floor(num))*60;
+        if (Math.abs(60-primi)<(1e-2)){
+            ris=Math.floor(num)+1;
+        }else {
+            ris=num;
+        }
     }
 
     return ris;
