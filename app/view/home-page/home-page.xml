@@ -1,12 +1,9 @@
-<Page navigatingTo="onNavigatingTo"
-      xmlns="http://schemas.nativescript.org/tns.xsd">
-
+<Page loaded="loaded">
     <ActionBar title="Benvenuti in Navigation path!">
         <ActionItem tap="onAbout" andoroid.postion="right" ios.position="right">
             <Label text="Info" class="About" />
         </ActionItem>
     </ActionBar>
-
 
     <ScrollView>
 
@@ -16,23 +13,14 @@
                 <Image src="~/images/logo.jpg" width="70" height="70"
                        marginTop="20" />
 
-                <Button class="btn btn-istruzioni" text="Istruzioni"
-                        tap="onIstruzioniTap" />
-                <Button class="btn btn-teoria" text="Cenni di teoria"
-                        tap="onTeoriaTap" />
-                <Label textWrap="true" text="Lossodromia" fontWeight="Bold"
-                       fontSize="17" color="lightgreen" />
-                <Button class="btn btn-lossodromia" text="Primo problema"
-                        tap="onPrimoproblemaTap" />
-                <Button class="btn btn-lossodromia" text="Secondo problema"
-                        tap="onSecondoproblemaTap" />
-                <Label textWrap="true" text="Ortodromia" fontWeight="Bold"
-                       fontSize="17" color="lightsalmon" />
-                <Button class="btn btn-ortodromia" text="Senza Waypoints"
-                        tap="onSenzawaypointsTap" />
-                <Button class="btn btn-ortodromia" text="Con Waypoints"
-                        tap="onConwaypointsTap" />
+                <Button class="btn-istruzioni" text="Istruzioni" tap="onIstruzioniTap" />
 
+                <Button class="btn-teoria" text="Cenni di teoria"  tap="onTeoriaTap" />
+
+                <Button class="btn-lossodromia" text="Lossodromia" tap="onLossodromiaTap" id="menuLossodromia"  />
+                
+                <Button class="btn-ortodromia" text="Ortodromia" tap="onOrtodromiaTap" id="menuOrtodromia" />
+               
 
                 <TextView editable="false">
                     <Span text=" " />
@@ -45,7 +33,4 @@
 
         </FlexboxLayout>
     </ScrollView>
-
-
-
 </Page>

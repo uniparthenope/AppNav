@@ -1,100 +1,98 @@
-const frames = require("tns-core-modules/ui/frame").Frame;
-const observableModule = require("tns-core-modules/data/observable");
-let appversion = require("nativescript-appversion");
+var frameModule = require('tns-core-modules/ui/frame');
+var observableModule = require('tns-core-modules/data/observable');
+const { Menu } = require('nativescript-menu');
+const { getViewById, action, Frame } = require('@nativescript/core');
+const { fromAstNodes } = require('@nativescript/core/ui/styling/css-selector');
+
+var page;
+
+exports.loaded = function (args){
+    page = args.object;
+
+}
 
 
-exports.onNavigatingTo = function (args) {
-    let page = args.object;
-    let viewModel = observableModule.fromObject({});
+exports.onAbout = function(){
+    let navigationEntry = {
+        moduleName: "view/info/info",
+        transition: {
+            name: "fade",
+            duration: 300
+        }
+    };
+    Frame.topmost().navigate(navigationEntry);
+}
 
-    appversion.getVersionName().then(function(v) {
-        page.getViewById("version").text = "Versione: " + v;
-    });
 
-    page.bindingContext = viewModel;
-};
-
-function onIstruzioniTap() {
+exports.onIstruzioniTap = function(){
     let navigationEntry = {
         moduleName: "view/istruzioni/istruzioni",
         transition: {
             name: "fade",
-            duration: 1000
+            duration: 300
         }
     };
-    frames.topmost().navigate(navigationEntry);
+    Frame.topmost().navigate(navigationEntry);
 }
-exports.onIstruzioniTap = onIstruzioniTap;
 
-function onTeoriaTap() {
-    let navigationEntryTeoria = {
+
+exports.onTeoriaTap = function(){
+    let navigationEntry = {
         moduleName: "view/cenniTeoria/cenniTeoria",
         transition: {
             name: "fade",
-            duration: 1000
+            duration: 300
         }
     };
-    frames.topmost().navigate(navigationEntryTeoria);
+    Frame.topmost().navigate(navigationEntry);
 }
-exports.onTeoriaTap = onTeoriaTap;
 
-function onPrimoproblemaTap() {
-    let navigationEntryPrimo = {
-        moduleName: "view/lossodromia/primoProblema/primoProblema",
+
+exports.onLossodromiaTap = function(){
+    let navigationEntryLosso = {
+        moduleName: "view/lossodromia/lossodromia",
         transition: {
             name: "fade",
-            duration: 1000
+            duration: 300
         }
     };
-    frames.topmost().navigate(navigationEntryPrimo);
+    Frame.topmost().navigate(navigationEntryLosso);
 }
-exports.onPrimoproblemaTap = onPrimoproblemaTap;
 
-function onSecondoproblemaTap() {
-    let navigationEntrySecondo = {
-        moduleName: "view/lossodromia/secondoProblema/secondoProblema",
-        transition: {
-            name: "fade",
-            duration: 1000
-        }
-    };
-    frames.topmost().navigate(navigationEntrySecondo);
-}
-exports.onSecondoproblemaTap = onSecondoproblemaTap;
+exports.onOrtodromiaTap = function(){
+    Menu.popup({
+        view: page.getViewById("menuOrtodromia"),
+        actions: ["Senza Waypoints", "Con Waypoints"]
+    })
+    .then(action=>{
+        switch (action.id){
+            case 0:
+                let navigationEntryConWay = {
+                    moduleName: "view/ortodromia/senzawaypoints/senzawaypoints",
+                    transition: {
+                        name: "fade",
+                        duration: 300
+                    }
+                };
+                Frame.topmost().navigate(navigationEntryConWay);
+                break;
+            case 1:
+                let navigationEntrySenzaWay = {
+                    moduleName: "view/ortodromia/conwaypoints/conwaypoints",
+                    transition: {
+                        name: "fade",
+                        duration: 300
+                    }
+                };
+                Frame.topmost().navigate(navigationEntrySenzaWay);
+                break;
+            default:
 
-function onConwaypointsTap() {
-    let navigationEntryConway = {
-        moduleName: "view/ortodromia/conwaypoints/conwaypoints",
-        transition: {
-            name: "fade",
-            duration: 1000
+                break;
         }
-    };
-    frames.topmost().navigate(navigationEntryConway);
+    })
+    .catch(console.log);
 }
-exports.onConwaypointsTap = onConwaypointsTap;
 
-function onSenzawaypointsTap() {
-    let navigationEntrySenzaway = {
-        moduleName: "view/ortodromia/senzawaypoints/senzawaypoints",
-        transition: {
-            name: "fade",
-            duration: 1000
-        }
-    };
-    frames.topmost().navigate(navigationEntrySenzaway);
-}
-exports.onSenzawaypointsTap = onSenzawaypointsTap;
 
-function onAbout(){
-    let navigationEntryAbout = {
-        moduleName: "view/info/info",
-        transition: {
-            name: "fade",
-            duration: 1230
-        }
-    };
-    frames.topmost().navigate(navigationEntryAbout);
-}
-exports.onAbout = onAbout;
 

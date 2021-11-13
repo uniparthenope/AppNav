@@ -1,1744 +1,421 @@
-const fromObject = require("tns-core-modules/data/observable").fromObject;
+var observableModule = require('tns-core-modules/data/observable');
+const { getViewById, action, Observable, fromObject, View } = require('@nativescript/core');
+
+var Punto_AND_Differenze = require('~/view/Punto&Differenze');
+var FunctionMath = require('~/view/FunctionMath');
+var OggettoOrtodromia = require('~/view/OggettoOrtodromia');
+const { clear } = require('@nativescript/core/application-settings');
+const { parse } = require('@nativescript/core/css');
 
 
-//___________________________________________________________
-//___________________________________________________________
-//DICHIARO DI SEGUITO TUTTE LE VARIABILI UTILI
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+/**
+ * Di seguito dichiaro tutte le variabili utili, di carattere globale
+ */
+
+//variabili della pagina
+var page;
+var bug;
+var bugVuota=1; //bug se la pagina ha tutti i textField vuoti, può assumere 4 valori: 0(tutto ok), 1(manca input)
+
+//variabili input punti di partenza e arrivo
+var gradiLat, primiLat, letteraLat="N"; //ho inizializzato solo la lettera di latitudine per il default dello switch
+var gradiLon, primiLon, letteraLon="E"; //ho inizializzato solo la lettera di longitudine per il default dello switch
+var gradiLatArr, primiLatArr, letteraLatArr="N"; //ho inizializzato solo la lettera di latitudine per il default dello switch
+var gradiLonArr, primiLonArr, letteraLonArr="E"; //ho inizializzato solo la lettera di longitudine per il default dello switch
+
+//variabile per il numero dei waypoints
+var numeroWay=null;
+
+//variabile per il selezionatore lista
+var lista = ["distanza","longitudine"];
+var metodoWay="distanza";
+
+//variabili dei punti e dei risultati
+var lat, lon;
+var latArr, lonArr;
+var risultatiOrto, risultatiWay;
+var outputOrto, outputWay;
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
-//di seguito dichiaro le variabili per ricevere gli inut dell'utente
-var idGradiLat, idPrimiLat, idLetteraLat;
-var idGradiLon, idPrimiLon, idLetteraLon;
-var idGradiLatArr, idPrimiLatArr, idLetteraLatArr;
-var idGradiLonArr, idPrimiLonArr, idLetteraLonArr;
-var idNumeroWaypoints;
-var tipolist;
 
-//variabile dei metodi di calcoli dei waypoints
-const tipologia=["distanza","longitudine"];
+//funzione caricamento pagina
+exports.onLoaded=function(args){
+    page=args.object;
 
-/*variabile dove viene memorizzata la tipologia del prblema, ovvero
-* se dai dati inseriti si rientra in uno dei casi particolari dell'ortodromia
-* */
-var tipoProblema;
+    page.bindingContext=Modello();
 
-/*variabile nella quale assegno il valore di bug che permette di non
-* effettuare i calcoli*/
-var bug=0;
-
-//di seguito dichiaro tutte le variabili per i calcoli della risoluzione dell'ortodromia
-var latitude, letteraLat, longitude, letteraLon;
-var latitudeArr, letteraLatArr, longitudeArr, letteraLonArr;
-var deltaPhi, letteraDeltaPhi, deltaLambda, letteraDeltaLambda, letteraDeltaLambdaPrima;
-var cammino, rottaIniziale;
-var rottaFinale;
-var latitudeVertice, letteraLatVertice, letteraLatVerticeOpp;
-var deltaLambdaVertice, longitudeVertice, letteraLonVertice, longitudeVerticeOpp, letteraLonVerticeOpp;
-var longitudeNodoPrincipale, longitudeNodoSecondario;
-
-//variabile per mostarre i risultati dell'ortodromia
-var risultati;
-
-//di seguito dichiaro tutte le variabili utili per il calcolo dei waypoints
-var numeroWaypoints;
-var latWaypoints=[], letteraLatWaypoints=[];
-var lonWaypoints=[], letteraLonWaypoints=[];
-
-//variabile del cammino per i waypoints con metodo delle distanze
-var camminoWayDist;
-
-//variabile della differenza di longitudine dei waypoints con il metodo delle differenze di longitudine
-var differenzaLongitudineWay;
-
-//variabile che regola gli output dei waypoints
-var risultatiWaypoints;
-
-//___________________________________________________________
-//___________________________________________________________
+}//fine funzione caricamento pagina
 
 
-//___________________________________________________________
-/*funzione che carica la pagina, ricordo che la pagina è unica
-* ma suddivise in schede, la differenza delle caselle di input
-* la creo negli identificatori associati alle caselle
-* */
-exports.onLoaded = function (args){
-    const page=args.object;
 
-    idGradiLat=page.getViewById("idGradiLat");
-    idPrimiLat=page.getViewById("idPrimiLat");
-    idLetteraLat=page.getViewById("idLetteraLat");
-    idGradiLon=page.getViewById("idGradiLon");
-    idPrimiLon=page.getViewById("idPrimiLon");
-    idLetteraLon=page.getViewById("idLetteraLon");
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+/**
+ * In Questa sezione dichiaro le funzione di gestione dei vari eventi della pagina
+ */
 
-    idGradiLatArr=page.getViewById("idGradiLatArr");
-    idPrimiLatArr=page.getViewById("idPrimiLatArr");
-    idLetteraLatArr=page.getViewById("idLetteraLatArr");
-    idGradiLonArr=page.getViewById("idGradiLonArr");
-    idPrimiLonArr=page.getViewById("idPrimiLonArr");
-    idLetteraLonArr=page.getViewById("idLetteraLonArr");
-
-    //ricevo in input il numero di waypoints
-    idNumeroWaypoints=page.getViewById("idNumeroWaypoints");
-
-    tipolist=page.getViewById("tipolist");
-
-    const vm = fromObject({
-        tipologia: tipologia
-    });
-    page.bindingContext=vm;
-
-    //ricevo la variabile dove mostarare i risultati
-    risultati=page.getViewById("risultati");
-
-    //ricevo la variabile dove mostrare i risultati dei waypoints
-    risultatiWaypoints=page.getViewById("risultatiWaypoints");
-
-}//end function onLoaded()
-//___________________________________________________________
+//evento che gestisce l'inserimento gradi latitudine del punto di partenza
+exports.CambioGradiLat=()=>{
+    gradiLat = parseInt( page.getViewById("idGradiLat").text );
+    if(gradiLat>90){
+        alert("Errore inserimento gradi latitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
+}
 
 
-//___________________________________________________________
-//funzione che gestisce il selezionatore lista
-function onListPickerLoaded(fargs) {
-    const listPickerComponent = fargs.object;
-    listPickerComponent.on("selectedIndexChange", (args) => {
-        var picker = args.object;
-        //QUESTO SNIPPET, SE NON COMMENTATO, SERVE PER CONTROLLARE SE FUNZIONA IL PICKER console.log(`index: ${picker.selectedIndex}; item" ${tipologia[picker.selectedIndex]}`);
-        switch (picker.selectedIndex){
-            case 0:
-                tipolist="distanza";
+
+//evento che gestisce l'inserimento primi latitudine del punto di partenza
+exports.CambioPrimiLat=()=>{
+    primiLat = parseFloat( page.getViewById("idPrimiLat").text );
+    if(primiLat>60){
+        alert("Errore inserimento primi latitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
+}
+
+
+
+//evento che gestisce lo switch della lettera di latitudine del punto di partenza
+exports.onSwitchLat=(args)=>{
+    const switchLat = args.object;
+    switchLat.on("checkedChange", (fargs)=>{
+        const sw = fargs.object;
+        const isChecked = sw.checked;
+        switch (isChecked){
+            case false:
+                letteraLat="N";
                 break;
-            case 1:
-                tipolist="longitudine";
+
+            case true:
+                letteraLat="S";
                 break;
         }
     });
 }
-exports.onListPickerLoaded = onListPickerLoaded;
-//___________________________________________________________
 
 
-//___________________________________________________________
-//funzione che gestisce l'azione del bottone per la risoluzione del problema di ortodromia
-function onTap(fargs){
-    const button = fargs.object;
 
-    RisolviOrtodromia();
-    RisolviWayPoints();
-
+//evento che gestisce l'inserimento gradi longitudine del punto di partenza
+exports.CambioGradiLon=()=>{
+    gradiLon = parseInt( page.getViewById("idGradiLon").text );
+    if(gradiLon>180){
+        alert("Errore inserimento gradi longitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
 }
-exports.onTap=onTap;
-//___________________________________________________________
 
 
-//___________________________________________________________
-/*funzione che memorizza gli input del SECODO PROBLEMA DI ORTODROMIA*/
+
+//evento che gestisce l'inserimento primi longitudine del punto di partenza
+exports.CambioPrimiLon=()=>{
+    primiLon = parseFloat( page.getViewById("idPrimiLon").text );
+    if(primiLon>60){
+        alert("Errore inserimento primi longitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
+}
+
+
+
+//evento che gestisce lo switch della lettera di longitudine del punto di partenza
+exports.onSwitchLon=(args)=>{
+    const switchLon = args.object;
+    switchLon.on("checkedChange", (fargs)=>{
+        const sw = fargs.object;
+        const isChecked = sw.checked;
+        switch (isChecked){
+            case false:
+                letteraLon="E";
+                break;
+
+            case true:
+                letteraLon="W";
+                break;
+        }
+    });
+}
+
+
+
+//evento che gestisce l'inserimento gradi latitudine del punto di arrivo
+exports.CambioGradiLatArr=()=>{
+    gradiLatArr = parseInt( page.getViewById("idGradiLatArr").text );
+    if(gradiLatArr>90){
+        alert("Errore inserimento gradi latitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
+}
+
+
+
+//evento che gestisce l'inserimento primi latitudine del punto di arrivo
+exports.CambioPrimiLatArr=()=>{
+    primiLatArr = parseFloat( page.getViewById("idPrimiLatArr").text );
+    if(primiLatArr>60){
+        alert("Errore inserimento primi latitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
+}
+
+
+
+//evento che gestisce lo switch della lettera di latitudine del punto di arrivo
+exports.onSwitchLatArr=(args)=>{
+    const switchLatArr = args.object;
+    switchLatArr.on("checkedChange", (fargs)=>{
+        const sw = fargs.object;
+        const isChecked = sw.checked;
+        switch (isChecked){
+            case false:
+                letteraLatArr="N";
+                break;
+
+            case true:
+                letteraLatArr="S";
+                break;
+        }
+    });
+}
+
+
+
+//evento cche gestisce l'inserimento gradi longitudine del punto di arrivo
+exports.CambioGradiLonArr=()=>{
+    gradiLonArr = parseInt( page.getViewById("idGradiLonArr").text );
+    if(gradiLonArr>180){
+        alert("Errore inserimento gradi longitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
+}
+
+
+
+//evento che gestisce l'inserimento primi longituidine del punto di arrivo
+exports.CambioPrimiLonArr=()=>{
+    primiLonArr = parseFloat( page.getViewById("idPrimiLonArr").text );
+    if(primiLonArr>60){
+        alert("Errore inserimento primi longitudine.");
+        bug=1;
+    }else{
+        bug=0;
+    }
+}
+
+
+
+//evento che gestisce lo switch della lettera di longitudine del punto di arrivo
+exports.onSwitchLonArr=(args)=>{
+    const switchLonArr = args.object;
+    switchLonArr.on("checkedChange", (fargs)=>{
+        const sw = fargs.object;
+        const isChecked = sw.checked;
+        switch (isChecked){
+            case false:
+                letteraLonArr="E";
+                break;
+
+            case true:
+                letteraLonArr="W";
+                break;
+        }
+    });
+}
+
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+
+
+
+
+
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+/**
+ * In questa sezione dichiaro tutte le funzioni utili per effettuare i calcoli della pagina
+ */
+
+
 function SetInput(){
-    letteraLat=idLetteraLat.text;
-    letteraLon=idLetteraLon.text;
-    letteraLatArr=idLetteraLatArr.text;
-    letteraLonArr=idLetteraLonArr.text;
-    numeroWaypoints=parseInt(idNumeroWaypoints.text);
-    bug=0;
+    /**
+     * Funzione che setta gli input della pagina
+     */
+    bugVuota=1;
+    let sommaLat, sommaLon, sommaLatArr, sommaLonArr;
 
-    //ciclo condizionale che controlla l'inserimento della latitudine di partenza
-    if(parseInt(idGradiLat.text)===90){
-        latitude=parseInt(idGradiLat.text);
-    }else if(parseInt(idGradiLat.text)<=90){
-        if(parseFloat(idPrimiLat.text)<=60){
-            latitude=parseInt(idGradiLat.text)+(parseFloat(idPrimiLat.text)/60);
-            if(latitude>90){//assegnazione bug se la latitudine risulta maggiore di 90 gradi
-                bug=1;
-            }
-        }else if(parseFloat(idPrimiLat.text)>60){
-            alert("Errore inserimeto primi di latitudine.");
-            bug=1; //asseganzione del bug, errore utente
-        }
+    if( isNaN(gradiLat) || isNaN(primiLat) || isNaN(gradiLon) || isNaN(primiLon) || isNaN(gradiLatArr) || isNaN(primiLatArr) || isNaN(gradiLonArr) || isNaN(primiLonArr) ){
+        bugVuota=1;
     }else{
-        alert("Errore inserimento gradi latitudine.");
-        bug=1;
+        bugVuota=0;
     }
 
-    //ciclo condizionale che controlla l'inserimento della longitudine di partenza
-    if(parseInt(idGradiLon.text)===180){
-        longitude=parseInt(idGradiLon.text);
-    }else if(parseInt(idGradiLon.text)<=180){
-        if(parseFloat(idPrimiLon.text)<=60){
-            longitude=parseInt(idGradiLon.text)+(parseFloat(idPrimiLon.text)/60);
-            if (longitude>180){
-                bug=1;//assegnazione bug se la longitudine risulta maggiore di 180 gradi
-            }
-        }else if(parseFloat(idPrimiLon.text)>60){
-            alert("Errore inserimento primi di longitudine.");
-            bug=1;
-        }
-    }else{
-        alert("Errore inserimento gradi longitudine.");
-        bug=1;
-    }
+    numeroWay = parseInt( page.getViewById("idNumeroWaypoints").text );
 
-    //ciclo consizionale che controlla l'inserimento della latitudine del punto di arrivo
-    if(parseInt(idGradiLatArr.text)===90){
-        latitudeArr=parseInt(idGradiLatArr.text);
-    }else if(parseInt(idGradiLatArr.text)<=90){
-        if(parseFloat(idPrimiLatArr.text)<=60){
-            latitudeArr=parseInt(idGradiLatArr.text)+(parseFloat(idPrimiLatArr.text)/60);
-            if(latitudeArr>90){//assegnazione bug se la latitudine risulta maggiore di 90 gradi
-                bug=1;
-            }
-        }else if(parseFloat(idPrimiLatArr.text)>60){
-            alert("Errore inserimeto primi di latitudine.");
-            bug=1; //asseganzione del bug, errore utente
-        }
-    }else{
-        alert("Errore inserimento gradi latitudine.");
-        bug=1;
-    }
+    
 
-    //ciclo condizionale che controlla l'inserimento della longitudine di arrivo
-    if(parseInt(idGradiLonArr.text)===180){
-        longitudeArr=parseInt(idGradiLonArr.text);
-    }else if(parseInt(idGradiLonArr.text)<=180){
-        if(parseFloat(idPrimiLonArr.text)<=60){
-            longitudeArr=parseInt(idGradiLonArr.text)+(parseFloat(idPrimiLonArr.text)/60);
-            if (longitudeArr>180){
-                bug=1;//assegnazione bug se la longitudine risulta maggiore di 180 gradi
-            }
-        }else if(parseFloat(idPrimiLonArr.text)>60){
-            alert("Errore inserimento primi di longitudine.");
-            bug=1;
-        }
-    }else{
-        alert("Errore inserimento gradi longitudine.");
-        bug=1;
-    }
+    switch(bugVuota){
+        case 0:
+            sommaLat = gradiLat+(primiLat/60);
+            sommaLon = gradiLon+(primiLon/60);
+            sommaLatArr = gradiLatArr+(primiLatArr/60);
+            sommaLonArr = gradiLonArr+(primiLonArr/60);
 
-    /*di seguito vado a calcolare l'antimeridiano del punto di partenza
-    * in modo da poter verificare, solo dopo aver fatto tale calcolo, se
-    * si rientra in un caso particolare di ortodromia*/
-    let antiMeridiano, letteraAntiMeridiano;
-
-    switch (letteraLon){
-        case "E":
-            antiMeridiano=longitude+180;
-            if(antiMeridiano>=180){
-                antiMeridiano=360-antiMeridiano;
-                letteraAntiMeridiano="W";
+            if(sommaLat<=90){
+                lat = Punto_AND_Differenze.SetLatitudine(gradiLat,primiLat,letteraLat);
+                bug=0;
             }else{
-                letteraAntiMeridiano="E";
+                bug=1;
             }
-            break;
-        case "W":
-            antiMeridiano=(-longitude)+180;
-            if(antiMeridiano>=0){
-                letteraAntiMeridiano="E";
-            }else {
-                letteraAntiMeridiano="W";
+
+            if(sommaLon<=180){
+                lon = Punto_AND_Differenze.SetLongitudine(gradiLon,primiLon,letteraLon);
+                bug=0;
+            }else{
+                bug=1;
             }
+
+            if(sommaLatArr<=90){
+                latArr = Punto_AND_Differenze.SetLatitudine(gradiLatArr,primiLatArr,letteraLatArr);
+                bug=0;
+            }else{
+                bug=1;
+            }
+
+            if(sommaLonArr<=180){
+                lonArr = Punto_AND_Differenze.SetLongitudine(gradiLonArr,primiLonArr,letteraLonArr);
+                bug=0;
+            }else{
+                bug=1;
+            }
+
             break;
-        default:
-            alert("Errore valutazione antimeridiano.");
+
+        case 1:
+            alert("Input vuoti.");
+            bug=1;
             break;
     }
 
-    //ciclo condizionale che riconosce i casi particolari
-    if ((antiMeridiano===longitudeArr) && (letteraAntiMeridiano===letteraLonArr)){
-        tipoProblema="navigazione meridiano con arrivo antimeridiano";
-    }else if ((longitude===longitudeArr) && (letteraLon===letteraLonArr)){
-        tipoProblema="navigazione meridiano con arrivo meridiano";
-    }else if (latitude===0 && latitudeArr===0){
-        tipoProblema="navigazione equatoriale";
-    }else if ( ((longitude===0) || (longitude===180)) && (longitude===longitudeArr) ){
-        tipoProblema="navigazione meridiano con arrivo meridiano";
-    }else{
-        tipoProblema="navigazione generale";
-    }
 
 }//end function SetInput()
-//___________________________________________________________
 
 
-//___________________________________________________________
-//funzione che trasforma gli angoli, da gradi in radianti
-//180:pi=a°:a(rad)
-function Deg2Rad(angolo){
-    angoloRad = (angolo*Math.PI)/180;
 
-    return angoloRad;
-}
-//___________________________________________________________
-
-
-//___________________________________________________________
-//funzione che trasforma gli angoli, da radianti in gradi
-function  Rad2Deg(angolo){
-    angoloDeg = (angolo*180)/Math.PI;
-
-    return angoloDeg;
-}
-//___________________________________________________________
-
-
-//___________________________________________________________
-//funzione che calcola la differenza di latitudine
-function DeltaPhi(){
-
-    switch (letteraLat){
-        case "N":
-            switch (letteraLatArr){
-                case "N":
-                    deltaPhi=latitudeArr-latitude;
-                    if(deltaPhi<0){
-                        letteraDeltaPhi="S";
-                        deltaPhi=Math.abs(deltaPhi);
-                    }else{
-                        letteraDeltaPhi="N"
-                    }
-                    break;
-                case "S":
-                    deltaPhi=(-latitudeArr)-latitude;
-                    if(deltaPhi<0){
-                        letteraDeltaPhi="S";
-                        deltaPhi=Math.abs(deltaPhi);
-                    }else{
-                        letteraDeltaPhi="N";
-                    }
-                    break;
-                default:
-                    alert("Errore valutazione differenza di latitudine.");
-                    break;
-            }
-            break;
-        case "S":
-            switch (letteraLatArr){
-                case "N":
-                    deltaPhi=latitudeArr-(-latitude);
-                    if(deltaPhi<0){
-                        letteraDeltaPhi="S";
-                        deltaPhi=Math.abs(deltaPhi);
-                    }else{
-                        letteraDeltaPhi="N";
-                    }
-                    break;
-                case "S":
-                    deltaPhi=(-latitudeArr)-(-latitude);
-                    if(deltaPhi<0){
-                        letteraDeltaPhi="S";
-                        deltaPhi=Math.abs(deltaPhi);
-                    }else{
-                        letteraDeltaPhi="N";
-                    }
-                    break;
-                default:
-                    alert("Errore di valutazione differenza di latitudine.");
-                    break;
-            }
-            break;
-        default:
-            alert("Erroe di valutazione differenza di latitudine.");
-            break;
-    }
-
-}//end function DeltaPhi()
-//___________________________________________________________
-
-
-//___________________________________________________________
-/*funzione che calcola la differenza di longitudine*/
-function DeltaLambda(){
-    switch (letteraLon){
-        case "E":
-            switch (letteraLonArr){
-                case "E":
-                    deltaLambda=longitudeArr-longitude;
-                    if (deltaLambda<0){
-                        letteraDeltaLambda="W";
-                        letteraDeltaLambdaPrima=letteraDeltaLambda;
-                        deltaLambda=Math.abs(deltaLambda);
-                    }else{
-                        letteraDeltaLambda="E";
-                        letteraDeltaLambdaPrima=letteraDeltaLambda;
-                    }
-                    break;
-                case "W":
-                    deltaLambda=(-longitudeArr)-longitude;
-                    if (deltaLambda<0 && Math.abs(deltaLambda)<180){
-                        letteraDeltaLambda="W";
-                        letteraDeltaLambdaPrima=letteraDeltaLambda;
-                        deltaLambda=Math.abs(deltaLambda);
-                    }else if (deltaLambda<0 && Math.abs(deltaLambda)>180){//caso passaggio antimeridiano da E->W
-                        letteraDeltaLambda="E";
-                        letteraDeltaLambdaPrima="W";
-                        deltaLambda=360-Math.abs(deltaLambda);
-                    }else{
-                        alert("Errore valutazione differenza di longitudine");
-                    }
-                    break;
-                default:
-                    alert("Errore valutazione differenza di longitudine");
-                    break;
-            }
-            break;
-        case "W":
-            switch (letteraLonArr){
-                case "E":
-                    deltaLambda=longitudeArr-(-longitude);
-                    if (deltaLambda>=0 && deltaLambda<180){
-                        letteraDeltaLambda="E";
-                        letteraDeltaLambdaPrima=letteraDeltaLambda;
-                    }else if (deltaLambda>=0 && deltaLambda>180){//caso passaggio antimeridiano da W->E
-                        letteraDeltaLambda="W";
-                        letteraDeltaLambdaPrima="E";
-                        deltaLambda=360-deltaLambda;
-                    }else {
-                        alert("Errore valutazione differenza di longitudine");
-                    }
-                    break;
-                case "W":
-                    deltaLambda=(-longitudeArr)-(-longitude);
-                    if(deltaLambda<0){
-                        letteraDeltaLambda="W";
-                        letteraDeltaLambdaPrima=letteraDeltaLambda;
-                        deltaLambda=Math.abs(deltaLambda);
-                    }else {
-                        letteraDeltaLambda="E";
-                        letteraDeltaLambdaPrima=letteraDeltaLambda;
-                    }
-                    break;
-                default:
-                    alert("Errore valutazione differenza di longitudine");
-                    break;
-            }
-            break;
-        default:
-            alert("Errore valutazione differenza di longitudine");
-            break;
-    }
-
-}//end function DeltaLambda()
-//___________________________________________________________
-
-
-//___________________________________________________________
-//funzione che calcola il cammino ortodromico
-function Cammino(){
-    if (letteraLatArr!==letteraLat){
-        latitudeArr*=(-1);
-    }
-
-    cammino = Math.sin(Deg2Rad(latitude))*Math.sin(Deg2Rad(latitudeArr))+(Math.cos(Deg2Rad(latitude))*Math.cos(Deg2Rad(latitudeArr))*Math.cos(Deg2Rad(deltaLambda)));
-    cammino = Rad2Deg(Math.acos(cammino)) * 60;
-
-    if (latitudeArr<0){
-        latitudeArr=Math.abs(latitudeArr);
-    }
-}//end function Cammino()
-//___________________________________________________________
-
-
-//___________________________________________________________
-/*funzione che calcola la rotta iniziale ortodromica
-* il calcolo della rotta iniziale, usando il teorema di eulero, mi porta
-* ad un valore non espresso in quadrantale, se considero i segni delle latitudini.
-* Però ho un caso particolare, se il punto di patrenza è nell'emisfero sud e
-* quello di arrivo nell'emisfero nord, il valore che ottengo è contato a partire
-* dal polo sud. Quindi abbiamo due casi sostanzialmente:
-* 1)punto di arrivo emisfero nord, ma a più ad est di quello di partenza, allora:
-*     Ri=180-valore_ottenuto_di_rotta
-* 2)punto di arrivo emisfero nord, ma più ad ovest di quello di partenza, allora:
-*     Ri=180+valore_ottenuto_di_rotta*/
-function RottaIniziale(){
-    if (letteraLatArr!==letteraLat){
-        latitudeArr*=(-1);
-    }
-
-    if (letteraDeltaLambda==="W"){
-        deltaLambda*=(-1);
-    }
-
-    let num=Math.sin(Deg2Rad(latitudeArr)) - Math.cos(Deg2Rad(cammino/60))*Math.sin(Deg2Rad(latitude));
-    let den=Math.sin(Deg2Rad(cammino/60))*Math.cos(Deg2Rad(latitude));
-    rottaIniziale=Math.acos(num/den);
-    rottaIniziale=Rad2Deg(rottaIniziale);
-
-    switch (letteraLat){
-        case "N":
-            switch (letteraDeltaLambda){
-                case "E":
-                    rottaIniziale*=1;
-                    break;
-                case "W":
-                    rottaIniziale=360-rottaIniziale;
-                    break;
-            }
-            break;
-        case "S":
-            switch (letteraDeltaLambda){
-                case "E":
-                    rottaIniziale=180-rottaIniziale;
-                    break;
-                case "W":
-                    rottaIniziale=180+rottaIniziale;
-                    break;
-            }
-    }
-
-    if (latitudeArr<0){
-        latitudeArr=Math.abs(latitudeArr);
-    }
-
-    if (deltaLambda<0){
-        deltaLambda=Math.abs(deltaLambda);
-    }
-
-}//end function RottaIniziale()
-//___________________________________________________________
-
-
-//___________________________________________________________
-/*funzione che calcola la rotta finale. Per il calcolo della rotta
-* finale si adopera il teorema di Eulero usando le variabili calcolate
-*    cos(90-phi)=cos(d0)*cos(90-phi')+sin(d0)*sin(90-phi')*cos(beta)
-*    beta=arccos(...)
-*    Rf=180-beta     se deltaLambda>0
-*    Rf=180+beta     se deltaLambda<0
-* */
-function   RottaFinale(){
-    if (letteraLat==="S"){
-        latitude*=(-1);
-    }
-
-    if (letteraLatArr==="S"){
-        latitudeArr*=(-1);
-    }
-
-    let beta, num, den;
-    num= Math.cos(Deg2Rad((90-latitude)))-(Math.cos(Deg2Rad((cammino/60)))*Math.cos(Deg2Rad((90-latitudeArr))));
-    den= Math.sin(Deg2Rad((cammino/60)))*Math.sin(Deg2Rad((90-latitudeArr)));
-
-    beta = Rad2Deg(Math.acos(num/den));
-
-    switch (letteraDeltaLambda){
-        case "E":
-            rottaFinale=180-beta;
-            break;
-        case "W":
-            rottaFinale=180+beta;
-            break;
-        default:
-            alert("Errore determinazione rotta finale");
-            break;
-    }
-
-    if (latitude<0){
-        latitude=Math.abs(latitude);
-    }
-
-    if (latitudeArr<0){
-        latitudeArr=Math.abs(latitudeArr);
-    }
-
-}//end function RottaFinale()
-//___________________________________________________________
-
-//___________________________________________________________
-//funzione che trasforma il valore, passato in input, in rotta quadrantale
-function Circolare2Quadrantale(rotta){
-    let rottaQuad;
-    if (rotta<=90){
-        rottaQuad=rotta;
-    }else if ((rotta>90) && (rotta<=180)){
-        rottaQuad=180-rotta;
-    }else if ((rotta>180) && (rotta<=270)){
-        rottaQuad=rotta-180;
-    }else if ((rotta>270) && (rotta<=360)){
-        rottaQuad=360-rotta;
-    }else{
-        alert("Errore trasformazione rotta da circolare in quadrantale.");
-    }
-
-    return rottaQuad;
-}//end funcction Circolare2Quadrantale(...)
-//___________________________________________________________
-
-
-//___________________________________________________________
-//funzione che trasforma i valori di rotta, inseriti, da quadrantale in circolare
-function Quadrantale2Circolare(rotta,letteraDeltaPhi,letteraDeltaLambda){
-    let rottaCirco;
-    switch (letteraDeltaPhi){
-        case "N":
-            switch (letteraDeltaLambda){
-                case "E":
-                    rottaCirco=rotta;
-                    break;
-                case "W":
-                    rottaCirco=360-rotta;
-                    break;
-                default:
-                    alert("Errore trasformazione rotta da quadrantale a circolare.");
-                    break;
-            }
-            break;
-        case "S":
-            switch (letteraDeltaLambda){
-                case "E":
-                    rottaCirco=180-rotta;
-                    break;
-                case "W":
-                    rottaCirco=180+rotta;
-                    break;
-                default:
-                    alert("Errore trasformazione rotta da quadrantale a circolare.");
-                    break;
-            }
-            break;
-        default:
-            alert("Errore trasformazione rotta da quadrantale a circolare.");
-            break;
-    }
-    return rottaCirco;
-}//end function Quadrantale2Circolare(...)
-//___________________________________________________________
-
-
-//___________________________________________________________
-/*funzione che calcola le coordinate dei vertici. Per calcolare
-* la latitudine dei vertici applico ancora il teorema di Clairout,
-* quindi:   cos(phiVertice)=cos(phiA)*sin(rottaIniziale)
-* Per calcolare la longitudine dei vertici applico il teorema
-* di Viete*/
-function Vertici(){
-    let rottaInizialeQuadrantale=Circolare2Quadrantale(rottaIniziale);
-    latitudeVertice=Rad2Deg(Math.acos(Math.cos(Deg2Rad(latitude)) * Math.sin(Deg2Rad(rottaInizialeQuadrantale))));
-
-    switch (letteraLat){
-        case "N":
-            if (rottaIniziale<90 || (rottaIniziale>270 && rottaIniziale<360)){
-                latitudeVertice*=1;
-            }else if ((rottaIniziale>90 && rottaIniziale<180) || (rottaIniziale>180 && rottaIniziale<270)){
-                latitudeVertice*=(-1);
-            }
-            break;
-        case "S":
-            if ((rottaIniziale<90) || (rottaIniziale>270 && rottaIniziale<360)){
-                latitudeVertice*=(-1);
-            }else if ((rottaIniziale>90 && rottaIniziale<180) || (rottaIniziale>180 && rottaIniziale<270)){
-                latitudeVertice*=1;
-            }
-            break;
-        default:
-            alert("Errore valutazione lettera latitudine vertice.");
-            break;
-    }
-
-    /*calcolo la longitudine del vertice con il metodo alternativo, ovvero seguendo la rotta iniziale, calcolo il
-    * cammino fino al vertice e dopo la differenza di longitudine e quindi la longitudine del vertice*/
-    let num=Math.sin(Deg2Rad(latitude))*Math.sin(Deg2Rad(latitudeVertice));
-    let den=1-Math.cos(Deg2Rad(latitude))*Math.cos(Deg2Rad(latitudeVertice))*Math.sin(Deg2Rad(Circolare2Quadrantale(rottaIniziale)));
-    let camminoVertice=Math.acos(num/den);//valore in radianti
-
-    deltaLambdaVertice=Math.sin(Deg2Rad(Circolare2Quadrantale(rottaIniziale)))*Math.cos(camminoVertice);
-    deltaLambdaVertice=Rad2Deg(Math.acos(deltaLambdaVertice));
-
-    switch (letteraLon){
-        case "E":
-            switch (letteraDeltaLambda){
-                case "E":
-                    longitudeVertice=longitude+deltaLambdaVertice;
-                    if (longitudeVertice>=0 && longitudeVertice<=180){
-                        letteraLonVertice="E";
-                    }else if (longitudeVertice>=0 && longitudeVertice>180){
-                        longitudeVertice=360-longitudeVertice;
-                        letteraLonVertice="W";
-                    }
-                    break;
-                case "W":
-                    longitudeVertice=longitude-deltaLambdaVertice;
-                    if (longitudeVertice>=0){
-                        letteraLonVertice="E";
-                    }else if (longitudeVertice<0){
-                        letteraLonVertice="W";
-                        longitudeVertice=Math.abs(longitudeVertice);
-                    }
-                    break;
-            }
-            break;
-        case "W":
-            switch (letteraDeltaLambda){
-                case "E":
-                    longitudeVertice=(-longitude)+deltaLambdaVertice;
-                    if(longitudeVertice<0){
-                        longitudeVertice=Math.abs(longitudeVertice);
-                        letteraLonVertice="W";
-                    }else if (longitudeVertice>=0){
-                        letteraLonVertice="E";
-                    }
-                    break;
-                case "W":
-                    longitudeVertice=(-longitude)-deltaLambdaVertice;
-                    if (Math.abs(longitudeVertice)<180){
-                        letteraLonVertice="W";
-                        longitudeVertice=Math.abs(longitudeVertice);
-                    }else if (Math.abs(longitudeVertice)>=180){
-                        letteraLonVertice="E";
-                        longitudeVertice=360-Math.abs(longitudeVertice);
-                    }
-            }
-            break;
-        default:
-            alert("Errore valutazione longitudine vertice.");
-            break;
-    }
-
-    /*  if (latitudeVertice<0){
-          latitudeVertice=Math.abs(latitudeVertice);
-      }*/
-
-
-    //ciclo condizionale che determina la longitudine del vertice opposto
-    switch (letteraLonVertice){
-        case "E":
-            longitudeVerticeOpp=longitudeVertice+180;
-            longitudeVerticeOpp=360-longitudeVerticeOpp;
-            letteraLonVerticeOpp="W";
-            break;
-        case "W":
-            longitudeVerticeOpp=(-longitudeVertice)+180;
-            letteraLonVerticeOpp="E";
-            break;
-        default:
-            alert("Errore valutazione longitudine vertice oppposto al primo.");
-            break;
-    }
-    /*
-        //ciclo che assegna le latitudini ai vertici
-        switch (letteraLon){
-            case "E":
-                if (letteraLonVertice==="E"){
-                    letteraLatVertice=letteraLat;
-                    if (letteraLatVertice==="N"){
-                        letteraLatVerticeOpp="S";
-                    }else if (letteraLatVertice==="S"){
-                        letteraLatVerticeOpp="N";
-                    }
-                }else {
-                    letteraLatVertice=letteraLatArr;
-                    if (letteraLatVertice==="N"){
-                        letteraLatVerticeOpp="S";
-                    }else if (letteraLatVertice==="S"){
-                        letteraLatVerticeOpp="N";
-                    }
-                }
-                break;
-            case "W":
-                if (letteraLonVertice==="W"){
-                    letteraLatVertice=letteraLat;
-                    if (letteraLatVertice==="N"){
-                        letteraLatVerticeOpp="S";
-                    }else if (letteraLatVertice==="S"){
-                        letteraLatVerticeOpp="N";
-                    }
-                }else {
-                    letteraLatVertice=letteraLatArr;
-                    if (letteraLatVertice==="N"){
-                        letteraLatVerticeOpp="S";
-                    }else if (letteraLatVertice==="S"){
-                        letteraLatVerticeOpp="N";
-                    }
-                }
-                break;
-            default:
-                alert("Errore valutazione lettere coordinate vertici.");
-                break;
-        }
-    */
-
-    switch (letteraLat){
-        case "N":
-            if (latitudeVertice<0){
-                letteraLatVertice="S";
-                letteraLatVerticeOpp="N";
-                latitudeVertice=Math.abs(latitudeVertice);
-            }else {
-                letteraLatVertice="N";
-                letteraLatVerticeOpp="S";
-            }
-            break;
-        case "S":
-            if (latitudeVertice<0){
-                letteraLatVertice="N";
-                letteraLatVerticeOpp="S";
-                latitudeVertice=Math.abs(latitudeVertice);
-            }else {
-                letteraLatVertice="S";
-                letteraLatVerticeOpp="N";
-            }
-            break;
-        default:
-            alert("Erroe determinazione lettera coordinata vertici.");
-            break;
-    }
-}//end function Vertici();
-//___________________________________________________________
-
-
-//_____________________________________________________________
-//funzione che calcola le longitudini dei due nodi dell'ortodromia
-function Nodi(){
-    switch (letteraLonVertice){
-        case "E":
-            if(longitudeVertice>=90){
-                longitudeNodoPrincipale=longitudeVertice-90;
-                longitudeNodoSecondario=longitudeNodoPrincipale+180;
-                if (longitudeNodoSecondario>=180){
-                    longitudeNodoSecondario=360-longitudeNodoSecondario;
-                }
-            }else if (longitudeVertice<90){
-                longitudeNodoPrincipale=longitudeVertice+90;
-                longitudeNodoSecondario=longitudeNodoPrincipale+180;
-                if(longitudeNodoSecondario>=180){
-                    longitudeNodoSecondario=360-longitudeNodoSecondario;
-                }
-            }else{
-                alert("Errore valutazione coordinate nodi.");
-            }
-            break;
-        case "W":
-            if(longitudeVertice<=90){
-                longitudeNodoPrincipale=(-longitudeVertice)+90;
-                longitudeNodoSecondario=longitudeNodoPrincipale+180;
-                if(longitudeNodoSecondario>=180){
-                    longitudeNodoSecondario=360-longitudeNodoSecondario;
-                }
-            }else if (longitudeVertice>90){
-                longitudeNodoPrincipale=360-(longitudeVertice+90);
-                longitudeNodoSecondario=longitudeNodoPrincipale+180;
-                if(longitudeNodoSecondario>=180){
-                    longitudeNodoSecondario=360-longitudeNodoSecondario;
-                }
-            }else {
-                alert("Errore valutazione coordinate nodi.");
-            }
-            break;
-        default:
-            alert("Errore valutazione coordinate nodi.");
-            break;
-    }
-
-}//end function Nodi()
-//___________________________________________________________
-
-
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-/*di seguito vado ad implementare le funzioni che calcolano i casi
-* particolari dell'ortodromia*/
-//___________________________________________________________
-//funzione che risolve il caso di navigazione equatoriale
-function NavigazioneEquatoriale(){
-    DeltaLambda();
-    cammino = deltaLambda*60;
-
-    switch (letteraDeltaLambda){
-        case "E":
-            rottaIniziale=90;
-            break;
-        case "W":
-            rottaIniziale=270;
-            break;
-        default:
-            alert("Errore valutazione navigazione equatoriale ortodromia");
-            break;
-    }
-}//end function NavigazioneEquatoriale()
-//___________________________________________________________
-
-
-//___________________________________________________________
-/*funzione che risolve il problema della navigazione su meridiano, ma
-* con arrivo nel meridiano stesso*/
-function NavigazioneMeridianoOrto(){
-    DeltaPhi();
-    cammino=deltaPhi*60;
-
-    switch (letteraDeltaPhi){
-        case "N":
-            rottaIniziale=0;
-            break;
-        case "S":
-            rottaIniziale=180;
-            break;
-        default:
-            alert("Errore valutazione rotta iniziale in navigazione meridiano con arrivo nel meridiano.");
-            break;
-    }
-}//end function NavigazioneMeridianoOrto()
-//___________________________________________________________
-
-
-//___________________________________________________________
-/*funzione che risolve il caso di navigazione per meridiano, ma con
-* nell'antimeridiano del punto di partenza*/
-function NavigazioneMeridianoAntiMeridianoOrto(){
-
-    let coLat=90-latitude, coLatArr=90-latitudeArr;
-
-    if (letteraLat===letteraLatArr){
-        cammino=(coLat+coLatArr)*60;
-    }else if (letteraLat!==letteraLatArr){
-        if(latitudeArr<=latitude){
-            cammino=(coLat+90+latitudeArr)*60;
-        }else if (latitudeArr>latitude){
-            cammino=(latitude+90+coLatArr)*60;
-        }else {
-            alert("Errore valutazione cammino navigazione meridiano con arrivo antimeridiano ortodromia.");
-        }
-    }else {
-        alert("Errore valutazione cammino navigazione meridiano con arrivo antimeridiano ortodromia.");
-    }
-
-    if (letteraLat===letteraLatArr){
-        switch (letteraLat){
-            case "N":
-                rottaIniziale=0;
-                break;
-            case "S":
-                rottaIniziale=180;
-                break;
-            default:
-                alert("Errore valutazione rotta navigazione meridiano con arrivo nell'antimeridiano ortodromia.");
-                break;
-        }
-    }else if (letteraLat!==letteraLatArr){
-        if (latitudeArr<=latitude){
-            switch (letteraLat){
-                case "N":
-                    rottaIniziale=0;
-                    break;
-                case "S":
-                    rottaIniziale=180;
-                    break;
-            }
-        }else if (latitudeArr>latitude){
-            switch (letteraLat){
-                case "N":
-                    rottaIniziale=180;
-                    break;
-                case "S":
-                    rottaIniziale=0;
-                    break;
-            }
-        }else {
-            alert("Errore valutazione rotta navigazione meridiano con arrivo nell'antimeridiano ortodromia.");
-        }
-    }
-}//NavigazioneMeridianoAntiMeridianoOrto()
-//___________________________________________________________
-
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-
-//___________________________________________________________
-/*funzine che regola gli output in base alla tipologia del problema,
-* relativa alla risoluzione del secondo problema di ortodromia*/
-function SetoOutput(){
-    switch (tipoProblema){
-        case "navigazione generale":
-            let latitudineVertice=CorreggiRoundOff(latitudeVertice);
-            let gradiLatVert=Math.floor(latitudineVertice), primiLatVert=(latitudineVertice-gradiLatVert)*60;
-            let longitudineVertice=CorreggiRoundOff(longitudeVertice);
-            let gradiLonVert=Math.floor(longitudineVertice), primiLonVert=(longitudineVertice-gradiLonVert)*60;
-            longitudineVertice=CorreggiRoundOff(longitudeVerticeOpp);
-            let gradiLonVertOpp=Math.floor(longitudineVertice), primiLonVertOpp=(longitudineVertice-gradiLonVertOpp)*60;
-            let longitudeNodo=CorreggiRoundOff(longitudeNodoPrincipale);
-            let gradiLonNodo=Math.floor(longitudeNodo), primiLonNodo=(longitudeNodo-gradiLonNodo)*60;
-            longitudeNodo=CorreggiRoundOff(longitudeNodoSecondario);
-            let gradiLonNodoSec=Math.floor(longitudeNodo), primiLonNodoSec=(longitudeNodo-gradiLonNodoSec)*60;
-
-            risultati.text=`Cammino do: ${cammino.toFixed(2)} NM
-
-Rotta Iniziale: ${rottaIniziale.toFixed(2)}°
-
-Rotta Finale: ${rottaFinale.toFixed(2)}°
-
-Coordinate Primo Vertice:
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVertice}
-Longitudine: ${gradiLonVert}° ${primiLonVert.toFixed(2)}' ${letteraLonVertice}
-
-Coordinate Secondo Vertice:
-Latitudine: ${gradiLatVert}° ${primiLatVert.toFixed(2)}' ${letteraLatVerticeOpp}
-Longitudine: ${gradiLonVertOpp}° ${primiLonVertOpp.toFixed(2)}' ${letteraLonVerticeOpp}
-
-Nodo Principale:
-Longitudine: ${gradiLonNodo}° ${primiLonNodo.toFixed(2)}' E
-
-Nodo Secondario:
-Longitudine: ${gradiLonNodoSec}° ${primiLonNodoSec.toFixed(2)}' W`;
-            break;
-        case "navigazione equatoriale":
-            risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
-
-Rotta Iniziale: ${rottaIniziale}°`;
-            break;
-        case "navigazione meridiano con arrivo meridiano":
-            risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
-
-Rotta Iniziale: ${rottaIniziale}°
-
-Vertici
-Sono i poli geografici
-
-Nodi
-Sono dati dall'intersezione del piano meridiano con il piano equatoriale`;
-            break;
-        case "navigazione meridiano con arrivo antimeridiano":
-            risultati.text=`Cammino d0: ${cammino.toFixed(2)} NM
-
-Rotta Iniziale: ${rottaIniziale}°
-
-Rotta Finale: ${rottaIniziale+180}°
-
-Vertici
-Sono i poli geografici
-
-Nodi
-Sono dati dall'intersezione del piano meridiano con il piano equatoriale`;
-            break;
-        default:
-            alert("Errore regolazione output risultati.");
-            break;
-    }
-
-}//end function SetOutput()
-//___________________________________________________________
-
-
-//___________________________________________________________
-/*funzione che va a risolvere il secondo problema di ortodromia
-* mediante la valutazione di eventuali bug, errori fatti dall'utente
-* nell'inserimento dei dati*/
 function RisolviOrtodromia(){
-    SetInput();
-    switch (bug){
+    /**
+     * Funzione che avvia la risoluzione dell'ortodromia
+     */
+
+    switch(bug){
         case 0:
-            switch (tipoProblema){
-                case "navigazione generale":
-                    DeltaPhi();
-                    DeltaLambda();
-                    Cammino();
-                    RottaIniziale();
-                    Vertici();
-                    Nodi();
-                    RottaFinale();
-                    break;
-                case "navigazione equatoriale":
-                    NavigazioneEquatoriale();
-                    break;
-                case "navigazione meridiano con arrivo meridiano":
-                    NavigazioneMeridianoOrto();
-                    break;
-                case "navigazione meridiano con arrivo antimeridiano":
-                    NavigazioneMeridianoAntiMeridianoOrto();
-                    break;
-                default:
-                    alert("Errore valutazione risoluzione secondo problema di ortodromia.");
-                    break;
-            }
-            SetoOutput();
+            risultatiOrto = OggettoOrtodromia.RisolviSecondoProblema(lat,lon,latArr,lonArr);
+            outputOrto = OggettoOrtodromia.SetOutputSecondo(risultatiOrto); 
             break;
+
         case 1:
-            risultati.text=` `;
-            alert("Errore valutazione della risoluzione tramite bug.");
+            alert("Errore risoluzione ortodromia.");
+            outputOrto=``;
             break;
     }
 
 }//end function RisolviOrtodromia()
-//___________________________________________________________
 
 
-//___________________________________________________________
-//___________________________________________________________
-/*
-* Di seguit vado a dichiarare le funzioni utili al calcolo dei waypoints con le due metodologie proposte
-* */
 
+function RisolviWaypoints(){
+    /**
+     * Funzione che avvia la risoluzione dei waypoints
+     */
 
-//___________________________________________________________
-//funzione che calcola i waypoints con il metodo delle differenze di distanza
-function WaypointsCammino(){
+    switch(bug){
+        case 0:
+            switch(metodoWay){
+                case "distanza":
+                    risultatiWay = OggettoOrtodromia.WaypointsCammino(numeroWay,lat,lon,latArr,lonArr,risultatiOrto);
+                    outputWay = OggettoOrtodromia.SetOutputWaypoints(risultatiWay);
+                    break;
 
-    camminoWayDist = cammino/(numeroWaypoints+1);
-
-    //memorizzo nei vettori, come primo termine il punto di partenza
-    latWaypoints[0]=Math.abs(latitude);
-    letteraLatWaypoints[0]=letteraLat;
-    lonWaypoints[0]=longitude;
-    letteraLonWaypoints[0]=letteraLon;
-
-    switch (tipoProblema){
-        case "navigazione generale":
-            //dichiaro variabile locale per la differenza di longitudine dei waypoints
-
-            for (i=1; i<=numeroWaypoints; i++){
-
-                if (letteraLat==="S"){
-                    latitude*=-1;
-                }
-
-                //creo variabili d'appoggio
-                let alfa = Math.sin(Deg2Rad(latitude))*Math.cos(Deg2Rad(i*(camminoWayDist/60)));
-                let beta = Math.cos(Deg2Rad(latitude))*Math.sin(Deg2Rad(i*(camminoWayDist/60)))*Math.cos(Deg2Rad(rottaIniziale));
-
-                //calcolo latitudine del waypoint e assegno lettera coordinata
-                latWaypoints[i]=Rad2Deg(Math.asin(alfa+beta));
-                alfa=0; beta=0;
-                if (latWaypoints[i]<0){
-                    letteraLatWaypoints[i]="S";
-                    latWaypoints[i]=Math.abs(latWaypoints[i]);
-                }else {
-                    letteraLatWaypoints[i]="N";
-                }
-
-                //calcolo la differenza di longitudine del waypoint
-                if (letteraLatWaypoints[i]!==letteraLat){//ciclo che mi permette di effettuare il corretto calcolo della differenza di longitudine
-                    latWaypoints[i]*=-1;
-                }
-
-                latitude=Math.abs(latitude);
-
-
-                let deltaLambdaX;
-
-                let num = Math.cos(Deg2Rad(i*(camminoWayDist/60))) - Math.sin(Deg2Rad(latitude))*Math.sin(Deg2Rad(latWaypoints[i]));
-                let den = Math.cos(Deg2Rad(latitude))*Math.cos(Deg2Rad(latWaypoints[i]));
-                deltaLambdaX = Rad2Deg(Math.acos(num/den));
-
-                if (latWaypoints[i]<0){//ciclo che mi riassegna il giusto segno alla latitudine
-                    latWaypoints[i]=Math.abs(latWaypoints[i]);
-                }
-
-                switch (letteraLon){
-                    case "E":
-                        switch (letteraDeltaLambda){
-                            case "E":
-                                lonWaypoints[i]=longitude+deltaLambdaX;
-                                if (lonWaypoints[i]>=180){
-                                    lonWaypoints[i]=360-lonWaypoints[i];
-                                    letteraLonWaypoints[i]="W";
-                                }else if (lonWaypoints[i]>=0 && lonWaypoints[i]<180){
-                                    letteraLonWaypoints[i]="E";
-                                }
-                                break;
-                            case "W":
-                                lonWaypoints[i]=longitude-deltaLambdaX;
-                                if (lonWaypoints[i]>=0){
-                                    letteraLonWaypoints[i]="E";
-                                }else if (lonWaypoints[i]<0){
-                                    letteraLonWaypoints[i]="W";
-                                    lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                                }
-                                break;
-                            default:
-                                alert("Errore valutazione longitudine del singolo waypoints.");
-                                break;
-                        }
-                        break;
-                    case "W":
-                        switch (letteraDeltaLambda){
-                            case "E":
-                                lonWaypoints[i]=(-longitude)+deltaLambdaX;
-                                if (lonWaypoints[i]<0){
-                                    letteraLonWaypoints[i]="W";
-                                    lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                                }else if (lonWaypoints[i]>=0){
-                                    letteraLonWaypoints[i]="E";
-                                }
-                                break;
-                            case "W":
-                                lonWaypoints[i]=(-longitude)-deltaLambdaX;
-                                if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])>=180){
-                                    letteraLonWaypoints[i]="E";
-                                    lonWaypoints[i]=360-Math.abs(lonWaypoints[i]);
-                                }else if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])<180){
-                                    letteraLonWaypoints[i]="W";
-                                    lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                                }
-                                break;
-                            default:
-                                alert("Errore valutazione longitudine del singolo waypoints.");
-                                break;
-                        }
-                        break;
-                    default:
-                        alert("Errore valutazione longitudine del singolo waypoints.");
-                        break;
-                }//end switch (letteraLon)
-
-                deltaLambdaX=0; num=0; den=0;
-
-
-            }//end for
-
-            if (latitude<0){
-                latitude=Math.abs(latitude);
+                case "longitudine":
+                    risultatiWay = OggettoOrtodromia.WaypointsLongitudine(numeroWay,lat,lon,latArr,lonArr,risultatiOrto);
+                    outputWay = OggettoOrtodromia.SetOutputWaypoints(risultatiWay);
+                    break;
             }
 
             break;
-
-        case "navigazione meridiano con arrivo antimeridiano":
-
-            if ( rottaIniziale===0 || rottaIniziale===360 ){//caso rotta iniziale nord
-                for (i=1;i<=numeroWaypoints;i++){
-                    if (letteraLatWaypoints[i-1]==="S"){
-                        latWaypoints[i-1]*=(-1);
-                    }
-
-                    latWaypoints[i] = latWaypoints[i-1]+(camminoWayDist/60);
-
-                    if (latWaypoints[i]>90){//caso superamento del polo nord
-
-                        latWaypoints[i] = 90-(latWaypoints[i]-90);
-                        lonWaypoints[i]=longitudeArr;
-                        letteraLonWaypoints[i]=letteraLonArr;
-
-                    }else if ( latWaypoints[i]<=90 ){//caso non superamento del polo nord
-
-                        lonWaypoints[i] = longitude;
-                        letteraLonWaypoints[i] = letteraLon;
-
-                    }
-
-                    if ( latWaypoints[i]<0 ){
-                        letteraLatWaypoints[i] = "S";
-                        latWaypoints[i] = Math.abs(latWaypoints[i]);
-                    }else {
-                        letteraLatWaypoints[i] = "N";
-                    }
-
-                    if (latWaypoints[i-1]<0){
-                        latWaypoints[i-1]=Math.abs(latWaypoints[i-1]);
-                    }
-
-                }//end for
-
-            }else if ( rottaIniziale===180 ){//caso rotta iniziale a sud
-
-                for (i=1;i<=numeroWaypoints;i++){
-                    if (letteraLatWaypoints[i-1]==="S"){
-                        latWaypoints[i-1]*=(-1);
-                    }
-
-                    latWaypoints[i] = latWaypoints[i-1]-(camminoWayDist/60);
-
-                    if ( Math.abs(latWaypoints[i])>90 ){//caso superamento del polo sud
-
-                        latWaypoints[i] = (-90) + (Math.abs(latWaypoints[i])-90);
-                        lonWaypoints[i] = longitudeArr;
-                        letteraLonWaypoints[i] = letteraLonArr;
-
-                    }else if ( Math.abs(latWaypoints[i])<=90 ){//caso non superamento del polo sud
-
-                        lonWaypoints[i] = longitude;
-                        letteraLonWaypoints[i] = letteraLon;
-
-                    }
-
-                    if ( latWaypoints[i]<0 ){
-                        letteraLatWaypoints[i] = "S";
-                        latWaypoints[i] = Math.abs(latWaypoints[i]);
-                    }
-
-                    if (latWaypoints[i-1]<0){
-                        latWaypoints[i-1]=Math.abs(latWaypoints[i-1]);
-                    }
-
-                }//end for
-
-            }//end if
-
+        case 1:
+            alert("Errore risoluzione waypoints.");
+            outputWay=``;
             break;
-
-        case "navigazione meridiano con arrivo meridiano":
-
-            if ( rottaIniziale===0 || rottaIniziale===360 ){
-
-                for (i=1;i<=numeroWaypoints;i++){
-                    if (letteraLatWaypoints[i-1]==="S"){
-                        latWaypoints[i-1]*=(-1);
-                    }
-
-                    latWaypoints[i] = latWaypoints[i-1]+(camminoWayDist/60);
-
-                    if (latWaypoints[i]<0){
-                        letteraLatWaypoints[i] = "S";
-                        latWaypoints[i] = Math.abs(latWaypoints[i]);
-                    }else {
-                        letteraLatWaypoints[i] = "N";
-                    }
-                    lonWaypoints[i] = longitude;
-                    letteraLonWaypoints[i] = letteraLon;
-
-                    if (latWaypoints[i-1]<0){
-                        latWaypoints[i-1] = Math.abs(latWaypoints[i-1]);
-                    }
-
-                }//end for
-
-            }else if (rottaIniziale===180 ){
-
-                for (i=1;i<=numeroWaypoints;i++){
-                    if (letteraLatWaypoints[i-1]==="S"){
-                        latWaypoints[i-1]*=(-1);
-                    }
-
-                    latWaypoints[i] = latWaypoints[i-1]-(camminoWayDist/60);
-
-                    if (latWaypoints[i]<0){
-                        letteraLatWaypoints[i] = "S";
-                        latWaypoints[i] = Math.abs(latWaypoints[i]);
-                    }else {
-                        letteraLatWaypoints[i] = "N";
-                    }
-                    lonWaypoints[i] = longitude;
-                    letteraLonWaypoints[i] = letteraLon;
-
-                    if (latWaypoints[i-1]<0){
-                        latWaypoints[i-1] = Math.abs(latWaypoints[i-1]);
-                    }
-                }//end for
-
-            }//end if
-
-            break;
-
-        case "navigazione equatoriale":
-
-            if (letteraLonWaypoints[0]==="W"){
-                lonWaypoints[0] *= (-1);
-            }
-
-            if ( rottaIniziale===90 ){
-
-                for (i=1;i<=numeroWaypoints;i++){
-                    if (letteraLonWaypoints[i-1]==="W"){
-                        lonWaypoints[i-1]*=(-1);
-                    }
-
-                    latWaypoints[i] = latitude;
-                    letteraLatWaypoints[i] = letteraLat;
-
-                    lonWaypoints[i] = lonWaypoints[i-1]+(camminoWayDist/60);
-
-                    if (lonWaypoints[i]>180){//caso passaggi antimeridiano
-                        letteraLonWaypoints[i] = "W";
-                        lonWaypoints[i] = 360-lonWaypoints[i];
-                    }
-
-                    if (lonWaypoints[i]>=0 && lonWaypoints[i]<=180){
-                        letteraLonWaypoints[i] = "E";
-                    }else if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])<=180){
-                        letteraLonWaypoints[i] = "W";
-                        lonWaypoints[i] = Math.abs(lonWaypoints[i]);
-                    }
-
-                    if (lonWaypoints[i-1]<0){
-                        lonWaypoints[i-1]=Math.abs(lonWaypoints[i-1]);
-                    }
-                }//end for
-
-            }else if ( rottaIniziale===270 ){
-
-                for (i=1;i<=numeroWaypoints;i++){
-
-                    latWaypoints[i] = latitude;
-                    letteraLatWaypoints[i] = letteraLat;
-
-                    if (letteraLonWaypoints[i-1]==="W"){
-                        lonWaypoints[i-1]*=(-1);
-                    }
-
-                    lonWaypoints[i] = lonWaypoints[i-1]-(camminoWayDist/60);
-
-                    if ( Math.abs(lonWaypoints[i])>180 ){//caso passaggi antimeridiano
-                        letteraLonWaypoints[i] = "E";
-                        lonWaypoints[i] = 360 - Math.abs(lonWaypoints[i]);
-                    }
-
-                    if (lonWaypoints[i]>=0 && lonWaypoints[i]<=180){
-                        letteraLonWaypoints[i] = "E";
-                    }else if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])<=180){
-                        letteraLonWaypoints[i] = "W";
-                        lonWaypoints[i] = Math.abs(lonWaypoints[i]);
-                    }
-
-                    if (lonWaypoints[i-1]<0){
-                        lonWaypoints[i-1]=Math.abs(lonWaypoints[i-1]);
-                    }
-
-                }//end for
-
-            }//end if
-            break;
-    }//end switch (tipoproblema)
-
-
-    latWaypoints[numeroWaypoints+1]=latitudeArr;
-    letteraLatWaypoints[numeroWaypoints+1]=letteraLatArr;
-    lonWaypoints[numeroWaypoints+1]=longitudeArr;
-    letteraLonWaypoints[numeroWaypoints+1]=letteraLonArr;
-
-
-/*
-    //dichiaro variabile locale per la differenza di longitudine dei waypoints
-
-    for (i=1; i<=numeroWaypoints; i++){
-
-        if (letteraLat==="S"){
-            latitude*=-1;
-        }
-
-        //creo variabili d'appoggio
-        let alfa = Math.sin(Deg2Rad(latitude))*Math.cos(Deg2Rad(i*(camminoWayDist/60)));
-        let beta = Math.cos(Deg2Rad(latitude))*Math.sin(Deg2Rad(i*(camminoWayDist/60)))*Math.cos(Deg2Rad(rottaIniziale));
-
-        //calcolo latitudine del waypoint e assegno lettera coordinata
-        latWaypoints[i]=Rad2Deg(Math.asin(alfa+beta));
-        alfa=0; beta=0;
-        if (latWaypoints[i]<0){
-            letteraLatWaypoints[i]="S";
-            latWaypoints[i]=Math.abs(latWaypoints[i]);
-        }else {
-            letteraLatWaypoints[i]="N";
-        }
-
-        //calcolo la differenza di longitudine del waypoint
-        if (letteraLatWaypoints[i]!==letteraLat){//ciclo che mi permette di effettuare il corretto calcolo della differenza di longitudine
-            latWaypoints[i]*=-1;
-        }
-
-        latitude=Math.abs(latitude);
-
-
-        let deltaLambdaX;
-
-        let num = Math.cos(Deg2Rad(i*(camminoWayDist/60))) - Math.sin(Deg2Rad(latitude))*Math.sin(Deg2Rad(latWaypoints[i]));
-        let den = Math.cos(Deg2Rad(latitude))*Math.cos(Deg2Rad(latWaypoints[i]));
-        deltaLambdaX = Rad2Deg(Math.acos(num/den));
-
-        if (latWaypoints[i]<0){//ciclo che mi riassegna il giusto segno alla latitudine
-            latWaypoints[i]=Math.abs(latWaypoints[i]);
-        }
-
-        switch (letteraLon){
-            case "E":
-                switch (letteraDeltaLambda){
-                    case "E":
-                        lonWaypoints[i]=longitude+deltaLambdaX;
-                        if (lonWaypoints[i]>=180){
-                            lonWaypoints[i]=360-lonWaypoints[i];
-                            letteraLonWaypoints[i]="W";
-                        }else if (lonWaypoints[i]>=0 && lonWaypoints[i]<180){
-                            letteraLonWaypoints[i]="E";
-                        }
-                        break;
-                    case "W":
-                        lonWaypoints[i]=longitude-deltaLambdaX;
-                        if (lonWaypoints[i]>=0){
-                            letteraLonWaypoints[i]="E";
-                        }else if (lonWaypoints[i]<0){
-                            letteraLonWaypoints[i]="W";
-                            lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                        }
-                        break;
-                    default:
-                        alert("Errore valutazione longitudine del singolo waypoints.");
-                        break;
-                }
-                break;
-            case "W":
-                switch (letteraDeltaLambda){
-                    case "E":
-                        lonWaypoints[i]=(-longitude)+deltaLambdaX;
-                        if (lonWaypoints[i]<0){
-                            letteraLonWaypoints[i]="W";
-                            lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                        }else if (lonWaypoints[i]>=0){
-                            letteraLonWaypoints[i]="E";
-                        }
-                        break;
-                    case "W":
-                        lonWaypoints[i]=(-longitude)-deltaLambdaX;
-                        if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])>=180){
-                            letteraLonWaypoints[i]="E";
-                            lonWaypoints[i]=360-Math.abs(lonWaypoints[i]);
-                        }else if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])<180){
-                            letteraLonWaypoints[i]="W";
-                            lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                        }
-                        break;
-                    default:
-                        alert("Errore valutazione longitudine del singolo waypoints.");
-                        break;
-                }
-                break;
-            default:
-                alert("Errore valutazione longitudine del singolo waypoints.");
-                break;
-        }//end switch (letteraLon)
-
-        deltaLambdaX=0; num=0; den=0;
-
-
-    }//end for
-
-    if (latitude<0){
-        latitude=Math.abs(latitude);
     }
 
-    //memorizzo come ultima componente dei vettori il punto di arrivo
-    latWaypoints[numeroWaypoints+1]=latitudeArr;
-    letteraLatWaypoints[numeroWaypoints+1]=letteraLatArr;
-    lonWaypoints[numeroWaypoints+1]=longitudeArr;
-    letteraLonWaypoints[numeroWaypoints+1]=letteraLonArr;
-*/
-}//end function WaypointsCammino()
-//___________________________________________________________
+}//end function RisolviWaypoints()
+
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
 
 
-//___________________________________________________________
-//funzione che calcola i waypoints con il metodo delle differenze di longitudine
-function WaypointsLongitudine(){
 
-    if (tipoProblema==="navigazione meridiano con arrivo meridiano" || tipoProblema==="navigazione meridiano con arrivo antimeridiano"){
 
-        alert("Non è possibile determinare i waypoints con questo metodo.");
-        bug=1;
 
-    }else {
-        differenzaLongitudineWay = deltaLambda/(numeroWaypoints+1);
 
-        //memorizzo nei vettori il punto di partenza
-        latWaypoints[0]=latitude;
-        letteraLatWaypoints[0]=letteraLat;
-        lonWaypoints[0]=longitude;
-        letteraLonWaypoints[0]=letteraLon;
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+/**
+ * In questa sezione dichiaro la funzione modello che esporta la pagina
+ */
 
-        //dichiaro i due cicli che assegnano i segni alle variabili per effettuare il giusto calcolo
-        if (letteraLat==="S"){
-            latitude*=(-1);
-        }
+function Modello(){
+    const modello = new Observable();
 
-        if (letteraDeltaLambda==="W"){
-            differenzaLongitudineWay*=(-1);
-        }
-
-        //calcolo la latitudine dei waypoints
-        for (i=1; i<=numeroWaypoints; i++){
-
-            let primoTermine=Math.tan(Deg2Rad(latitude))*Math.cos(Deg2Rad((i*differenzaLongitudineWay)));
-            let secondoTermine=Math.sin(Deg2Rad((i*differenzaLongitudineWay)))/(Math.cos(Deg2Rad(latitude)) * Math.tan(Deg2Rad(rottaIniziale)));
-            latWaypoints[i]=Rad2Deg(Math.atan((primoTermine+secondoTermine)));
-            console.log(latWaypoints[i]);
-            primoTermine=0; secondoTermine=0;
-
-            if (latWaypoints[i]>=0){
-                letteraLatWaypoints[i]="N";
-            }else if (latWaypoints[i]<0){
-                letteraLatWaypoints[i]="S";
-                latWaypoints[i]=Math.abs(latWaypoints[i]);
-            }else {
-                alert("Errore valutazione lettera coordinata latitudine del singolo waypoints.");
-            }
-
-            //ciclo condizionale innsestato che calcola la longitudine del waypoints
-            switch (letteraLon){
-                case "E":
-                    switch (letteraDeltaLambda){
-                        case "E":
-                            lonWaypoints[i]=longitude+Math.abs(i*differenzaLongitudineWay);
-                            if (lonWaypoints[i]>=180){
-                                letteraLonWaypoints[i]="W";
-                                lonWaypoints[i]=360-lonWaypoints[i];
-                            }else if (lonWaypoints[i]>=0 && lonWaypoints[i]<180){
-                                letteraLonWaypoints[i]="E";
-                            }
-                            break;
-                        case "W":
-                            lonWaypoints[i]=longitude-Math.abs(i*differenzaLongitudineWay);
-                            if (lonWaypoints[i]>=0){
-                                letteraLonWaypoints[i]="E";
-                            }else if (lonWaypoints[i]<0){
-                                letteraLonWaypoints[i]="W";
-                                lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                            }
-                            break;
-                        default:
-                            alert("Errore valutazione longitudine del singolo waypoints.");
-                            break;
-                    }
+    modello.lista = lista;
+    modello.onListPickerLoaded=(fargs)=>{
+        const listPickerComponent = fargs.object;
+        listPickerComponent.on("selectedIndexChange", (args)=>{
+            const picker = args.object;
+            switch(picker.selectedIndex){
+                case 0:
+                    metodoWay = "distanza";
                     break;
-                case "W":
-                    switch (letteraDeltaLambda){
-                        case "E":
-                            lonWaypoints[i]=(-longitude)+Math.abs(i*differenzaLongitudineWay);
-                            if (lonWaypoints[i]>=0){
-                                letteraLonWaypoints[i]="E";
-                            }else if (lonWaypoints[i]<0){
-                                letteraLonWaypoints[i]="W";
-                                lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                            }
-                            break;
-                        case "W":
-                            lonWaypoints[i]=(-longitude)-Math.abs(i*differenzaLongitudineWay);
-                            if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])>=180){
-                                letteraLonWaypoints[i]="E";
-                                lonWaypoints[i]=360-Math.abs(lonWaypoints[i]);
-                            }else if (lonWaypoints[i]<0 && Math.abs(lonWaypoints[i])<180){
-                                letteraLonWaypoints[i]="W";
-                                lonWaypoints[i]=Math.abs(lonWaypoints[i]);
-                            }
-                            break;
-                        default:
-                            alert("Errore valutazione longitudine del singolo waypoints.");
-                            break;
-                    }
-                    break;
-                default:
-                    alert("Errore valutazione longitudine del singolo waypoints.");
-                    break;
-            }//end switch(letteraLon)
-
-            //memorizzo nei vettori, come ultmo elemento, il punto di arrivo
-            latWaypoints[numeroWaypoints+1]=latitudeArr;
-            letteraLatWaypoints[numeroWaypoints+1]=letteraLatArr;
-            lonWaypoints[numeroWaypoints+1]=longitudeArr;
-            letteraLonWaypoints[numeroWaypoints+1]=letteraLonArr;
-
-
-        }//end for
-
-        //ciclo condizionale che riassegna il segno positivo alla latitudine di partenza
-        if (latitude<0){
-            latitude=Math.abs(latitude);
-        }
-    }
-
-
-
-}//end function WaypointsLongitudine()
-//___________________________________________________________
-
-
-//___________________________________________________________
-//funzione che regola gli output dei waypoints
-function SetOutputWay(){
-
-    let gradiLatWay=[], primiLatWay=[];
-    let gradiLonWay=[], primiLonWay=[];
-
-    gradiLatWay[0]=Math.floor(latWaypoints[0]); primiLatWay[0]=((latWaypoints[0]-gradiLatWay[0])*60).toFixed(2);
-    gradiLonWay[0]=Math.floor(lonWaypoints[0]); primiLonWay[0]=((lonWaypoints[0]-gradiLonWay[0])*60).toFixed(2);
-
-    let out = "Punto di Partenza"+"\n"+gradiLatWay[0]+"°"+" "+primiLatWay[0]+"'"+letteraLatWaypoints[0]+" "+gradiLonWay[0]+"°"+" "+primiLonWay+"'"+letteraLonWaypoints[0]+"\n";
-
-
-    for (i=1; i<(latWaypoints.length -1); i++){
-        let latWaySenzaRoundOff=CorreggiRoundOff(latWaypoints[i]);
-        gradiLatWay[i]=Math.floor(latWaySenzaRoundOff);
-        primiLatWay[i]=((latWaySenzaRoundOff-gradiLatWay[i])*60).toFixed(2);
-
-        let lonWaySenzaRoundOff=CorreggiRoundOff(lonWaypoints[i]);
-        gradiLonWay[i]=Math.floor(lonWaySenzaRoundOff);
-        primiLonWay[i]=((lonWaySenzaRoundOff-gradiLonWay[i])*60).toFixed(2);
-
-        out = out +"\n"+ i+"°"+" Waypoint\n"+gradiLatWay[i]+"°"+" "+primiLatWay[i]+"'"+letteraLatWaypoints[i]+" "+gradiLonWay[i]+"°"+" "+primiLonWay[i]+"'"+letteraLonWaypoints[i]+"\n";
-
-    }
-
-    let j=latWaypoints.length-1;
-
-    gradiLatWay[j]=Math.floor(latWaypoints[j]); primiLatWay[j]=((latWaypoints[j]-gradiLatWay[j])*60).toFixed(2);
-    gradiLonWay[j]=Math.floor(lonWaypoints[j]); primiLonWay[j]=((lonWaypoints[j]-gradiLonWay[j])*60).toFixed(2);
-    out=out+"\nPunto di Arrivo\n"+gradiLatWay[j]+"°"+" "+primiLatWay[j]+"'"+letteraLatWaypoints[j]+" "+gradiLonWay[j]+"°"+" "+primiLonWay[j]+"'"+letteraLonWaypoints[j];
-
-    risultatiWaypoints.text=`\n \n COORDINATE WAYPOINTS
-
-${out}`;
-
-}//end function SetOutputWay()
-//___________________________________________________________
-
-
-//___________________________________________________________
-//funzione che risolve il calcolo dei waypoints
-function RisolviWayPoints(){
-    switch (tipolist){
-        case "distanza":
-            latWaypoints=[];
-            letteraLatWaypoints=[];
-            lonWaypoints=[];
-            letteraLonWaypoints=[];
-            WaypointsCammino();
-            SetOutputWay();
-            break;
-        case "longitudine":
-            latWaypoints=[];
-            letteraLatWaypoints=[];
-            lonWaypoints=[];
-            letteraLonWaypoints=[];
-            WaypointsLongitudine();
-            switch (bug){
                 case 1:
+                    metodoWay = "longitudine";
                     break;
                 default:
-                    SetOutputWay();
+                    metodoWay = "distanza"
                     break;
             }
-
-            break;
-        default:
-            alert("Errore risoluzione dei waypoints.");
-    }
-}//end function RisolviwayPoints()
-//___________________________________________________________
-
-
-
-/*
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
- */
-//funzione che implementa la correzione di round-off negli output
-function CorreggiRoundOff(num){
-    let ris, differenza, primi;
-    let decimali=num-Math.floor(num);
-
-    let int;
-    if (decimali>0.5){
-        int=Math.floor(num)+1;
-    }else {
-        int=Math.floor(num);
+        });
     }
 
-    differenza=Math.abs(int-num);
-    if (differenza < (1e-5) ){
-        ris=int;
-    }else {
-        //ris=num;
-        primi = (num-Math.floor(num))*60;
-        if (Math.abs(60-primi)<(1e-2)){
-            ris=Math.floor(num)+1;
-        }else {
-            ris=num;
-        }
+    //creo funzione per il bottone di effettua calcoli
+    modello.calcola = () =>{
+        SetInput();
+        RisolviOrtodromia();
+        RisolviWaypoints();
+        modello.set("Risultati Ortodromia Waypoints","Risultati Ortodromia con Waypoints");
+        modello.set("RisultatiOrto",outputOrto);
+        modello.set("RisultatiWay",outputWay);
     }
 
-    return ris;
+    return modello;
+}//end function Modello()
+exports.Modello=Modello;
 
-}//end function CorreggiRoundOff(num)
-/*
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
- */
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________

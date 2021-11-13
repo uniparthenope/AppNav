@@ -1,9 +1,11 @@
-<Page loaded="onLoaded">
+<Page loaded="onLoaded" class="sfondoPagine">
     <Page.actionbar>
         <ActionBar title="Navigation path" />
     </Page.actionbar>
 
-    <ScrollView>
+    <TabView id="tabViewContainer">
+        <TabViewItem ios:title="" android:title="">
+            <ScrollView>
 
         <!--Creo UI per inserimento dei dati per l'ortodromia con risoluzione dei waypoints-->
         <GridLayout
@@ -12,149 +14,146 @@
 
             <!--Creo UI con titolo e breve descrizione-->
             <StackLayout row="0" col="0" colSpan="3"
-                         class="riquadro evidenza">
-                <StackLayout class="titolo-riquadro-ortodromia">
+                         class="riquadro">
+                <StackLayout class="title ortodromia titolo-riquadro nero">
                     <Label textWrap="true" text="Ortodromia con waypoints" />
                 </StackLayout>
-                <StackLayout>
+                <StackLayout class="sub-riquadro">
                     <Label textWrap="true"
                            text="Si calcolano i vari parametri dell'ortodromia e le coordinate geografiche dei waypoints, facenti parte della spezzata lossodromica tra i due punti di coordinate geografiche note."
-                           class="testo"/>
+                           class="testo nero"/>
                 </StackLayout>
             </StackLayout>
 
             <!--Punto di partenza-->
             <StackLayout row="1" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Punto di partenza"
-                           fontSize="19" />
+                <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro nero">
+                    <Label textWrap="true" text="Punto di partenza" />
                 </StackLayout>
             </StackLayout>
             <!--Latitudine punto di partenza-->
             <StackLayout row="2" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Latitudine" fontSize="17" />
+                <StackLayout class="testo-evidenza sub-riquadro centro nero">
+                    <Label textWrap="true" text="Latitudine" />
                 </StackLayout>
             </StackLayout>
             <!--Creo UI per inserimento latitudine-->
-            <StackLayout row="3" col="0" class="riquadro">
-                <TextField id="idGradiLat" text="{{ inputGradiLat }}" hint="gradi" keyboardType="number" />
+            <StackLayout row="3" col="0" class="riquadro sub-riquadro">
+                <TextField id="idGradiLat" hint="gradi" keyboardType="number" textChange="CambioGradiLat" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="3" col="1" class="riquadro">
-                <TextField id="idPrimiLat" text="{{ inputPrimiLat }}" hint="primi" keyboardType="number" />
+            <StackLayout row="3" col="1" class="riquadro sub-riquadro">
+                <TextField id="idPrimiLat" hint="primi" keyboardType="number" textChange="CambioPrimiLat" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="3" col="2" class="riquadro">
-                <TextField id="idLetteraLat" text="{{ inputLetteraLat }}" hint="N/S" />
+            <StackLayout row="3" col="2" orientation="horizontal" horizontalAlignment="center" class="riquadro sub-riquadro">
+                <Label text="N" verticalAlignment="center" class="grassetto nero" />
+                <Switch checked="false" loaded="onSwitchLat" />
+                <Label text="S" verticalAlignment="center" class="grassetto nero" />
             </StackLayout>
             <!--Longitudine punto di partenza-->
             <StackLayout row="4" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Longitudine" fontSize="17" />
+                <StackLayout class="testo-evidenza sub-riquadro centro nero">
+                    <Label textWrap="true" text="Longitudine" />
                 </StackLayout>
             </StackLayout>
             <!--Creo UI per inserimento longitudine-->
-            <StackLayout row="5" col="0" class="riquadro">
-                <TextField id="idGradiLon" text="{{ inputGradiLon }}" hint="gradi" keyboardType="number" />
+            <StackLayout row="5" col="0" class="riquadro sub-riquadro">
+                <TextField id="idGradiLon" hint="gradi" keyboardType="number" textChange="CambioGradiLon" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="5" col="1" class="riquadro">
-                <TextField id="idPrimiLon" text="{{ inputPrimiLon }}" hint="primi" keyboardType="number" />
+            <StackLayout row="5" col="1" class="riquadro sub-riquadro">
+                <TextField id="idPrimiLon" hint="primi" keyboardType="number" textChange="CambioPrimiLon" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="5" col="2" class="riquadro">
-                <TextField id="idLetteraLon" text="{{ inputLetteraLon }}" hint="E/W" />
+            <StackLayout row="5" col="2" orientation="horizontal" horizontalAlignment="center" class="riquadro sub-riquadro">
+                <Label text="E" verticalAlignment="center" class="grassetto nero" />
+                <Switch checked="false" loaded="onSwitchLon" />
+                <Label text="W" verticalAlignment="center" class="grassetto nero" />
             </StackLayout>
 
 
             <!--Punto di arrivo-->
             <StackLayout row="6" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Punto di arrivo"
-                           fontSize="19" />
+                <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro nero">
+                    <Label textWrap="true" text="Punto di arrivo" />
                 </StackLayout>
             </StackLayout>
             <!--Latitudine punto di arrivo-->
             <StackLayout row="7" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Latitudine" fontSize="17" />
+                <StackLayout class="testo-evidenza sub-riquadro centro nero">
+                    <Label textWrap="true" text="Latitudine" />
                 </StackLayout>
             </StackLayout>
             <!--Creo UI per inserimento latitudine-->
-            <StackLayout row="8" col="0" class="riquadro">
-                <TextField id="idGradiLatArr" text="{{ inputGradiLatArr }}" hint="gradi" keyboardType="number" />
+            <StackLayout row="8" col="0" class="riquadro sub-riquadro">
+                <TextField id="idGradiLatArr" hint="gradi" keyboardType="number" textChange="CambioGradiLatArr" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="8" col="1" class="riquadro">
-                <TextField id="idPrimiLatArr" text="{{ inputPrimiLatArr }}" hint="primi" keyboardType="number" />
+            <StackLayout row="8" col="1" class="riquadro sub-riquadro">
+                <TextField id="idPrimiLatArr" hint="primi" keyboardType="number" textChange="CambioPrimiLatArr" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="8" col="2" class="riquadro">
-                <TextField id="idLetteraLatArr" text="{{ inputLetteraLatArr }}" hint="N/S" />
+            <StackLayout row="8" col="2" orientation="horizontal" horizontalAlignment="center" class="riquadro sub-riquadro">
+                <Label text="N" verticalAlignment="center" class="grassetto nero" />
+                <Switch checked="false" loaded="onSwitchLatArr" />
+                <Label text="S" verticalAlignment="center" class="grassetto nero" />
             </StackLayout>
             <!--Longitudine punto di arrivo-->
             <StackLayout row="9" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Longitudine" fontSize="17" />
+                <StackLayout class="testo-evidenza sub-riquadro centro nero">
+                    <Label textWrap="true" text="Longitudine" />
                 </StackLayout>
             </StackLayout>
             <!--Creo Ui per inserimento longitudine-->
-            <StackLayout row="10" col="0" class="riquadro">
-                <TextField id="idGradiLonArr" text="{{ inputGradiLonArr }}" hint="gradi" keyboardType="number" />
+            <StackLayout row="10" col="0" class="riquadro sub-riquadro">
+                <TextField id="idGradiLonArr" hint="gradi" keyboardType="number" textChange="CambioGradiLonArr" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="10" col="1" class="riquadro">
-                <TextField id="idPrimiLonArr" text="{{ inputPrimiLonArr }}" hint="primi" keyboardType="number" />
+            <StackLayout row="10" col="1" class="riquadro sub-riquadro">
+                <TextField id="idPrimiLonArr" hint="primi" keyboardType="number" textChange="CambioPrimiLonArr" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="10" col="2" class="riquadro">
-                <TextField id="idLetteraLonArr" text="{{ inputLetteraLonArr }}" hint="E/W" />
+            <StackLayout row="10" col="2" orientation="horizontal" horizontalAlignment="center" class="riquadro sub-riquadro">
+                <Label text="E" verticalAlignment="center" class="grassetto nero" />
+                <Switch checked="false" loaded="onSwitchLonArr" />
+                <Label text="W" verticalAlignment="center" class="grassetto nero" />
             </StackLayout>
 
 
             <!--Numero waypoints e tipologia di calcolo-->
             <StackLayout row="11" col="0" colSpan="1" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Numero waypoints"
-                           fontSize="17" />
+                <StackLayout class="testo-evidenza-noMargin titolo-riquadro centro ortodromia nero"> 
+                    <Label textWrap="true" text="Numero waypoints" />
                 </StackLayout>
             </StackLayout>
-            <StackLayout row="11" col="1" colSpan="2" class="riquadro" backgroundColor="lightsalmon">
+            <StackLayout row="11" col="1" colSpan="2" class="testo-evidenza-noMargin titolo-riquadro centro ortodromia nero">
                 <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true" text="Metodo di calcolo"
-                           fontSize="17" />
+                    <Label textWrap="true" text="Metodo di calcolo" />
                 </StackLayout>
             </StackLayout>
 
             <!--Creo UI per inserimento numero waypoints e scelta tipologia di calclolo-->
-            <StackLayout row="12" col="0" colSpan="1" class="riquadro waypoints">
-                <TextField id="idNumeroWaypoints" text="{{ inputNumeroWaypoints }}"
-                           hint="numero waypoints" keyboardType="number" />
+            <StackLayout row="12" col="0" colSpan="1" class=" riquadro sub-riquadro">
+                <TextField id="idNumeroWaypoints" hint="numero waypoints" keyboardType="number" style="color: black;"/>
             </StackLayout>
-            <StackLayout row="12" col="1" colSpan="2" class="riquadro">
-                <ListPicker id="tipolist" items="{{ tipologia }}"
-                            selectedIndex="0" loaded="onListPickerLoaded" class="picker"/>
+            <StackLayout row="12" col="1" colSpan="2">
+                <ListPicker items="{{ lista }}" selectedIndex="0" loaded="{{ onListPickerLoaded }}" class="picker"/>
             </StackLayout>
 
 
             <!--Creo UI per effetttuare i calcoli-->
-            <Button row="13" col="0" colSpan="3" text="Esegui calcoli"
-                    tap="onTap" class="btn btn-ortodromia" />
+            <Button row="13" col="0" colSpan="3" text="Esegui calcoli" tap="{{ calcola }}" class="esegui-calcoli" />
 
 
             <!--Creo Ui per restituire i risultati-->
             <StackLayout row="14" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
-                    <Label textWrap="true"
-                           text="Risultati ortodromia con waypoints"
-                           fontSize="17" />
+                <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro nero">
+                    <Label textWrap="true" text="{{ Risultati Ortodromia Waypoints }}" />
                 </StackLayout>
             </StackLayout>
 
 
             <!--UI dove vengono mostrati i risultati-->
-            <Label row="15" col="0" colSpan="3" id="risultati" textWrap="true" marginLeft="3"
-                   class="output" />
-            <Label row="16" col="0" colSpan="3" id="risultatiWaypoints" textWrap="true" marginLeft="3"
-                   class="output" />
+            <Label row="15" col="0" colSpan="3" text="{{ RisultatiOrto }}" textWrap="true" marginLeft="3" class="output" />
+            <Label row="16" col="0" colSpan="3" text="{{ RisultatiWay }}" textWrap="true" marginLeft="3" class="output" />
 
 
 
             <StackLayout row="17" col="0" colSpan="3" class="riquadro">
-                <StackLayout class="titolo-riquadro-ortodromia">
+                <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro">
                     <Label text=" " fontSize="17" color="lightsalmon" />
                 </StackLayout>
             </StackLayout>
@@ -164,7 +163,7 @@
 
 
     </ScrollView>
-
-
+        </TabViewItem>
+    </TabView>
 
 </Page>

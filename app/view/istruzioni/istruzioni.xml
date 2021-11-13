@@ -29,7 +29,7 @@
                     <Span text="\n" />  <!--vado a capo-->
                     <Span text="\n" />  <!--vado a capo-->
                     <Span text="Latitudine e Longitudine: " class="titolo-paragrafo"/>
-                    <Span text="Per questi valori sono previste tre caselle di inserimento" />
+                    <Span text="Per questi valori sono previste tre aree di inserimento" />
                     <Span text="\n" />  <!--vado a capo-->
                     <Span text="Prima casella, gradi: " class="nome-casella" />
                     <Span text="inserire il valore, " /><Span text="numero intero e positivo" class="grassetto" />
@@ -39,8 +39,8 @@
                     <Span text="inserire il valore, "/> <Span text="numero intero o decimale positivo" class="grassetto" />
                     <Span text=", relativo ai primi di latitudine o longitudine. Si ricorda che, per entrambe le coordinate, tal valore deve essere minore di 60." />
                     <Span text="\n" />  <!--vado a capo-->
-                    <Span text="Terza casella, cardine: " class="nome-casella" />
-                    <Span text="inserire la lettera coordinata associata alla latitudine, N (nord) o S (sud), o alla longitudine, E (est) o W (ovest)." />
+                    <Span text="Switch, cardine: " class="nome-casella" />
+                    <Span text="scegliere la lettera coordinata associata alla latitudine, N (nord) o S (sud), o alla longitudine, E (est) o W (ovest). Per default lo switch sarà impostato su N (nord), per la latitudine, mentre su E (est), per la longitudine." />
                     <Span text="\n" />  <!--vado a capo-->
                     <Span text="\n" />  <!--vado a capo-->
                     <Span text="Cammino: " class="titolo-paragrafo" />
@@ -67,12 +67,12 @@
             </TextView>
             <TextView editable="false">
                 <FormattedString>
-                    <Span text="Per la risoluzione dei problemi legati alla traiettoria lossodromica sono dedicate due pagine, una per la risoluzione del " />
+                    <Span text="Per la risoluzione dei problemi legati alla traiettoria lossodromica è dedicata una sola pagina composta da due schede, una per la risoluzione del " />
                     <Span text="Primo Problema " class="corsivo" />
                     <Span text="ed una per la risoluzione del " />
                     <Span text="Secondo Problema." class="corsivo" />
                     <Span text="\n" />  <!--vado a capo-->
-                    <Span text="In entrambe le pagine viene fornita la possibilità di selezionare la superficie di riferimento sulla quale basare i calcoli." />
+                    <Span text="In entrambe le schede viene fornita la possibilità di selezionare la superficie di riferimento su quale basare i calcoli." />
                 </FormattedString>
             </TextView>
 
