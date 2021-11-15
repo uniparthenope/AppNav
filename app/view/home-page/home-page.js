@@ -3,12 +3,16 @@ var observableModule = require('tns-core-modules/data/observable');
 const { Menu } = require('nativescript-menu');
 const { getViewById, action, Frame } = require('@nativescript/core');
 const { fromAstNodes } = require('@nativescript/core/ui/styling/css-selector');
+let appversion = require("nativescript-appversion");
 
 var page;
 
 exports.loaded = function (args){
-    page = args.object;
+    appversion.getVersionName().then(function(v) {
+        page.getViewById("version").text = "Versione: " + v;
+    });
 
+    page = args.object;
 }
 
 

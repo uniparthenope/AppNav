@@ -6,13 +6,12 @@ selectors and properties you can use to style UI components.
 
 /*
 In many cases you may want to use the NativeScript core theme instead
-of writing your own CSS rules. You can learn more about the
+of writing your own CSS rules. You can learn more about the 
 NativeScript core theme at https://github.com/nativescript/theme
 The imported CSS rules must precede all other types of rules.
 */
 @import "~@nativescript/theme/css/core.css";
 @import "~@nativescript/theme/css/default.css";
-
 
 /* Place any CSS rules you want to apply on both iOS and Android here.
 This is where the vast majority of your CSS code goes. */
@@ -21,9 +20,15 @@ This is where the vast majority of your CSS code goes. */
 The following CSS rule changes the font size of all Buttons that have the
 "-primary" class modifier.
 */
+Button.-primary {
+    font-size: 18;
+}
 
-.btn {                   /*stile dei bottoni*/
-    font-size: 15;
+
+
+
+Button {                   /*stile dei bottoni*/
+    font-size: 18;
     font-weight: bold;
     border-radius: 30;
 }
@@ -105,11 +110,32 @@ Actionbar{
     font-weight: bold;
 }
 
-/*Inserire qui lo stile della classe .btn-esegui-ortodromia, da usare per i bottoni di calcolo nella pagine di ortodromia*/
 
 
-/*Creo le caratteristiche di stile per l'UI delle pagine lossodromia per quanto riguarda la parte degli input in modo da poter usare
-queste caratteristiche in entrambe le pagine (primoProblema e secondoProblema)*/
+/*
+Insrisco le istruzioni per abbellire graficamente gli elementi di grafica
+*/
+
+/*classe per i selezionatori lista*/
+.picker {
+    background-color: transparent;
+    color: goldenrod;
+    border-color: brown;
+    border-radius: 20;
+    border-width: 2;
+    width: 200;
+    height: 100;
+    vertical-align: middle;
+}
+
+
+/*Definisco classi per gli sfondi delle pagine, sia per lossodromia che ortodromia*/
+.sfondoPagine{
+    background: rgb(106,251,213);
+    background: linear-gradient(0deg, rgba(106,251,213,0.9923319669664741) 0%, rgba(245,237,158,1) 100%);
+}
+
+/*Definisco le classi per abbellire le pagine lossodromoia e ortodromia*/
 
 .riquadro{
     background-color: #f5f5f5;
@@ -117,63 +143,83 @@ queste caratteristiche in entrambe le pagine (primoProblema e secondoProblema)*/
     border-radius: 3;
 }
 
+.sub-riquadro{
+    opacity: 0.6;
+}
+
 .titolo-riquadro{
-    background-color: lightgreen;
-    text-align: center;
-    font-weight: bold;
     border-radius: 3;
 }
 
-.evidenza .titolo-riquadro{
+.sottoTitolo{
     font-weight: bold;
-    border-radius: 3;
-    font-size: 23;
+    font-size: 19;
 }
 
-.evidenza .titolo-riquadro Label{
-    font-size: 17;
-}
-
-.modelloTerra{
-    orientation: vertical;
-    align-items: center;
-}
-
-.btn-lossodromia{        /*stile dei bottoni usati per eseguire i calcoli delle pagine di lossodromia*/
-    border-radius: 30;
-    background-color: bisque;
+.testo-evidenza-noMargin{
     font-weight: bold;
     font-size: 15;
 }
 
+.output{
+    font-weight: bold;
+    font-size: 15;
+    text-align: center;
+    color: black;
+}
 
-/*Gli stili per le UI delle pagine ortodromie sfruttano gli stili delle pagine lossodromie, ma devo definire la classe per il titolo per caratterizzare
-il colore di background dei titoli, per distinguere le pagine ortodromia con quelle lossodromia*/
+.nero{
+    color: black;
+}
 
-.titolo-riquadro-ortodromia{
+.ortodromia{
     background-color: lightsalmon;
-    align-items: center;
-    text-align: center;
-    font-weight: bold;
-    border-radius: 3;
 }
 
-.evidenza .titolo-riquadro-ortodromia{
-    font-size: 23;
+.lossodromia{
+    background-color: lightgreen;
 }
 
-.btn-ortodromia{
-    background-color: wheat;
-    font-weight: bold;
-    font-size: 15;
-}
-
-.waypoints{
-    align-content: center;
+.esegui-calcoli{
+    background-color: rgba(248, 185, 26, 0.76); /*rgb(218, 194, 89)*/
 }
 
 
-/*Classe che gestisce la grafica del listpicker*/
-.picker{
-    width: 700px;
+/*Classi per le animazioni nelle pagine lossodromia e ortodromia*/
+@keyframes animaBack {
+    from {background-color: rgb(250, 235, 215);}
+    to {background-color: transparent;}
+}
+
+.animato{
+    animation-name: animaBack;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+}
+
+@keyframes animaRuota {
+    from{transform: rotate(0deg);}
+    to{transform: rotate(360deg);}
+}
+.animatoRuota{
+    animation-name: animaRuota;
+    animation-duration: 5s;
+    animation-fill-mode: both;
+    animation-iteration-count: 3;
+    border-radius: 34px;
+}
+
+
+
+@keyframes animaBackLosso {
+    from{background-color: antiquewhite;}
+    to{background-color: transparent;}
+}
+
+.animatoLosso{
+    animation-name: animaBackLosso;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
 }
