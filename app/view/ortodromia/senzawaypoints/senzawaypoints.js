@@ -150,7 +150,7 @@ exports.onSwitchLon1=(args)=>{
             case true:
                 letteraLon1="W";
                 break;
-        }        
+        }
     });
 }
 
@@ -410,10 +410,10 @@ exports.CambioRotta1=()=>{
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 /**
  * In questa sezione dichiaro tutte le funzioni utili alla risoluzione dei problemi relativi l'ortodromia
- * 
+ *
  * IMPPORTANTE, verrà dichiarata la funzione ""Modello()"" che rappresenta il modello della pagina, che controlla i vari eventi
  * le funzioni dei pulsanti e la gestione degli output
- * 
+ *
  * IMPORTANTE: ""Modello()"" è l'ultima funzione ad essere dichiarata
  */
 
@@ -427,7 +427,7 @@ exports.CambioRotta1=()=>{
 
  function SetInput1(){
      /**
-      * Funzione che setta gli input del primo problema di ortodromia, nel caso in cui siano sbagliati setta il bug=1 
+      * Funzione che setta gli input del primo problema di ortodromia, nel caso in cui siano sbagliati setta il bug=1
       * per non risolvere il problema
       */
      bugVuota=1;
@@ -494,7 +494,7 @@ exports.CambioRotta1=()=>{
              output=``;
              break;
      }
-     
+
  }//end function RisolviPrimoProb
 
 
@@ -508,8 +508,8 @@ exports.CambioRotta1=()=>{
 
  function SetInput2(){
      /**
-      * Funzione che setta gli input del secondo problema di ortodromia, nel caso in cui siano sbagliati setta il bug=1 
-      * per non risolvere il problema 
+      * Funzione che setta gli input del secondo problema di ortodromia, nel caso in cui siano sbagliati setta il bug=1
+      * per non risolvere il problema
       */
      bugVuota=1;
      let sommaLat2, sommaLon2, sommaLatArr2, sommaLonArr2;
@@ -639,7 +639,7 @@ exports.CambioRotta1=()=>{
              break;
      }
  }//end function RisolviConfrontoSecondo()
- 
+
 
 
  //_________________________________________________________________________________________________
@@ -682,10 +682,10 @@ exports.CambioRotta1=()=>{
 
  function VerificaNavMista(risultati){
      /**
-      * Funzione che controlla se la navigazione mista è possibile calcolarla, in base alla tipologia dei problemi di ortodromia risolti 
-      * 
+      * Funzione che controlla se la navigazione mista è possibile calcolarla, in base alla tipologia dei problemi di ortodromia risolti
+      *
       * bugMista assumerà valore 3 se: 1-si è risolta una navigazione equatoriale
-      *                                2-si è risolta una navigazione per meridiano, qui attento con il "primo problema", la funzione nel file ortodromia non fa il 
+      *                                2-si è risolta una navigazione per meridiano, qui attento con il "primo problema", la funzione nel file ortodromia non fa il
       *                                  riconoscimento se si va nell'antimeridiano, pertanto metto un controllo sulle rotte, se sono uguali si innesca il bug
       *                                3-se la latitudine del vertice è inferiore alla latitudine del parallelo limite
       */
@@ -705,14 +705,18 @@ exports.CambioRotta1=()=>{
                      problemaCalcolato="primo problema ok";
                  }
              }
-             
+
              break;
 
          default:
              if(risultati[4][0]<=latLim[0]){
                  bugMista = 3;
              }else{
-                 bugMista = 0;
+                 if(risultati[4][1]!=latLim[1]){
+                     bugMista = 3;
+                 }else {
+                     bugMista = 0;
+                 }
              }
              break;
      }//end switch(dim)
@@ -724,12 +728,12 @@ exports.CambioRotta1=()=>{
  function RisolviNavMista(problemaCalcolato){
      /**
       * Funzione che manda in risoluzione la navigazione mista
-      * 
+      *
       * Input:
       * -problemaCalcolato: stringa assegnata una volta fatto click nei relativi pulsanti di calcolo dei problemi di ortodromia, può assumere due valori
       *                     "primo problema"/"primo problema ok" oppure "secondo problema"
       */
-    
+
      switch(bugVuotaMista){
          case 0:
              switch(bugVuota){

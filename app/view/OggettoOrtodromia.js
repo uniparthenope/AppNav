@@ -10,9 +10,9 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
 /**
  * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
  * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
- * 
+ *
  * Dichiaro tutte le funzioni utili alla risoluzione dell'ortodromia
- * 
+ *
  * Per il primo problema di ortodromia
  * -CalcolaLatitudineArrivo()
  * -DeltaLambdaPrimoProblema()
@@ -29,16 +29,16 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function CalcolaLatitudineArrivo(lat,m,R){
      /**
       * Funzione che calcola la latitudine di arrivo del primo problema di ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -m: valore del cammino espresso in miglia nautiche
-      * 
+      *
       * -R: valore rotta iniziale in circolare
-      * 
+      *
       * Output:
       * -ris: vettore di latitudine del punto di arrivo di due componenti
       *       1-valore latitudine
@@ -77,20 +77,20 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function DeltaLambdaPrimoProblema(lat,latArr,m,R){
      /**
       * Funzione che determina la differenza di longitudine del primo problema di ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore di latitudine del punto di arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * -m: valore cammino espresso in miglia nautiche
-      * 
+      *
       * -R: valore rotta iniziale in circolare
-      * 
+      *
       * Output:
       * -ris: vettore della differenza di longitudine espressa in gradi decimali di DUE componenti
       *       1-valore differenza
@@ -139,16 +139,16 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function CalcolaLongitudineArrivo(lon,deltaLambda){
      /**
       * Funzione che determina la longitudine del punto di arrivo del primo problema di ortodromia
-      * 
+      *
       * Input:
       * -lon: vettore di longitudine del punto di partenza di due componenti
       *       1-valore logitudine
       *       2-lettera
-      * 
+      *
       * -deltalambda: vettore della differenza di longitudine di due componenti
       *               1-valore differenza longitudine
       *               2-lettera relativa al semipiano di navigazione, può essere "ovest/est", attenzione non è la lettera della differnza di longitudine
-      * 
+      *
       * Output:
       * -ris: vettore della longitudine di arrivo di due componenti:
       *       1-valore longitudine
@@ -224,20 +224,20 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function NavigazioneMeridianoPrimoProblema(lat,lon,m,R){
      /**
       * Funzione che risolve la navigazione per meridiano nel primo problema di ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -lon: vettore di longitudine del punto di partenza di due componenti
       *       1-valore longitudine
       *       2-lettera
-      * 
+      *
       * -m: valore cammino espresso in miglia nautiche
-      * 
+      *
       * -R: valore rotta iniziale in circolare
-      * 
+      *
       * Output:
       * -ris: vettore di tre componenti
       *       1-vettore di latitudine del punto di arrivo di due componenti
@@ -332,7 +332,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
                                       break;
                             }//end switch(lon[1])
                             ris[2] = 180;
-  
+
                         }else if ( ris[0][0]<0 && Math.abs(ris[0][0])<90 ){//arrivo antimeridiano emisfero sud
 
                           ris[0][1] = "S";
@@ -348,14 +348,14 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
                                     break;
                           }//end switch(lon[1])
                           ris[2] = 180;
-  
+
                         }else if ( ris[0][0]<0 && Math.abs(ris[0][0])>90 && Math.abs(ris[0][0])<180){//caso arrivo meridiano punto di partenza ma emisfero sud
-                            
+
                             ris[0][0] = 90 - Math.abs( ris[0][0]+90 );
                             ris[0][1] = "S";
                             ris[1] = lon;
                             ris[2] = 0;
-  
+
                         }else if ( ris[0][0]<0 && Math.abs(ris[0][0])>=180 ){//caso arrivo meridiano punto di partenza emisfero nord
 
                             ris[0][0] = Math.abs(ris[0][0]-90) - 90;
@@ -527,20 +527,20 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function NavigazioneEquatorePrimoProblema(lat,lon,m,R){
      /**
       * Funzione che risolve la navigazione per equatore nel primo problema di ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -lon: vettore di longitudine del punto di partenza di due componenti
       *       1-valore longitudine
       *       2-lettera
-      * 
+      *
       * -m: valore cammino espresso in miglia nautiche, questo valore deve essere al massimo il cammino per raggiungere il punto di partenza=>un giro del globo
-      * 
+      *
       * -R: valore rotta iniziale espressa in circolare
-      * 
+      *
       * Output:
       * -ris: vettore di due componenti
       *       1-vettore di latitudine del punto di arrivo di due componenti
@@ -662,14 +662,14 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function RiconosciPrimoProblema(lat,R){
      /**
       * Funzione che riconosce la tipologia di ortodromia del primo problema
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -R: valore della rotta iniziale dell'ortodromia
-      * 
+      *
       * Output:
       * -ris: stringa con la tipologia di ortodromia
       */
@@ -713,22 +713,22 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
 
 
  function RisolviPrimoProblema(lat,lon,m,R){
-     /** 
+     /**
       * Funzione che risolve il primo problema di ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -lon: vettore di longitudine del punto di partenza di due componenti
       *       1-valore longitudine
       *       2-lettera
-      * 
+      *
       * -m: valore cammino espresso in miglia nautiche
-      * 
+      *
       * -R: valore rotta iniziale in circolare
-      * 
+      *
       * Output:
       * -ris: vettore di diverse diensioni a seconda del problema che si presenta
       *       -ZERO DIMENSIONI: caso in cui non è possibile risolvere il problema sottoposto
@@ -739,7 +739,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
       *                           _lettera
       *                         3-vettore longitudine arrivo di due componenti
       *                           _valore longitudine
-      *                           _lettera                        
+      *                           _lettera
       *       -QUATTRO DIMENSIONI: caso navigazione per meridiano
       *                            1-stringa di testo che descrive la tipologia di problema "navigazione meridiano"
       *                            2-vettore latitudine arrivo di due componenti
@@ -761,7 +761,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
       *                         5-vettore latitudine primo vertice di due componenti
       *                           -valore latitudine
       *                           -lettera
-      *                         6-vettore longitudine primo vertice di due componenti  
+      *                         6-vettore longitudine primo vertice di due componenti
       *                           -valore longitudine
       *                           -lettera
       *                         7-vettore latitudine secondo vertice di due componenti
@@ -783,7 +783,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
       *                             -lettera
       *                             -lettera a monte di correzioni (NON VIENE USATA)
       *                            _valore rotta iniziale espressa in circolare
-      *                        
+      *
      */
 
      var ris=[];
@@ -870,45 +870,45 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function CalcolaVertici(lat,lon,latArr,lonArr,deltaLambda,R){
      /**
       * Funzione che determina le coordinate dei vertici dell'ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore latitudine punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -lon: vettore longitudine punto di partenza di due componenti
       *       1-valore longitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore latitudine punto arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * -lonArr: vettore longitudine punto arrivo di due componenti
       *          1-valore longitudine
       *          2-lettera
-      * 
+      *
       * -deltaLambda: vettore di differenza di longitudine di tre componenti
       *               1-valore differenza
       *               2-lettera
       *               3-lettera a monte di eventuali correzioni, non viene utilizzata
-      * 
+      *
       * -R: valore rotta iniziale in circolare
-      * 
+      *
       * Output:
       * -ris: vettore di quattro componenti
       *       1-vettore latitudine primo verticie di due componenti
       *         _valore latitudine
       *         _lettera
-      * 
+      *
       *       2-vettore longitudine primo vertice di due componenti
       *         _valore longitudine
       *         _lettera
-      * 
+      *
       *       3-vettore latitudine secondo vertice di due componenti
       *         _valore latitudine
       *         _lettera
-      * 
+      *
       *       4-vettore longitudine secondo vertice di due componenti
       *         _valore longitudine
       *         _lettera
@@ -1015,18 +1015,18 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function CalcolaNodi(lonVertice){
      /**
       * Funzione che determina i nodi dell'ortodromia
-      * 
+      *
       * Input:
       * -lonVertice: vettore longitudine del vertice di due componenti
       *              1-valore longitudine
       *              2-lettera
-      * 
+      *
       * Output:
       * -ris: vettore di due componenti
       *       1-vettore longitudine nodo principale di due componenti
       *         _valore longitudine
       *         _lettera
-      * 
+      *
       *       2-vettore longitudine nodo secondario di due componenti
       *         _valore longitudine
       *         _lettera
@@ -1044,7 +1044,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
                  lonNodoSecondario[0] = lonNodoPrincipale[0]+180;
                  if( lonNodoSecondario[0]>=180 ){
                      lonNodoSecondario[0] = 360-lonNodoSecondario[0];
-                 } 
+                 }
 
              }else if( lonVertice[0]<90 ){
                  lonNodoPrincipale[0] = lonVertice[0]+90;
@@ -1096,35 +1096,37 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function CalcolaRottaFinale(lat,latArr,deltaLambda,m,R){
      /**
       * Funzione che calcola la rotta finale dell'ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine (deve essere positivo)
       *       2-lettera
-      * 
+      *
       * -latArr: vettore di latitudine del punto di arrivo di due componenti
       *          1-valore latitudine (deve essere positivo)
       *          2-lettera
-      * 
+      *
       * -deltaLambda: vettore differenza longitudine di tre componenti
       *               1-valore differenza (deve essere positiva)
       *               2-lettera
       *               2-lettera a monte di correzione, NON VIENE USATA
-      * 
+      *
       * -m: valore del cammino ortodromico espresso in miglia nautiche, deve essere
       *     normalizzato, al massimo assumere il valore corrispondente a un giro del globo
-      * 
+      *
       * -R: valore della rotta iniziale in gradi circolari
-      * 
+      *
       * Output:
       * -ris: valore della rotta finale in circolare
       */
      var ris;
 
+     lat[0] = Math.abs(lat[0]);
      if( lat[1]==="S" ){
          lat[0]*=(-1);
      }
 
+     latArr[0] = Math.abs(latArr[0]);
      if( latArr[1]==="S" ){
          latArr[0]*=(-1);
      }
@@ -1172,7 +1174,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
 
      if( latArr[0]<0 ){
          latArr[0] = Math.abs(latArr[0]);
-     } 
+     }
 
      return ris;
  }//end function CalcoloRottaFinale(...)
@@ -1183,23 +1185,23 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function CalcolaRottaIniziale(lat,latArr,deltaLambda,m){
      /**
       * Funzione che determina la rotta inziale ortodromica
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore di latitudine del punto di arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * -deltaLambda: vettore di differenza di longitudine di tre componenti
       *               1-valore differenza
       *               2-lettera differenza
       *               3-lettera a monte di correzioni; NON viene usata
-      * 
+      *
       * -m: valore del cammino ortodromico espresso in miglia nautiche
-      * 
+      *
       * Output:
       * -ris: valore della rotta iniziale espressa in circolare
       */
@@ -1262,21 +1264,21 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function CalcolaCammino(lat,latArr,deltaLambda){
      /**
       * Funzione che calcola il cammino ortodromico
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore di latitudine del punto di arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * -deltaLambda: vettore di differenza di longitudine di tre componenti
       *               1-valore differenza
       *               2-lettera
       *               3-lettera a monte di correzioni, NON viene usata
-      * 
+      *
       * Output:
       * -ris: valore cammmino in miglia nautiche
       */
@@ -1303,16 +1305,16 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function NavigazioneEquatoreSecondo(lon,lonArr){
      /**
       * Funzione che risolve la navigazione sull'equatore per il secondo problema di ortodromia
-      * 
+      *
       * Input:
       * -lon: vettore di longitudine del punto di partenza di due componenti
       *       1-valore longitudine
       *       2-lettera
-      * 
+      *
       * -lonArr: vettore di longitudine del punto di arrivo di due componenti
       *          1-valore longitudine
       *          2-lettera
-      * 
+      *
       * Output:
       * -ris: vettore di due componenti
       *       1-valore cammino espresso in miglia nautiche
@@ -1347,16 +1349,16 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function NavigazioneMeridianoSecondo(lat,latArr){
      /**
       * Funzione che risolve la navigazione sul meridiano nel secondo problema di ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore di latitudine del punto di arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * Output:
       * -ris: vettore di due componenti
       *       1-valore del cammino espresso in miglia nautiche
@@ -1391,20 +1393,20 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function NavigazioneMeridiano2AntimeridianoSecondo(lat,latArr){
      /**
       * Funzione che risolve il caso particolare di ortodromia in cui si
-      * naviga per il meridiano del punto di partenza e si arriva 
+      * naviga per il meridiano del punto di partenza e si arriva
       * nell'antimeridiano
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di arrivo di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore di latitudine del punto di arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * -lonArr:vettore di longitudine del punto di arrivo
-      * 
+      *
       * Output:
       * -ris: vettore di tre componenti
       *       1-valore del cammino ortodromico espresso in miglia nautiche
@@ -1488,24 +1490,24 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function RiconosciSecondoProblema(lat,lon,latArr,lonArr){
      /**
       * Funzione che riconosce il secondo problema di ortodromia sottoposto dall'utente
-      * 
+      *
       * Input:
       * -lat: vettore di latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       2-lettera
-      * 
+      *
       * -lon: vettore di longitudine del punto di partenza di due componenti
       *       1-valore longitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore di latitudine del punto di arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * -lonArr: vettore di longitudine del punto di arrivo di due componenti
       *          1-valore longitudine
       *          2-lettera
-      * 
+      *
       * Output:
       * -ris: stringa con la tipologia di problema
       */
@@ -1513,7 +1515,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
      let ris;
 
      let antimeridiano = Punto_AND_Differenze.CalcolaAntimeridiano(lon);
-    
+
 
      //creo costrutto condizionale che riconosce la tipologia di problema
      if( (antimeridiano[0]===lonArr[0]) && (antimeridiano[1]===lonArr[1]) ){
@@ -1537,51 +1539,51 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function RisolviSecondoProblema(lat,lon,latArr,lonArr){
      /**
       * Funzione che risolve il secondo problema di ortodromia
-      * 
+      *
       * Input:
       * -lat: vettore latitudine del punto di partenza di due componenti
       *       1-valore latitudine
       *       -lettera
-      * 
+      *
       * -lon: vettore longitudine del punto di partenza di de componenti
       *       1-valore longitudine
       *       2-lettera
-      * 
+      *
       * -latArr: vettore latitudine del punto di arrivo di due componenti
       *          1-valore latitudine
       *          2-lettera
-      * 
+      *
       * -lonArr: vettore longitudine del punto di arrivo di due componenti
       *          1-valore longitudine
       *          2-lettera
-      * 
+      *
       * Ouptut:
       * -ris: vettore risultati multidimensionale dipendente dal problema presentato
       *       -3 DIMENSIONI, navigazione equatoriale
       *        1-stringa contenente "navigazione equatoriale"
       *        2-valore cammino espresso in miglia nautiche
       *        3-valore contenente la rotta iniziale espressa in circolare
-      * 
+      *
       *       -3 DIMENSIONI, navigazione meridiano
       *        1-stringa contenente "navigazione meridiano"
       *        2-valore cammino espresso in miglia nautiche
       *        3-valore rotta iniziale espressa in circolare
-      * 
+      *
       *       -4 DIMENSIONI, navigazione meridiano con arrivo antimeridiano
       *        1-stringa contenente "navigazione Meridiano2Antimeridiano"
       *        2-valore cammino espresso in miglia nautiche
       *        3-valore rotta iniziale espressa in circolare
       *        4-valore rotta finale espressa in circolare
-      * 
+      *
       *       -PIU' DIMENSIONI, caso generale
       *        1-stringa contenente "generale"
       *        2-valore cammino espresso in miglia nautiche
       *        3-valore rotta iniziale espressa in circolare
       *        4-valore rotta finale espressa in circolare
       *        5-vettore latitudine primo vertice di due componenti
-      *          _valore latitudine 
+      *          _valore latitudine
       *          _lettera
-      *        6-vettore longitudine primo vertice di due componenti 
+      *        6-vettore longitudine primo vertice di due componenti
       *          _valore longitudine
       *          _lettera
       *        7-vettore latitudine secondo vertice di due componenti
@@ -1596,7 +1598,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
       *        10-vettore longitudine nodo secondario di due componenti
       *           _valore longitudine
       *           _lettera
-      * 
+      *
       *           quelli di seguito dervono solo per la risoluzione della nav mista e in ogni caso memorizzano alcuni calcoli effettuati
       *        11-stringa contenente "secondo problema"
       *        12-vettore differenza di longitudine tra il punto di partenza e di arrivo di tre componenti
@@ -1681,10 +1683,10 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
  function SetOutputPrimo(ris){
     /**
      * Funzione che gestisce gli output del primo problema di ortodromia
-     * 
+     *
      * Input:
      * -ris: vettore di varie dimensioni dei risultati dei calcoli, IMPORTANTE--> il 1° elemento dell'array è la tipologia di problema
-     * 
+     *
      * Output:
      * -out: stringa con i risultati di output per l'utente
      */
@@ -1701,7 +1703,7 @@ var Punto_AND_Differenze = require('~/view/Punto&Differenze');
             let latVertice2 = FunctionMath.Gradi2Primi(ris[6][0]); //vettore con solo gradi e primi di latitudine
             let lonVertice2 = FunctionMath.Gradi2Primi(ris[7][0]); //vettore con solo gradi e primi di longitudine
             let lonNodoPrincipale = FunctionMath.Gradi2Primi(ris[8][0]); //vettore con solo gradi e primi di longitudine
-            let lonNodoSecondario = FunctionMath.Gradi2Primi(ris[9][0]); //vettore con solo gradi e primi di longitudine 
+            let lonNodoSecondario = FunctionMath.Gradi2Primi(ris[9][0]); //vettore con solo gradi e primi di longitudine
 
             out = `Punto di arrivo
 Latitudine: ${latArr[0]}° ${latArr[1].toFixed(2)}' ${ris[1][1]}
@@ -1757,10 +1759,10 @@ exports.SetOutputPrimo=SetOutputPrimo;
 function SetOutputSecondo(ris){
     /**
      * Funzione che gestisce gli output del secondo problema di ortodromia
-     * 
+     *
      * Input:
      * -ris: vettore di varie dimensioni dei risultati dei calcoli, IMPORTANTE--> il 1° elemento dell'array è la tipologia di problema
-     * 
+     *
      * Output:
      * -out: stringa con i risultati di output per l'utente
      */
@@ -1779,7 +1781,7 @@ function SetOutputSecondo(ris){
             let latVertice2 = FunctionMath.Gradi2Primi(ris[6][0]); //vettore con solo gradi e primi di latitudine
             let lonVertice2 = FunctionMath.Gradi2Primi(ris[7][0]); //vettore con solo gradi e primi di longitudine
             let lonNodoPrincipale = FunctionMath.Gradi2Primi(ris[8][0]); //vettore con solo gradi e primi di longitudine
-            let lonNodoSecondario = FunctionMath.Gradi2Primi(ris[9][0]); //vettore con solo gradi e primi di longitudine 
+            let lonNodoSecondario = FunctionMath.Gradi2Primi(ris[9][0]); //vettore con solo gradi e primi di longitudine
 
             out = `Cammino: ${m.toFixed(2)}NM
 
@@ -1816,7 +1818,7 @@ Rotta Iniziale: ${Ri.toFixed(2)}°`;
             Ri = FunctionMath.CorreggiRoundOffRotte(ris[2]);
 
             out = `Cammino: ${m.toFixed(2)}NM
-            
+
 Rotta Iniziale: ${Ri.toFixed(2)}°
 
 I vertici sono i poli geografici`;
@@ -1828,7 +1830,7 @@ I vertici sono i poli geografici`;
             Rf = FunctionMath.CorreggiRoundOffRotte(ris[3]);
 
             out = `Cammino: ${m.toFixed(2)}NM
-            
+
 Rotta Iniziale: ${Ri.toFixed(2)}°
 
 Rotta Finale: ${Rf.toFixed(2)}°
@@ -1853,29 +1855,29 @@ function WaypointsCammino(numeroWay,lat,lon,latArr,lonArr,risultati){
     /**
      * Funzione che determina le coordinatet dei waypoints con il metodo della
      * ugual differenza in cammino
-     * 
+     *
      * Input:
      * -numeroWay: valore intero che identifica il numero dei waypoints che vuole l'utente
-     * 
+     *
      * -lat: vettore latitudine del punto di partenza di due componenti
      *       1-valore latitudine
      *       2-lettera
-     * 
+     *
      * -lon: vettore longitudine del punto di partenza di due componenti
      *       1-valore longitudine
      *       2-lettera
-     * 
+     *
      * -latArr: vettore latitudine del punto di arrivo di due componenti
      *          1-valore latitudine
      *          2-lettera
-     * 
+     *
      * -lonArr: vettore longitudine del punto di arrivo di due componenti
      *          1-valore longitudine
      *          2-lettera
-     * 
+     *
      * -risultati: multiarray che contiene i risultati della risoluzione dell'ortodromia
      *             per vedere la struttura consultare la function in questo file "RisolviSecondo()"
-     * 
+     *
      * Output:
      * -ris: array di due componenti
      *       1-vettore delle latitudini di due componenti
@@ -1898,7 +1900,7 @@ function WaypointsCammino(numeroWay,lat,lon,latArr,lonArr,risultati){
             //memorizzo il punto di partenza nei vettori dei waypoints
             latWay[0] = lat, lonWay[0] = lon;
 
-            
+
             for(i=1; i<=numeroWay; i++){
 
                 if(lat[1]==="S"){
@@ -2005,30 +2007,30 @@ function WaypointsLongitudine(numeroWay,lat,lon,latArr,lonArr,risultati){
     /**
      * Funzione che calcola le coordinate dei waypoints con il metodo delle
      * ugual differenze in longitudine
-     * 
+     *
      * Input:
      * -numeroWay: valore intero che identifica il numero dei waypoints che vuole l'utente
-     * 
+     *
      * -lat: vettore latitudine del punto di partenza di due componenti
      *       1-valore latitudine
      *       2-lettera
-     * 
+     *
      * -lon: vettore longitudine del punto di partenza di due componenti
      *       1-valore longitudine
      *       2-lettera
-     * 
+     *
      * -latArr: vettore latitudine del punto di arrivo di due componenti
      *          1-valore latitudine
      *          2-lettera
-     * 
+     *
      * -lonArr: vettore longitudine del punto di arrivo di due componenti
      *          1-valore longitudine
      *          2-lettera
-     * 
+     *
      * -risultati: multiarray che contiene i risultati della risoluzione dell'ortodromia
      *             per vedere la struttura consultare la function in questo file "RisolviSecondo()"
-     * 
-     * 
+     *
+     *
      * Output:
      * -ris: array contenente le coordinate di due componenti
      *       1-vettore latitudini waypoints di due componenti
@@ -2054,15 +2056,15 @@ function WaypointsLongitudine(numeroWay,lat,lon,latArr,lonArr,risultati){
                 lat[0]*=(-1);
             }
 
-            
 
-            
+
+
             for(i=1; i<=numeroWay; i++){
 
                 if(risultati[11][1]==="W"){
                     deltaLonWay*=(-1);
                 }
-                
+
                 //calcolo la latitudine dei waypoints
                 let a = Math.tan( FunctionMath.Deg2Rad(lat[0]) ) * Math.cos( FunctionMath.Deg2Rad(i*deltaLonWay) );
                 let b = Math.sin( FunctionMath.Deg2Rad(i*deltaLonWay) ) / ( Math.cos( FunctionMath.Deg2Rad(lat[0]) ) * Math.tan( FunctionMath.Deg2Rad(risultati[2]) ) );
@@ -2145,16 +2147,16 @@ exports.WaypointsLongitudine=WaypointsLongitudine;
 function SetOutputWaypoints(risWay){
     /**
      * Funzione che setta gli output dei waypoints da mostrare all'utente
-     * 
+     *
      * Input:
      * -risWay: array contenente i risultati dei calcoli dei waypoints
-     * 
+     *
      * Output:
      * -output: stringa con gli output da mostrare
      */
     let output;
 
-    
+
     let lat = FunctionMath.Gradi2Primi( FunctionMath.CorreggiRoundOff(risWay[0][0][0]) );
     let lon = FunctionMath.Gradi2Primi( FunctionMath.CorreggiRoundOff(risWay[1][0][0]) );
 

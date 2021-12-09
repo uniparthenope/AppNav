@@ -9,9 +9,9 @@ var OggettoLossodromia = require('~/view/OggettoLossodromia');
  * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
  * :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
  * Dichiaro di seguito tutte le funzioni utili alla risoluzione della navigazione mista
- * 
+ *
  * La navigazione mista viene affrontata nella pagina di ortodromia senza waypoints
- * 
+ *
  * Funzioni:
  * -CalcolaCamminiOrtodromie()
  * -CalcolaDeltaLambdaVertici()
@@ -26,20 +26,20 @@ var OggettoLossodromia = require('~/view/OggettoLossodromia');
 function CalcolaCamminiOrtodromie(lat,latArr,paralleloLimite){
     /**
      * Funzione che determina i cammini delle due ortodromie della navigazione
-     * 
+     *
      * Input:
      * -lat: vettore latitudine del punto di partenza di due componenti
      *       1-valore latitudine
      *       2-lettera
-     * 
+     *
      * -latArr: vettore latitudine del punto di arrivo di due componenti
      *          1-valore latitudine
      *          2-lettera
-     * 
+     *
      * -paralleloLimite: vettore latitudine del parallelo limite
      *                   1-valore latitudine
      *                   2-lettera
-     * 
+     *
      * Output:
      * -ris: vettore di due dimensioni
      *       1-valore cammino della prima ortodromia espresso in miglia nautiche
@@ -120,28 +120,28 @@ function CalcolaDeltaLambdaVertici(lat,latArr,paralleloLimite,lon,lonArr){
     /**
      * Funzione che determina le differenze di longitudine tra i punti di partenza
      * e arrivo e i vertici, che giaciono nel parallelo limite
-     * 
+     *
      * Input:
      * -lat: vettore latitudine punto di partenza di due componenti
      *       1-valore latitudine
      *       2-lettera
-     * 
+     *
      * -latArr: vettore latitudine punto di arrivo di due componenti
      *          1-valore latitudine
      *          2-lettera
-     * 
+     *
      * -paralleloLimite: vettore latitudine del parallelo limite
      *                   1-valore latitudine
      *                   2-lettera
-     * 
+     *
      * -lon: vettore longitudine punto di partenza di due componenti
      *       1-valore longitudine
      *       2-lettera
-     * 
+     *
      * -lonArr: vettore longitudine punto di arrivo di due componenti
      *          -valore longitudine
      *          -lettera
-     * 
+     *
      * Output:
      * -ris: vettore di due dimensioni
      *       1-vettore della differenza di longitudine tra punto di partenza e primo vertice, di due componenti
@@ -169,7 +169,7 @@ function CalcolaDeltaLambdaVertici(lat,latArr,paralleloLimite,lon,lonArr){
     ris[0][0] = FunctionMath.Rad2Deg( Math.acos(ris[0][0]) );
     ris[1][0] = Math.tan( FunctionMath.Deg2Rad(latArr[0]) ) / Math.tan( FunctionMath.Deg2Rad(paralleloLimite[0]) );
     ris[1][0] = FunctionMath.Rad2Deg( Math.acos(ris[1][0]) );
-    
+
     if(ris[0][0]>=180){
         ris[0][0] = 360-ris[0][0];
     }else if(ris[0][0]<0 && Math.abs(ris[0][0])>=180 ){
@@ -228,20 +228,20 @@ function CalcolaRottaIniziale(lat,paralleloLimite,deltaLambda){
     /**
      * Funzione che determina la rotta iniziale della prima ortodromia della navigazione mista
      * Non si usa la funzine della determinazione della rotta iniziale dell'ortodromia, perché con la seguente si effettuano meno calcoli
-     * 
+     *
      * Input:
      * -lat: vettore latitudine del punto di partenza di due componenti
      *       1-valore latitudine
      *       2-lettera
-     * 
+     *
      * -paralleloLimite: vettore latitudine del parallelo limite di due componenti
      *                   1-valore latitudine
      *                   2-lettera
-     * 
+     *
      * -deltaLambda: vettore della differenza di longitudine tra il punto di partenza e il primo vertice della navigazione mista di due componenti
      *               1-valore differenza
      *               2-lettera
-     * 
+     *
      * Output:
      * -ris: valore rotta iniziale espressa in circolare
      */
@@ -266,25 +266,25 @@ function CalcolaRottaFinale(latArr,paralleloLimite,deltaLambda,d2){
     /**
      * Funzione che determina la rotta finale della seconda ortodromia, non sfrutto la funzione della
      * rotta finale dell'ortodromia per comodità
-     * 
+     *
      * Input:
      * -latArr: vettore latitudine del punto di arrivo di due componenti
      *          1-valore latitudine
      *          2-lettera
-     * 
+     *
      * -paralleloLimite: vettore latitudine del parallelo limite di due componenti
      *                   1-valore latitudine
      *                   2-lettera
-     * 
+     *
      * -deltaLambda: vettore differenza longitudine tra punto di partenza e primo vertice
      *               uso questa differenza solo per la lettera associata, che è uguale alla
      *               lettera associata alla differenza di longitudine tra il punto di partenza e di arrivo
      *               Questo vettore è di due componenti
      *               1-valore differenza (NON VIENE USATO)
      *               2-lettera
-     * 
+     *
      * -d2: valore cammino tra il secondo vertice e il punto di arrivo espresso in miglia nautiche
-     * 
+     *
      * Output:
      * -ris: valore rotta finale espresso in circolare
      */
@@ -336,12 +336,12 @@ function ControllaVertice(Ri,Rf){
      * Funzione che controlla se il vertice giace tra il punto di partenza e di arrivo
      * il controllo viene effettuato verificando che il valore semicircolare di rotta
      * iniiziale e finale siano discordi
-     * 
+     *
      * Input:
      * -Ri: valore rotta iniziale dell'ortodromia
-     * 
+     *
      * -Rf: valore di rotta finale dell'ortdromia
-     * 
+     *
      * Output:
      * -bug: viene assegnato solo il valore di bug
      */
@@ -379,45 +379,45 @@ exports.ControllaVertice=ControllaVertice;
 function RisolviNavMista(lat,lon,latArr,lonArr,Ri,Rf,latVertice,lonVertice,paralleloLimite,deltaLambda){
     /**
      * Funzione che risolve la navigazione mista
-     * 
+     *
      * Input:
      * -lat: vettore latitudine del punto di partenza di due componenti
      *       1-valore latitudine
      *       2-lettera
-     * 
+     *
      * -lon: vettore longitudine del punto di partenza di due componenti
      *       1-valore longitudine
      *       2-lettera
-     * 
-     * -latArr: vettore latitudine del punto di arrivo di due componenti 
+     *
+     * -latArr: vettore latitudine del punto di arrivo di due componenti
      *          1-valore latitudine
      *          2-lettera
-     * 
+     *
      * -lonArr: vettore longitudine del punto di arrivo di due componenti
      *          1-valore longitudine
      *          2-lettera
-     * 
+     *
      * -Ri: valore rotta iniziale ortodromica espressa in circolare
-     * 
+     *
      * -Rf: valore rotta finale ortodromica espressa in circolare
-     * 
+     *
      * -latVertice: vettore latitudine vertice di due componenti
      *              1-valore latitudine
      *              2-lettera
-     * 
+     *
      * -lonVertice: vettore longitudine vertice di due componenti
      *              1-valore longitudine
      *              2-lettera
-     * 
+     *
      * -paralleloLimite: vettore latitudine del parallelo limite di due componenti
      *                   1-valore latitudine
      *                   2-lettera
-     * 
+     *
      * -deltaLambda: vettore differenza longitudine tra punto partenza e arrivo di tre componenti
      *               1-valore differenza
      *               2-lettera
      *               3-lettera a monte di correzioni (NON VIENE USATA)
-     * 
+     *
      * Output:
      * -ris: vettore multidimensionale
      */
@@ -450,10 +450,10 @@ exports.RisolviNavMista=RisolviNavMista;
 function SetOutput(ris){
     /**
      * Funzione che setta gli output da mostrare all'utente per la navigazione mista
-     * 
+     *
      * Input:
      * -ris: multiarray fornito dalla function precedente
-     * 
+     *
      * Output:
      * -out: stringa da mostrare all'utente
      */

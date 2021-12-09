@@ -79,7 +79,7 @@
                     </StackLayout>
 
                     <!--Per non lasciare spazio vuoto inserisco il logo dell'università-->
-                    <StackLayout row="6" col="1" class="animato" borderRadius="3">
+                    <StackLayout row="6" col="1" borderRadius="3">  <!--nello snippet c'era la seguente dichiarazione class="animato"-->
                         <Image src="~/images/logo.jpg" width="70" height="70" class="animatoRuota"/>
                     </StackLayout>
 
