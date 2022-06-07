@@ -7,6 +7,9 @@ var FunctionMath = require('~/view/FunctionMath');
 const { clear } = require('@nativescript/core/application-settings');
 var OggetoOrtodromia = require('~/view/OggettoOrtodromia');
 
+const { Animation } = require("@nativescript/core");
+const { AnimationCurve } = require("@nativescript/core/ui/enums");
+
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 /**
  * Di seguito dichiaro tutte le variabili utili, variabili di carattere globale
@@ -45,12 +48,12 @@ var output;
 
 //funzione caricamento pagina
 exports.loaded=function(args){
-    page=args.object;  
+    page=args.object;
 
-    
+
     page.bindingContext=Modello();
 
-    
+
 }
 //fine funzione caricamento pagina
 
@@ -180,7 +183,7 @@ exports.CambioRotta=()=>{
 
 
 
- //evento che gestisce l'inserimento dei gradi di latitudine del punto di partenza 
+ //evento che gestisce l'inserimento dei gradi di latitudine del punto di partenza
  exports.CambioGradiLatSecondo=()=>{
      gradiLatSecondo=parseInt( page.getViewById("idGradiLatSecondo").text );
      if (gradiLatSecondo>90){
@@ -378,7 +381,7 @@ exports.CambioPrimiLonArrSecondo=()=>{
  * In questa sezione dichiaro tutte le funzioni utili alla risoluzione del primo problema di lossodromia
  * IMPORTANTE, verrà dichiarata la funzione ""Modello()"" che rappresenta il modello della pagina, che controlla il selezionatore di lista
  * le funzioni dei pulsanti e la gestione degli output.
- * 
+ *
  * IMPORTANTE: ""Modello()"" è l'ultima funzione ad essere dichiarata
  */
 
@@ -390,9 +393,9 @@ exports.CambioPrimiLonArrSecondo=()=>{
 
 
 
- function SetInput(){ 
+ function SetInput(){
      /**
-      * Funzione che setta gli input del primo problema di lossodromia, nel caso in cui siano sbagliati setta il bug=1 
+      * Funzione che setta gli input del primo problema di lossodromia, nel caso in cui siano sbagliati setta il bug=1
       * per non risolvere il problema
       */
      //ResetInput();
@@ -401,7 +404,7 @@ exports.CambioPrimiLonArrSecondo=()=>{
      let sommaLat, sommaLon;
 
      if(isNaN(gradiLat) || isNaN(primiLat)|| isNaN(gradiLon) || isNaN(primiLon)){
-         bugVuota=1; 
+         bugVuota=1;
      }else{
          bugVuota=0;
      }
@@ -501,7 +504,7 @@ Longitudine: ${gradiLonArr}° ${primiLonArr.toFixed(2)}' ${ris[1][1]}
 
 Maggiori dettagli
 Δϕ crescente: ${(ris[2][0]).toFixed(2)}' ${ris[2][1]}
-ϕ Partenza crescente: ${Math.abs( ris[3][0] ).toFixed(2)}' ${ris[3][1]} 
+ϕ Partenza crescente: ${Math.abs( ris[3][0] ).toFixed(2)}' ${ris[3][1]}
 ϕ Arrivo crescente: ${Math.abs( ris[4][0] ).toFixed(2)}' ${ris[4][1]}`;
              }
                 break;
@@ -622,7 +625,7 @@ Longitudine: ${gradiLongitudeArr}° ${primiLongitudeArr.toFixed(2)}' ${ris[0][1]
      switch (tipologia){
           case "navigazione meridiano":
              out = `Navigazione su meridiano
-             
+
 Cammino: ${ris[0].toFixed(2)} NM
 
 Rotta: ${ris[1]}°`;
@@ -630,9 +633,9 @@ Rotta: ${ris[1]}°`;
 
             case "navigazione parallelo":
                 out = `Navigazione su parallelo
-                
+
 Cammino: ${ris[0].toFixed(2)} NM
-                
+
 Rotta: ${ris[1]}°`;
                 break;
 
@@ -641,18 +644,18 @@ Rotta: ${ris[1]}°`;
 
                 if (eccentricita===0){
                     out = `Cammino: ${ris[0].toFixed(2)} NM
-                    
+
 Rotta: ${ris[1].toFixed(2)}°
 
 
 Maggiori dettagli
 Δϕ crescente: ${(ris[2][0]).toFixed(2)}' ${ris[2][1]}
-ϕ Partenza crescente: ${Math.abs( ris[3][0] ).toFixed(2)}' ${ris[3][1]} 
+ϕ Partenza crescente: ${Math.abs( ris[3][0] ).toFixed(2)}' ${ris[3][1]}
 ϕ Arrivo crescente: ${Math.abs( ris[4][0] ).toFixed(2)}' ${ris[4][1]}`;
 
                 }else{
                     out = `Cammino: ${ris[0].toFixed(2)} NM
-                    
+
 Rotta: ${ris[1].toFixed(2)}°
 
 
@@ -665,8 +668,8 @@ Maggiori dettagli
 
      }//end switch
 
-     return out;    
-     
+     return out;
+
  }//end function SetOutputSecondo()
 
 
@@ -703,18 +706,67 @@ function Modello(){
     }
 
     modello.calcola = ()=>{
-        SetInput();
-        RisolviPrimoProb();
-        modello.set("Risultati Primo problema", "Risultati del Primo Problema");
-        modello.set("RisultatiPrimo" , output);
-        //ResetInput();
+
+        //creo l'animazione dell'activityIndicator e a fine animazione faccio mostrare i risultati
+        let indicator = page.getViewById("ind");
+        indicator.visibility = "visible";
+        modello.set("bsy",true);
+
+        const defAnima = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let anima = new Animation([defAnima],false);
+        anima.play().then(()=>{
+            modello.set("bsy",false);
+            indicator.visibility = "collapse";
+
+            //mostro i calcoli
+            SetInput();
+            RisolviPrimoProb();
+            modello.set("Risultati Primo problema", "Risultati del Primo Problema");
+            modello.set("RisultatiPrimo" , output);
+            //ResetInput();
+        });
+
+
     }
 
     modello.calcolaSecondo = ()=>{
-        SetInputSecondo();
-        RisolviSecondoProb();
-        modello.set("Risultati Secondo problema", "Risultati del Secondo Problema");
-        modello.set("RisultatiSecondo", output);
+
+        //creo l'animazione dell'activityIndicator e a fine animazione faccio mostrare i risultati
+        let indicator = page.getViewById("ind2");
+        indicator.visibility = "visible";
+        modello.set("bsy2",true);
+
+        const defnAnim = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let anima = new Animation([defnAnim],false);
+        anima.play().then(()=>{
+            modello.set("bsy2",false);
+            indicator.visibility = "collapse";
+
+            //effettuo e mostro il risultato
+            SetInputSecondo();
+            RisolviSecondoProb();
+            modello.set("Risultati Secondo problema", "Risultati del Secondo Problema");
+            modello.set("RisultatiSecondo", output);
+        });
+
     }
 
     return modello;

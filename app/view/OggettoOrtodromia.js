@@ -1890,7 +1890,7 @@ function WaypointsCammino(numeroWay,lat,lon,latArr,lonArr,risultati){
     let ris=[];
 
     let camminoWay;
-    let latWay=[]; lonWay=[];
+    let latWay=[], lonWay=[];
     let aLat=[], aLon=[]; //sono due variabili d'appoggio
 
     switch(risultati[0]){
@@ -1915,10 +1915,11 @@ function WaypointsCammino(numeroWay,lat,lon,latArr,lonArr,risultati){
 
                 //calcolo latitudine e lettera del waypoint
                 aLat[0] = FunctionMath.Rad2Deg( Math.asin(alfa+beta) );
+                console.log("aLat: "+aLat); //DA RIMUOVERE IL console.log(), era solo per dbug
                 alfa=0, beta=0;
                 if(aLat[0]<0){
-                    aLat[1] = "S";
-                    aLat[0] = Math.abs(latWay[i][0]);
+                    aLat[1] = "S"; console.log("latWay: "+latWay[i]); //DA RIMUOVERE IL console.log(), era solo per debug
+                    aLat[0] = Math.abs((aLat[0]));//aLat[0] = Math.abs(latWay[i][0]);
                 }else{
                     aLat[1] = "N";
                 }

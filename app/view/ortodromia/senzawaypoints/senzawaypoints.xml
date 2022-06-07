@@ -11,7 +11,7 @@
         <TabViewItem ios:title="I Problema di Ortodromia" android:title="Primo Problema di Ortodromia">
             <ScrollView>
 
-                <GridLayout rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                <GridLayout rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                             columns="*,*,*" width="600">
 
                     <!--Creo UI per inserimento di dati per il primo problema-->
@@ -96,42 +96,49 @@
                     <!--Creo Ui per effettuare i calcoli-->
                     <Button row="7" col="0" colSpan="3" text="Esegui calcoli" tap="{{ calcolaPrimo }}" class="esegui-calcoli" />
 
+                    <!--Creo UI per l'inserimento dell'ActivityIndicator-->
+                    <ActivityIndicator row="8" col="0" colSpan="3" busy="{{bsy}}" id="ind" visibility="collapse" />
+
                     <!--Creo UI per mostrare i risultati dei calcoli del primo problema-->
-                    <StackLayout row="8" col="0" colSpan="3" class="riquadro">
+                    <StackLayout row="9" col="0" colSpan="3" class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro nero">
                             <Label textWrap="true" text="{{ Risultati Primo Problema }}" fontSize="17" />
                         </StackLayout>
                     </StackLayout>
 
-                    <Label row="9" col="0" colSpan="3" textWrap="true" text="{{ RisultatiPrimo }}"  class="output" />
+                    <Label row="10" col="0" colSpan="3" textWrap="true" text="{{ RisultatiPrimo }}"  class="output" />
 
-                    <StackLayout row="10" col="0" colSpan="3" class="riquadro">
+                    <StackLayout row="11" col="0" colSpan="3" class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro">
                             <Label text=" " fontSize="17" />
                         </StackLayout>
                     </StackLayout>
 
                     <!--Creo UI per effettuare il confronto con la lossdormia-->
-                    <StackLayout row="11" col="0" colSpan="3" class="riquadro animatoLosso nero">
+                    <StackLayout row="12" col="0" colSpan="3" class="riquadro animatoLosso nero">
                             <Label textWrap="true"
                                    text="Fai click di seguito per confrontare con la lossodromia!"
                                    fontSize="15" fontWeight="bold"
                                    textAlignment="center" />
                     </StackLayout>
 
-                    <Button row="12" col="0" colSpan="3"
+                    <!--Creo UI per effettuare il confronto con il primo problema di lossodromia-->
+                    <Button row="13" col="0" colSpan="3"
                             text="Confronta con lossodromia" tap="{{ confrontaPrimo }}" class="btn btn-ortodromia" class="esegui-calcoli"/>
 
+                    <!--Creo UI per l'inserimento dell'ActivityIndicator-->
+                    <ActivityIndicator row="14" col="0" colSpan="3" busy="{{bsyloss}}" id="indloss" visibility="collapse" />
+
                     <!--Mostro i risultati della lossdormia-->
-                    <StackLayout row="13" col="0" colSpan="3" class="riquadro">
+                    <StackLayout row="15" col="0" colSpan="3" class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro nero">
                             <Label textWrap="true" text="{{ Risultati Confronto Primo }}"/>
                         </StackLayout>
                     </StackLayout>
 
-                    <Label row="14" col="0" colSpan="3" text="{{ RisultatiConfrontoPrimo }}" textWrap="true"  class="output"/>
+                    <Label row="16" col="0" colSpan="3" text="{{ RisultatiConfrontoPrimo }}" textWrap="true"  class="output"/>
 
-                    <StackLayout row="15" col="0" colSpan="3" class="riquadro">
+                    <StackLayout row="17" col="0" colSpan="3" class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro">
                             <Label text=" " fontSize="17" color="lightsalmon" />
                         </StackLayout>
@@ -148,7 +155,7 @@
             <ScrollView>
 
                 <GridLayout
-                        rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                        rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                         columns="*,*,*" width="600">
 
                     <!--Creo UI per l'inserimento di dati per l'ortodromia-->
@@ -256,17 +263,20 @@
                     <!--Creo UI per eseguire i calcoli dell'ortodromia-->
                     <Button row="11" col="0" colSpan="3" text="Esegui calcoli" tap="{{ calcolaSecondo }}" class="btn btn-ortodromia" class="esegui-calcoli" />
 
+                    <!--Creo UI per inserimento dell'ActivityIndicator-->
+                    <ActivityIndicator row="12" col="0" colSpan="3" busy="bsy2" id="ind2" visibility="collapse" />
+
                     <!--Creo UI per mostrare i risultati-->
-                    <StackLayout row="12" col="0" colSpan="3"
+                    <StackLayout row="13" col="0" colSpan="3"
                                  class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro nero">
                             <Label textWrap="true" text="{{ Risultati Secondo Problema }}" fontSize="17" />
                         </StackLayout>
                     </StackLayout>
 
-                    <Label row="13" col="0" colSpan="3" textWrap="true" text="{{ RisultatiSecondo }}" marginLeft="3" class="output" />
+                    <Label row="14" col="0" colSpan="3" textWrap="true" text="{{ RisultatiSecondo }}" marginLeft="3" class="output" />
 
-                    <StackLayout row="14" col="0" colSpan="3"
+                    <StackLayout row="15" col="0" colSpan="3"
                                  class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro">
                             <Label text=" " fontSize="17"
@@ -274,7 +284,7 @@
                         </StackLayout>
                     </StackLayout>
 
-                    <StackLayout row="15" col="0" colSpan="3"
+                    <StackLayout row="16" col="0" colSpan="3"
                                  class="riquadro animatoLosso nero">
                         <Label textWrap="true"
                                text="Fai click di seguito per confrontare con la lossodromia!"
@@ -283,20 +293,23 @@
                     </StackLayout>
 
                     <!--Creo UI per permettere di confrontare i risultati con la lossodromia-->
-                    <Button row="16" col="0" colSpan="3" text="Confronta con Lossodromia" tap="{{ confrontaSecondo }}" class="esegui-calcoli" />
+                    <Button row="17" col="0" colSpan="3" text="Confronta con Lossodromia" tap="{{ confrontaSecondo }}" class="esegui-calcoli" />
+
+                    <!--Creo UI per inserimento dell'ActivityIndicator-->
+                    <ActivityIndicator row="18" col="0" colSpan="3" busy="bsyloss2" id="indloss2" visibility="collapse"/>
 
                     <!--Creo UI di per visualizzare i risultati della lossodromia-->
-                    <StackLayout row="17" col="0" colSpan="3"
+                    <StackLayout row="19" col="0" colSpan="3"
                                  class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro nero">
                             <Label textWrap="true" text="{{ Risultati Confronto Secondo }}" fontSize="17" />
                         </StackLayout>
                     </StackLayout>
 
-                    <Label row="18" col="0" colSpan="3" text="{{ RisultatiConfrontoSecondo }}" textWrap="true"
+                    <Label row="20" col="0" colSpan="3" text="{{ RisultatiConfrontoSecondo }}" textWrap="true"
                            marginLeft="3" class="output" />
 
-                    <StackLayout row="19" col="0" colSpan="3"
+                    <StackLayout row="21" col="0" colSpan="3"
                                  class="riquadro">
                         <StackLayout class="sottoTitolo centro ortodromia titolo-riquadro">
                             <Label text=" " fontSize="17"
@@ -313,7 +326,7 @@
         <!--Creo la seconda scehda (tipo una nuova pagina) dove implemento la grafica per la navigazione mista-->
         <TabViewItem title="Navigazione mista">
             <ScrollView>
-                <GridLayout rows="auto, auto, auto, auto, auto, auto, auto"
+                <GridLayout rows="auto, auto, auto, auto, auto, auto, auto, auto"
                             columns="*,*,*" width="600">
                     <!--Creo UI per titolo-->
                     <StackLayout row="0" col="0" colSpan="3" class="riquadro evidenza">
@@ -348,6 +361,9 @@
 
                     <!--Creo UI per il calcolo della navigazione mista-->
                     <Button row="3" col="0" colSpan="3" text="Esegui calcoli Navigazione Mista" tap="{{ calcolaNaMista }}" class="esegui-calcoli" />
+
+                    <!--Creo UI per inserimento dell'ActivtyIndicator-->
+                    <ActivityIndicator row="4" col="0" colSpan="3" busy="bsyMista" id="indMista" visibility="collapse" />
 
                     <!--Creo UI per mostrare i risultati della navigazione mista-->
                     <StackLayout row="4" col="0" colSpan="3" class="riquadro">

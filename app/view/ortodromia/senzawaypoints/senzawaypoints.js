@@ -8,6 +8,9 @@ const { clear } = require('@nativescript/core/application-settings');
 var OggettoLossodromia = require('~/view/OggettoLossodromia');
 var OggettoNavMista = require('~/view/OggettoNavMista');
 
+const { Animation } = require("@nativescript/core");
+const { AnimationCurve } = require("@nativescript/core/ui/enums");
+
 
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -829,20 +832,70 @@ exports.CambioRotta1=()=>{
     //______________________________________________________________________________________________
     //Di seguito dichiaro le funzioni dei pulsanti per la risoluzione dell'ortodromia
     modello.calcolaPrimo = () =>{
-        SetInput1();
-        RisolviPrimoProb();
-        modello.set("Risultati Primo Problema","Risultati del Primo Problema");
-        modello.set("RisultatiPrimo",output);
-        problemaCalcolato = "primo problema";
-    }
+
+        //creo animazione per l'activityIndicator e dopo mostro i risultati
+        let indicator = page.getViewById("ind");
+        indicator.visibility = "visible";
+        modello.set("bsy",true);
+
+        const defAnim = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let anima = new Animation([defAnim],false);
+        anima.play().then(()=>{
+            modello.set("bsy",false);
+            indicator.visibility = "collapse";
+
+            //mostro i calcoli
+            SetInput1();
+            RisolviPrimoProb();
+            modello.set("Risultati Primo Problema","Risultati del Primo Problema");
+            modello.set("RisultatiPrimo",output);
+            problemaCalcolato = "primo problema";
+        });
+
+
+    }//end calcolaPrimo
 
     modello.calcolaSecondo = () =>{
-        SetInput2();
-        RisolviSecondoProb();
-        modello.set("Risultati Secondo Problema","Risultati del Secondo Problema");
-        modello.set("RisultatiSecondo",output);
-        problemaCalcolato = "secondo problema";
-    }
+
+        //creo animazione per l'inserimento dell'activityIndicator
+        let indicator = page.getViewById("ind2");
+        indicator.visibility = "visible";
+        modello.set("bsy2",true);
+
+        const defAnima = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let anima = new Animation([defAnima],false);
+        anima.play().then(()=>{
+            modello.set("bsy2",false);
+            indicator.visibility = "collapse";
+
+            //mostro i risultati
+            SetInput2();
+            RisolviSecondoProb();
+            modello.set("Risultati Secondo Problema","Risultati del Secondo Problema");
+            modello.set("RisultatiSecondo",output);
+            problemaCalcolato = "secondo problema";
+        });
+
+
+    }//end calcolaSecondo
 
     //___________________________________________________________
     /**
@@ -850,26 +903,100 @@ exports.CambioRotta1=()=>{
      */
 
     modello.confrontaPrimo = () =>{
-        RisolviConfrontoPrimo();
-        modello.set("Risultati Confronto Primo","Risultati Confronto Lossodromia");
-        modello.set("RisultatiConfrontoPrimo",outputConfronto);
-    }
+
+        //creo animazione per l'activityIndicator e ppoi mostro i risultati
+        let indicator = page.getViewById("indloss");
+        indicator.visibility = "visible";
+        modello.set("bsyloss",true);
+
+        const defAnim = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let anima = new Animation([defAnim],false);
+        anima.play().then(()=>{
+            modello.set("bsyloss");
+            indicator.visibility = "collapse";
+
+            //mostro i risultati
+            RisolviConfrontoPrimo();
+            modello.set("Risultati Confronto Primo","Risultati Confronto Lossodromia");
+            modello.set("RisultatiConfrontoPrimo",outputConfronto);
+        });
+
+    }//end confrontaPrimo
 
     modello.confrontaSecondo = () =>{
-        RisolviConfrontoSecondo();
-        modello.set("Risultati Confronto Secondo","Risultati Confronto Lossodromia");
-        modello.set("RisultatiConfrontoSecondo",outputConfronto);
-    }
+
+        //creo animazione per inserire lactivtyIndicator e poi mostro i risultati
+        let indicator = page.getViewById("indloss2");
+        indicator.visibility = "visible";
+        modello.set("bsyloss2",true);
+
+        const defAnima = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let anima = new Animation([defAnima],false);
+        anima.play().then(()=>{
+            modello.set("bsyloss2",false);
+            indicator.visibility = "collpase";
+
+            //mostro i risultati
+            RisolviConfrontoSecondo();
+            modello.set("Risultati Confronto Secondo","Risultati Confronto Lossodromia");
+            modello.set("RisultatiConfrontoSecondo",outputConfronto);
+        });
+
+
+    }//end confrontaSecondo
     //___________________________________________________________
 
     //______________________________________________________________________________________________
     //Di seguito dichiaro la funzione del modello per la navigazione mista
     modello.calcolaNaMista = () =>{
-        SetInputParalleloLimite();
-        RisolviNavMista(problemaCalcolato);
-        modello.set("Risultati Navigazione Mista","Risultati della Navigazione Mista");
-        modello.set("RisultatiNavMista",outputNavMista);
-    }
+
+        //creo animazione per inserimento dell'activityIndicator e poi mostro i risultati
+        let indicator = page.getViewById("indMista");
+        indicator.visibility = "visible";
+        modello.set("bsyMista",true);
+
+        const defAnima = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let anima = new Animation([defAnima],false);
+        anima.play().then(()=>{
+            modello.set("bsyMista",false);
+            indicator.visibility = "collapse";
+
+            //mostro i risultati
+            SetInputParalleloLimite();
+            RisolviNavMista(problemaCalcolato);
+            modello.set("Risultati Navigazione Mista","Risultati della Navigazione Mista");
+            modello.set("RisultatiNavMista",outputNavMista);
+        });
+
+
+    }//end calcolaNaMista
 
     return modello;
  }//end function Modello

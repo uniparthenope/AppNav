@@ -7,6 +7,8 @@ var OggettoOrtodromia = require('~/view/OggettoOrtodromia');
 const { clear } = require('@nativescript/core/application-settings');
 const { parse } = require('@nativescript/core/css');
 
+const { Animation } = require("@nativescript/core");
+const { AnimationCurve } = require("@nativescript/core/ui/enums");
 
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -268,7 +270,7 @@ function SetInput(){
 
     numeroWay = parseInt( page.getViewById("idNumeroWaypoints").text );
 
-    
+
 
     switch(bugVuota){
         case 0:
@@ -326,7 +328,7 @@ function RisolviOrtodromia(){
     switch(bug){
         case 0:
             risultatiOrto = OggettoOrtodromia.RisolviSecondoProblema(lat,lon,latArr,lonArr);
-            outputOrto = OggettoOrtodromia.SetOutputSecondo(risultatiOrto); 
+            outputOrto = OggettoOrtodromia.SetOutputSecondo(risultatiOrto);
             break;
 
         case 1:
@@ -405,12 +407,36 @@ function Modello(){
 
     //creo funzione per il bottone di effettua calcoli
     modello.calcola = () =>{
-        SetInput();
-        RisolviOrtodromia();
-        RisolviWaypoints();
-        modello.set("Risultati Ortodromia Waypoints","Risultati Ortodromia con Waypoints");
-        modello.set("RisultatiOrto",outputOrto);
-        modello.set("RisultatiWay",outputWay);
+
+        let indicator = page.getViewById("ind");
+        indicator.visibility = "visible";
+        modello.set("bsy",true);
+
+        //definisco l'animazione da associare all'activityIndicator
+        const defAnima = {
+            target: indicator,
+            curve: AnimationCurve.easeInOut,
+            duration: 2000,
+            scale: {
+                x: 1,
+                y: 1
+            }
+        };
+
+        let animazione = new Animation([defAnima],false);
+        animazione.play().then(()=>{
+            modello.set("bsy",false);
+            indicator.visibility="collapse";
+
+            SetInput();
+            RisolviOrtodromia();
+            RisolviWaypoints();
+            modello.set("Risultati Ortodromia Waypoints","Risultati Ortodromia con Waypoints");
+            modello.set("RisultatiOrto",outputOrto);
+            modello.set("RisultatiWay",outputWay);
+        });
+
+
     }
 
     return modello;
